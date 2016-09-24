@@ -97,11 +97,10 @@
 			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
 				var href = this.getAttribute("data-href");
 				var userId = this.getAttribute("data-id");
+				//TODO 将点击的用户的id写入本地存储，在下一个页面取出来
+				//localStorage.setItem("userId",userId);
 				mui.openWindow({
-					url:href,
-					extras:{
-						id:'asd'
-					}
+					url:href
 				});
 			})
 			

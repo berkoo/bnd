@@ -34,7 +34,8 @@ function refresh(url, type) {
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					success: function(data) {
-						console.log(data)
+						//TODO 将获取的数据列表放入本地存储中。。。。
+						//localStorage.setItem("userListData",JSON.stringify(data));
 						for(var n = 0; n < data.data.length; n++) {
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
