@@ -1,0 +1,51 @@
+.mui-content ul li {
+	position: relative;
+}
+header .pui-a-right {
+	font-size: 24px !important;
+}
+.pui-slider-right {
+	position: absolute;
+	right: 0;
+	top: 26px;
+	font-size: 14px;
+}
+.pui-icon-gps {
+	position: absolute;
+	right: 38px;
+	top: -4px;
+	color: #56abe4;
+}
+.pui-p-down {
+	margin-top: 5px;
+}
+.pui-p-down i {
+	margin-right: 5px;
+	color: #56abe4;
+}
+.pui-p-up i {
+	color: #56abe4;
+}
+.pui-btn {
+	padding: 0;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+.pui-btn .pui-btn-one {
+	height: 42px !important;
+}
+.pui-btn button {
+	width: 50%;
+}
+
+.pui-icon-pastDue {
+	position: absolute;
+	right: -15px;
+	top:-6px;
+	font-size: 26px;
+	color: #f00;
+}
+.mui-table-view-chevron .mui-table-view-cell {
+	padding-right: 15px !important;
+}

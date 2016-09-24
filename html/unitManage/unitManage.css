@@ -1,0 +1,47 @@
+header .pui-a-right {
+	font-size: 26px;
+	color:#a9b7b7 !important;
+}
+.mui-content {
+	margin-top: 44px;
+}
+.mui-content ul li i {
+	color: #56abe4;
+}
+.pui-p-up {
+	font-size: 14px;
+	color: #333;
+}
+.pui-p-down {
+	margin-top: 5px;
+}
+.pui-p-down span {
+	font-size: 14px;
+	color: #333;
+}
+.pui-p-down i:nth-child(2) {
+	margin-left: 10px;
+}
+.mui-content .pui-btn {
+	padding: 0;
+}
+.mui-content .pui-btn button {
+	width: 50%;
+	color: #fff;
+}
+.mui-content .pui-btn button:nth-child(1) {
+	height: 42px;
+	border-right: 0;
+}
+.mui-content .pui-btn {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+.mui-content .pui-btn button:nth-child(2) {
+	border-left: 0;
+}
+.mui-btn-yellow {
+	border: 1px solid #ff6600;
+	background: #ff6600;
+}

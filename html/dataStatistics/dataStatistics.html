@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="dataStatistics.css" />
+		<title>数据统计</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">数据统计</h1>
+		</header>
+		<div class="mui-content">
+			<table border="1" cellspacing="0" bordercolor="#c8c7cc" frame="hsides">
+				<tr>
+					<td>代理商</td>
+					<td>单位</td>
+					<td>群组</td>
+					<td>用户</td>
+				</tr>
+				<tr>
+					<td  class="datainfo"></td>
+					<td  class="datainfo"></td>
+					<td  class="datainfo"></td>
+					<td  class="datainfo"></td>
+				</tr>
+			</table>
+			<div class="mui-card">
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">流量卡</a>
+						<div class="mui-collapse-content">
+							<table border="1" cellspacing="0" bordercolor="#c8c7cc" frame="hsides">
+								<tr>
+									<td>流量卡总数</td>
+									<td>已使用</td>
+									<td>未使用</td>
+								</tr>
+								<tr>
+									<td  class="datainfo"></td>
+									<td  class="datainfo"></td>
+									<td  class="datainfo"></td>
+								</tr>
+
+							</table>
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">存值卡</a>
+						<div class="mui-collapse-content">
+							<table border="1" cellspacing="0" bordercolor="#c8c7cc" frame="hsides">
+								<tr>
+									<td>充值卡总数</td>
+									<td>已使用</td>
+									<td>未使用</td>
+								</tr>
+								<tr>
+									<td  class="datainfo"></td>
+									<td  class="datainfo"></td>
+									<td  class="datainfo"></td>
+								</tr>
+							</table>
+						</div>
+					</li>
+					<li class="mui-table-view-cell mui-collapse">
+						<a class="mui-navigate-right" href="#">终端用户</a>
+						<div class="mui-collapse-content">
+							<table border="1" cellspacing="0" bordercolor="#c8c7cc" frame="hsides">
+								<tr>
+									<td>即将到期</td>
+									<td>已过期</td>
+								</tr>
+								<tr>
+									<td class="datainfo"></td>
+									<td  class="datainfo"></td>
+								</tr>
+
+							</table>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script>
+			(function($, win, doc, undefined) {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				$.ajax(req_url + '/api/v1/profile/stats?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							console.log("data:"+JSON.stringify(data.data));
+							var tags = document.getElementsByClassName("datainfo");
+							var i = 0;
+							for(var attrValue in data.data) {
+								tags[i].innerText = data.data[attrValue];
+								i++;
+							}
+						} else {
+							$.alert(data.msg, function() {
+
+							}, "提示", "取消");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+					}
+				});
+			})(mui, window, document)
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="agentDetail.css" />
+		<title>代理商详情</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">代理商详情</h1>
+			<a class="mui-pull-right pui-a-right" id="deleteAgent">删除</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<i class="icon icon-broad pui-icon-edit" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
+						<label for="">代理商名称</label>
+						<input type="text" value="张三丰" id="agentName" readonly="readonly" />
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<label for="">登录账户</label>
+						<input style="padding-right: 15px;" type="text" readonly="readonly" id="agentLoginName" value="zhangsanfeng" />
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt20">
+				<li class="mui-table-view-cell pui-list" data-href="contactInfo.html">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe612;</i>
+						<span class="fz14">联系人信息</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell pui-list" data-href="changepwd">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe601;</i>
+						<span class="fz14">修改密码</span>
+					</a>
+				</li>
+
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript">
+			(function($, doc, win, undefined) {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				$.ajax(req_url + "/v1/agent/list?access_token=" + access_token + "&openid=" + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data: {
+						"id": localStorage.getItem("agentDetailId")
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							localStorage.setItem("agentDetailInfo", JSON.stringify(data));
+							document.getElementById("agentName").value = data.data.name;
+							document.getElementById("agentLoginName").value = data.data.account.loginname;
+						} else {
+							$.alert(data.msg, function() {
+								$.back();
+							}, "提示", "确定")
+						}
+					}
+				});
+				document.getElementById("deleteAgent").addEventListener('tap', function() {
+					var agentId = localStorage.getItem("agentDetailId");
+					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
+					$.ajax(deleteUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'POST', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data: {
+							"id": localStorage.getItem("agentDetailId")
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								$.alert("删除成功", function() {
+									$.back();
+								}, "提示", "确定");
+							} else {
+								$.alert(data.msg, function() {}, "提示", "确定");
+							}
+						}
+					});
+				}, false);
+				$(".mui-table-view").on("tap", ".pui-icon-edit", function() {
+					$.prompt('', '', '代理商名称', ['确定', '取消'], function(e) {
+						if(e.index == 0) {
+							document.getElementById("agentName").value = e.value;
+							$.ajax(req_url + "/api/v1/agent/name?access_token=" + access_token + "&openid=" + openid, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								data: {
+									"id": localStorage.getItem("agentDetailId"),
+									"name": e.value
+								},
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded'
+								},
+								success: function(data) {
+									if(data.code == 20001) {
+										$.alert("修改成功", function() {}, "提示", "确定");
+									} else {
+										$.alert(data.msg, function() {}, "提示", "确定");
+									}
+								},
+								error: function() {}
+							});
+						}
+					}, 'div');
+				});
+				$(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
+					var href = this.getAttribute("data-href");
+					if(href == "changepwd") {
+						$.prompt('', '', '修改密码', function(e) {
+							if(e.index == 0) {
+								$.ajax(req_url + "/api/v1/agent/password?access_token=" + access_token + "&openid=" + openid, {
+									dataType: 'json', //服务器返回json格式数据
+									type: 'POST', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									data: {
+										"id": localStorage.getItem("agentDetailId"),
+										"password": e.value
+									},
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										if(data.code == 20001) {
+											$.alert("修改成功", function() {
+
+											}, "提示", "确定");
+										}
+									},
+									error: function() {
+
+									}
+								});
+							} else {
+
+							}
+						}, 'div');
+					} else {
+						$.openWindow(href);
+					}
+				});
+			})(mui, document, window)
+		</script>
+	</body>
+
+</html>

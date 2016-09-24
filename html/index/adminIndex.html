@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="index.css"/>
+		<title>单位管理平台</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<h1 class="mui-title">单位管理平台</h1>
+			<a class="icon icon-broad mui-icon mui-pull-right pui-icon-color" data-href="../notifierPro/notifierPro.html">&#xe615;</a>
+			<span class="pui-dot"></span>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view mui-table-view-chevron">
+				<li class="mui-table-view-cell mui-media" data-href = "../accountSetting/accountSetting.html">
+					<a class="mui-navigate-right" href="#">
+						<img width="50px" class="mui-media-object mui-pull-left head-img" id="head-img" src="../../imgs/icon_index.png">
+						<div class="mui-media-body">
+							<span id="nickname" class="pui-nickname"></span>
+							<p id="corg_name" class='mui-ellipsis'></p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view pui-statistics pui-initial">
+				<li class="mui-table-view-cell" data-href = "../dataStatistics/dataStatistics.html">
+					<a href="#">
+						<span class="pui-span-left fz14">数据统计</span>
+						<span class="icon icon-broad mui-icon icon-one">&#xe60e;</span>
+						<span class="fz14"><span id="satis-agent"></span>家</span>
+						<span class="icon icon-broad mui-icon icon-two">&#xe601;</span>	
+						<span class="fz14"><span id="satis-company"></span>家</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell pui-list" data-href = "../userManage/createUser.html">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe601;</i>
+						<span class="fz14">创建用户</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell pui-list" data-href = "../groupManage/createGroup.html">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe612;</i>
+						<span class="fz14">创建群组</span>
+					</a>
+				</li>
+			</ul>
+			<div class="pui-btn">
+				<button class="mui-btn icon icon-broad pui-icon" data-href="../groupManage/vedio.html">&#xe603;</button><button data-href="../userManage/userManage.html">用户列表</button><button data-href="../groupManage/groupManage.html">群组列表</button>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			document.querySelector(".mui-icon").addEventListener("tap",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			mui(".pui-btn").on("tap","button",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			
+		</script>
+		<script>
+			(function($, doc) {
+				$.init({});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var nickName = document.getElementById("nickname");
+				var corg_name = document.getElementById("corg_name");
+				mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒;
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							nickName.innerHTML = data.data.nickname;
+							corg_name.innerHTML = data.data.orginfo.corg_name;
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+				
+				
+				mui.ajax(req_url + '/api/v1/profile/faststats?access_token='+access_token+'&openid='+openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						document.getElementById("satis-agent").innerHTML = data.data.group_count;
+						document.getElementById("satis-company").innerHTML = data.data.user_count;
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}(mui, document));
+		</script>
+		
+		
+	</body>
+</html>

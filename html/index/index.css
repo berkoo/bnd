@@ -1,0 +1,139 @@
+.pui-icon-color {
+	color: #56abe4;
+}
+.pui-dot {
+	position: absolute;
+	right: 10px;
+	top: 12px;
+	width: 6px;
+	height: 6px;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	background: #f00;
+}
+/**
+ * 主体内容
+ */
+.mui-table-view-cell {
+	padding: 10.5px 15px;
+}
+.mui-content>.mui-table-view:first-child {
+	margin-top: 64px;
+}
+.mui-table-view .mui-media-object.mui-pull-left {
+	margin-right: 25px;
+}
+.mui-media-body {
+	font-size: 14px;
+	color: #333;
+}
+.pui-nickname {
+	font-size: 14px !important;
+}
+.mui-ellipsis {
+	margin-top: 5px;
+	font-size: 16px;
+	color: #333;
+}
+.mui-media a img {
+	width: 50px;
+	height: 50px;
+}
+.mui-table-view .mui-media-object {
+	max-width: 50px;
+	line-height: 50px;
+	height: 50px;
+}
+.pui-span-left {
+	margin-left: 15px;
+	font-size: 14px;
+	color: #333;
+}
+.icon-one {
+	margin-left: 16px;
+	color: #00bb9c !important;
+}
+.icon-two {
+	margin-left: 15px;
+	color: #58ace4 !important;
+}
+.icon-three {
+	margin-left: 15px;
+	color: #ae75c5 !important;
+}
+
+.pui-statistics {
+	margin-top: 10px;
+}
+.pui-initial .mui-table-view-cell>a:not(.mui-btn) {
+	padding: initial;
+}
+.pui-statistics li {
+	position: relative;
+}
+.pui-statistics li {
+	height: 46px;
+	line-height: 46px;
+}
+.pui-statistics li a{
+	height: 46px;
+	line-height: 46px;
+}
+.pui-statistics .mui-table-view-cell {
+	padding: 12px 15px;
+}
+.pui-statistics .mui-table-view-cell>a:not(.mui-btn) {
+	margin: -12px -15px;
+}
+
+.pui-list-icon {
+	position: absolute;
+	width: 50px;
+	
+	left: 15px;
+	color: #f4c600;
+	height: 100%;
+	text-align: center;
+}
+.pui-list-icon-one {
+	top: 10px;
+	font-size: 26px;
+}
+.pui-list-icon-two {
+	top: 12px;
+	font-size: 20px;
+}
+.pui-list span {
+	margin-left: 92px;
+}
+.pui-statistics li button {
+	width: 50%;
+	border: 0;
+	height: 100%;
+	border-radius: 0;
+}
+.pui-statistics li button:first-child {
+	border-right: 1px #c8c7cc solid;
+}
+.pui-statistics .pui-cell-btn {
+	padding: 0;
+}
+.mui-content .pui-btn {
+	width: 100%;
+	padding: 0;
+	position:fixed;
+	left: 0;
+	bottom: 0;
+}
+.mui-content .pui-btn button {
+	width: 33.33333%;
+}
+.mui-content .pui-btn button:nth-child(1) {
+	border-left: 0;
+	color: #9d55b8;
+	font-size: 25px;
+	padding: 2.5px 12px;
+}
+.mui-content .pui-btn button:nth-child(3) {
+	border-right: 0;
+}

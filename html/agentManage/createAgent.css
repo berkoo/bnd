@@ -1,0 +1,19 @@
+.mui-content ul li input {
+	margin-bottom: 0;
+	border:0;
+	font-size:14px;
+}
+.pui-span-right {
+	margin-right: 20px;
+	color: #ccc;
+}
+.mui-content ul li label {
+	color:#a9a9a9 !important;
+}
+.mui-content ul li .pui-address {
+	margin-right: 22px;
+}
+.mui-content ul li .pui-address span{
+	color: #a9a9a9 !important;
+	font-size: 14px;
+}

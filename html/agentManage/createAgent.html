@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" href="../../css/mui.picker.css" />
+		<link rel="stylesheet" href="../../css/mui.poppicker.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="createAgent.css" />
+		<title>创建代理商</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">创建代理商</h1>
+			<a class="mui-pull-right pui-a-right" id="save">保存</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="请输入代理商名称" id="userName" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入代理商账号" id="userAccount" />
+				</li>
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入账户密码" id="userPassword" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="联系人" id="contactName" />
+				</li>
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入联系电话" id="userTel" />
+				</li>
+				<li id="showCityPicker3" class="mui-table-view-cell">
+					<a class="mui-navigate-right">
+						<label for="">选择地址</label>
+						<span class="mui-pull-right pui-address">
+							<span id="province">省</span>
+							<span>></span>
+							<span id="city">市</span>
+							<span>></span>
+							<span id="district">区</span>
+						</span>
+					</a>
+				</li>
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="详细地址" id="userAddr" />
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/mui.picker.js"></script>
+		<script type="text/javascript" src="../../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../../js/city.data.js"></script>
+		<script type="text/javascript" src="../../js/city.data-3.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript">
+			(function($, win, doc, undefined) {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var addUrl = req_url + '/api/v1/agent/add?access_token=' + access_token + '&openid=' + openid;
+				document.getElementById("save").addEventListener('tap', function() {
+					name = document.getElementById("userName").value;
+					loginname = document.getElementById("userAccount").value;
+					pwd = document.getElementById("userPassword").value;
+					contact = document.getElementById("contactName").value;
+					mobile = document.getElementById("userTel").value;
+					address = document.getElementById("userAddr").value;
+					countryid = "86";
+					provinceid = document.getElementById("province").getAttribute("data-provinceId");
+					cityid = document.getElementById("city").getAttribute("data-cityId");
+					districtid = document.getElementById("district").getAttribute("data-districtId");
+					$.ajax(addUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"name": name,
+							"loginname": loginname,
+							"password": pwd,
+							"contact": contact,
+							"mobile": mobile,
+							"address": address,
+							"countryid": countryid,
+							"provinceid": provinceid,
+							"cityid": cityid,
+							"districtid": cityid
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								$.alert("添加成功", function() {}, "提示", "确定");
+							} else {
+								$.alert(data.msg, function() {}, "提示", "确定");
+							}
+						},
+						error: function() {}
+					});
+				}, false);
+				document.getElementById("showCityPicker3").addEventListener('tap', function() {
+					var cityPicker3 = new $.PopPicker({
+						layer: 3
+					});
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = doc.getElementById('showCityPicker3');
+					var cityResult3 = doc.getElementById('cityResult3');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							document.getElementById("province").innerText = items[0].text;
+							document.getElementById("province").setAttribute("data-provinceId", items[0].value);
+							document.getElementById("city").innerText = items[1].text;
+							document.getElementById("city").setAttribute("data-cityId", items[1].value);
+							document.getElementById("district").innerText = items[2].text;
+							document.getElementById("district").setAttribute("data-district", items[2].value);
+						});
+					}, false);
+				}, false);
+			})(mui, window, document)
+		</script>
+	</body>
+
+</html>

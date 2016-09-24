@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="remindDetail.css"/>
+		<title>过期提醒</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 id="title" class="mui-title">过期提醒</h1>
+			<a class="mui-pull-right pui-a-right" href="#" data-href="../changeCard/changeCard.html">换卡</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#">
+						<span>通知类型</span>
+						<span>已过期</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#">
+						<span>过期日期</span>
+						<span>2015-01-12</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#">
+						<span>过期人数</span>
+						<span>3人</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			 mui(".mui-bar").on("tap",".pui-a-right",function(){
+			 	var href = this.getAttribute("data-href");
+			 	mui.openWindow(href);
+			 })
+		</script>
+	</body>
+</html>

@@ -1,0 +1,16 @@
+.mui-content ul li {
+	position: relative;
+}
+.pui-slider-right {
+	position: absolute;
+	right: 0;
+	top: 14px;
+	font-size: 14px;
+}
+.pui-p-down i {
+	margin-right: 5px;
+	color: #56abe4;
+}
+.pui-p-down {
+	margin-top: 5px;
+}

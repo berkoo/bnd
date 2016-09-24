@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="login.css" />
+		<title>集群对讲管理平台</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<h1 class="mui-title">集群对讲管理平台</h1>
+			<a data-status="admin" class="icon icon-broad mui-icon mui-pull-right pui-a-change">&#xe613;</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input mui-input-row">
+					<label>账户</label>
+					<input oninput="myInputFun()" type="text" class="mui-input-clear pui-account pui-input" id="textAccount" placeholder="请输入单位管理员账户">
+				</li>
+				<li class="mui-table-view-input mui-input-row">
+					<label>密码</label>
+					<input oninput="myInputFun()" type="password" class="mui-input-clear pui-pwd" id="textPassword" placeholder="请输入密码">
+				</li>
+				<li class="mui-table-view-cell">
+					<label for="">自动登录</label>
+					<span></span>
+					<div class="mui-switch mui-switch-blue mui-switch-mini" id="switchAutoLogin">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>
+			<div class="pui-btn">
+				<button class="mui-btn mui-btn-primary mui-block" id="btnLogin" data-href="../index/index.html">登录</button>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script src="login.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			var APP_ID = "3b6bd62d64";
+			var APP_SECRET = "f3b2fff94f75498e";
+			(function($, doc) {
+				$.init({});
+				var userType = 1;
+				var loginButton = document.getElementById('btnLogin');
+				var switchAutoLogin = document.getElementById("switchAutoLogin");
+				switchAutoLogin.addEventListener("toggle", function() {
+					if(event.detail.isActive) {
+						localStorage.setItem("autoLogin", true);
+						var username = document.getElementById("textAccount").value;
+						var pwd = document.getElementById("textPassword").value;
+						localStorage.setItem("userAccount", username);
+						localStorage.setItem("pwd", pwd);
+					} else {
+						localStorage.setItem("autoLogin", false);
+						localStorage.setItem("userAccount", null);
+						localStorage.setItem("pwd", null);
+					}
+				});
+				var isActive = switchAutoLogin.classList.contains("mui-active");
+				if(isActive) {
+					mui.trigger(loginButton, 'tap');
+				}
+				mui(".mui-bar").on("tap", ".mui-icon", function() {
+					var status = document.querySelector(".mui-icon").getAttribute("data-status");
+					if(status == "admin") {
+						document.querySelector(".pui-account").placeholder = "请输入代理商账户";
+						document.querySelector(".mui-icon").setAttribute("data-status", "agent");
+						userType = 0;
+					}
+					if(status == "agent") {
+						document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
+						document.querySelector(".mui-icon").setAttribute("data-status", "admin");
+						userType = 1;
+					}
+					console.log("userType:"+userType);
+				});
+				loginButton.addEventListener('tap', function(event) {
+					var username = document.getElementById("textAccount").value;
+					var pwd = document.getElementById("textPassword").value;
+					localStorage.setItem("userType", userType);
+					mui.ajax(req_url + '/api/v1/auth/access_token', {
+						data: {
+							'appId': APP_ID,
+							'appSecret': APP_SECRET,
+							'username': username,
+							'password': pwd,
+							'user_type': userType
+						},
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								localStorage.setItem("access_token", data.data.access_token);
+								localStorage.setItem("refresh_token", data.data.refresh_token);
+								localStorage.setItem("ptt_openid", data.data.openid);
+								localStorage.setItem("user_type", userType);
+								if(userType == 1) {
+									mui.openWindow("../index/adminIndex.html");
+								} else {
+									mui.openWindow("../index/agentIndex.html");
+								}
+							} else {
+								mui.alert(data.msg, function() {}, "提示", "确定");
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+						}
+					});
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

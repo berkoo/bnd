@@ -1,0 +1,42 @@
+.mui-content .pui-p-down {
+	margin-top: 5px;
+}
+.mui-content li{
+	position: relative;
+}
+.mui-content .pui-p-down span:nth-child(2) {
+	font-size: 14px;
+}
+.mui-content p {
+	margin-bottom: 0 !important;
+	color: #333;
+	font-size: 16px;
+}
+.mui-content p:nth-child(2) {
+	margin-top: 5px;
+}
+.pui-slider-right {
+	position: absolute;
+	right: 15px;
+	top: 24px;
+	font-size: 14px !important;
+}
+
+.pui-btn {
+	width: 100%;
+	padding: 0;
+	bottom: 0;
+	left: 0;
+	position: fixed;
+}
+.pui-btn button {
+	width: 50%;
+}
+.pui-btn .pui-btn-one {
+	height: 42px !important;
+}
+.pui-time-right {
+	position: absolute;
+	right: 15px;
+	top: 25px;
+}

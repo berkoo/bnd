@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="unitContactInfo.css" />
+		<title>账户信息</title>
+	</head>
+
+	<body>
+		<!--<div class="pui-mask"></div>
+		<div class="pui-dialog">
+			<p>请输入修改内容</p>
+			<input type="text" value="" />
+			<button class="mui-btn mui-btn-block mui-btn-primary">保存</button>
+		</div>-->
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">账户信息</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<i id="promptBtn" class="icon icon-broad pui-icon-edit" data-id="username" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
+						<label for="">姓名</label>
+						<input id="username" type="text" value="张三丰" disabled="disabled" />
+					</a>
+				</li>
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<label for="">账户</label>
+						<input id="loginName" class="pui-disable-input" type="text" value="张三丰" disabled="disabled" />
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<label for="">单位名称</label>
+						<input id="corg_name" class="pui-disable-input" type="text" value="张三丰" disabled="disabled" />
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<i class="icon icon-broad pui-icon-edit" data-id="phoneNumber" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
+						<label for="">联系电话</label>
+						<input id="phoneNumber" type="text" name="" id="" value="100000000" disabled="disabled" />
+					</a>
+				</li>
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<i class="icon icon-broad pui-icon-edit" data-id="email" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
+						<label for="">邮箱地址</label>
+						<input id="email" type="text" name="" id="" value="188888888@163.com" disabled="disabled" />
+					</a>
+				</li>
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<i class="icon icon-broad pui-icon-edit" data-id="address" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
+						<label for="">通讯地址</label>
+						<input id="address" type="text" name="" id="" value="深圳宝安区西乡" disabled="disabled" />
+					</a>
+				</li>
+			</ul>
+
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
+				var id = this.getAttribute("data-id")
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				switch(id) {
+					case 'username':
+						e.detail.gesture.preventDefault();
+						var btnArray = ['取消', '确定'];
+						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+							if(e.index == 1) {
+								document.getElementById("username").value = e.value;
+								mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json',
+									type: 'post',
+									timeout: 10000,
+									data: {
+										'contact': e.value
+									},
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										console.log(data)
+										if(data.code == 20001) {}
+									},
+									error: function(xhr, type, errorThrown) {
+										//异常处理；
+										console.log(type);
+									}
+								});
+							}
+						})
+						break;
+					case 'phoneNumber':
+						e.detail.gesture.preventDefault();
+						var btnArray = ['取消', '确定'];
+						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+							if(e.index == 1) {
+								document.getElementById("phoneNumber").value = e.value;
+								mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json',
+									type: 'post',
+									timeout: 10000,
+									data: {
+										'mobile': 18931880683
+									},
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										console.log(data)
+										if(data.code == 20001) {}
+									},
+									error: function(xhr, type, errorThrown) {
+										//异常处理；
+										console.log(type);
+									}
+								});
+							}
+						})
+						break;
+					case 'email':
+						e.detail.gesture.preventDefault();
+						var btnArray = ['取消', '确定'];
+						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+							if(e.index == 1) {
+								document.getElementById("email").value = e.value;
+								mui.ajax(req_url + '/api/v1/profile/email?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json',
+									type: 'post',
+									timeout: 10000,
+									data: {
+										'email': 'wanglanfeng@broad.com'
+									},
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										console.log(data)
+										if(data.code == 20001) {}
+									},
+									error: function(xhr, type, errorThrown) {
+										//异常处理；
+										console.log(type);
+									}
+								});
+							}
+						})
+						break;
+					case 'address':
+						e.detail.gesture.preventDefault();
+						var btnArray = ['取消', '确定'];
+						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+							if(e.index == 1) {
+								document.getElementById("address").value = e.value;
+								mui.ajax(req_url + '/api/v1/profile/address?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json',
+									type: 'post',
+									timeout: 10000,
+									data: {
+										'address': e.value
+									},
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										console.log(data)
+										if(data.code == 20001) {}
+									},
+									error: function(xhr, type, errorThrown) {
+										//异常处理；
+										console.log(type);
+									}
+								});
+							}
+						})
+						break;
+				}
+			})
+		</script>
+		<script>
+			(function($, doc) {
+				$.init({});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var nickName = document.getElementById("nickname");
+				var corg_name = document.getElementById("corg_name");
+				var userType = localStorage.getItem("userType");
+				if(userType == 1) {
+					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒;
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								document.getElementById("username").value = data.data.nickname;
+								document.getElementById("loginName").value = data.data.loginname;
+								document.getElementById("corg_name").value = data.data.orginfo.corg_name;
+								document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
+								document.getElementById("email").value = data.data.orginfo.email;
+								document.getElementById("address").value = data.data.orginfo.address;
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+						}
+					});
+				} else {
+					var data = localStorage.getItem("agentInfo");
+					if(data != null) {
+						data = JSON.parse(data);
+					}
+					document.getElementById("username").value = data.data.nickname;
+					document.getElementById("loginName").value = data.data.loginname;
+					document.getElementById("corg_name").value = data.data.orginfo.corg_name;
+					document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
+					document.getElementById("email").value = data.data.orginfo.email;
+					document.getElementById("address").value = data.data.orginfo.address;
+				}
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

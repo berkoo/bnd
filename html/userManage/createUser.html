@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="createUser.css" />
+		<title>创建用户</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">创建用户</h1>
+			<a id="save" class="mui-pull-right pui-a-right" href="#">保存</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#">
+						<span>消防宝安消防支队</span>
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input mui-input-row">
+					<input id="iccid" class="mui-input-clear" type="text" placeholder="输入ICCID" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input mui-input-row">
+					<input id="username" class="mui-input-clear" type="text" placeholder="输入姓名" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input mui-input-row">
+					<input class="mui-input-clear" type="text" placeholder="输入手机号码" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt30">
+				<li class="mui-table-view-cell">
+					<label for="">位置上报</label>
+					<span></span>
+					<div id="gps" class="mui-switch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<label for="">语音状态</label>
+					<span></span>
+					<div id="audio" class="mui-switch mui-active">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<label for="">是否开启</label>
+					<span></span>
+					<div id="enable" class="mui-switch mui-active">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>
+			<ul id="OA_task_2" class="mui-table-view mt20">
+				<li class="mui-table-view-cell">
+					<span>加入群组</span>
+					<a id="add" href="#modal" class="mui-pull-right" style="display:inline-block;" href=""><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
+				</li>
+				<!--<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-green">默认</a>
+						<a class="mui-btn mui-btn-red">移除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<div id="groupName" class="mui-table-cell">
+						</div>
+					</div>
+				</li>-->
+				<!--<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-green">默认</a>
+						<a class="mui-btn mui-btn-red">移除</a>
+					</div>
+					<div class="mui-slider-handle">
+						<div class="mui-table-cell">
+							测试群组100
+						</div>
+					</div>
+				</li>-->
+			</ul>
+			<div id="modal" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal">保存</a>
+					<h1 class="mui-title">选择加入的群组</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<form class="mui-input-group">
+						<!--<div class="mui-input-row mui-checkbox mui-left">
+							<label>checked：false</label>
+							<input name="checkbox" type="checkbox" >
+						</div>-->
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($, doc) {
+				$.init({});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				check_val = [];
+				ids = [];
+				/**
+				 * 获取到群组列表
+				 */
+				document.getElementById("add").addEventListener("tap", function() {
+					document.querySelector(".mui-input-group").innerHTML = "";//点击获取群组之前 将上一次获取到的数据清空
+					//请求列表数据
+					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								var id = data.data.orginfo.id;
+								mui.ajax(req_url + '/api/v1/group/list?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json', //服务器返回json格式数据
+									data: {
+										'org_id': id //企业编号
+									},
+									type: 'GET', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										if(data.code == 20001) {
+											for(var i = 0; i < data.data.length; i++) {
+												var div = document.createElement("div");
+												div.className = "mui-input-row mui-checkbox mui-left"
+												var label = document.createElement("label");
+												var labelNode = document.createTextNode(data.data[i].name);
+												var inputText = document.createElement("input");
+												inputText.type = "checkbox";
+												inputText.name = "checkbox";
+												label.appendChild(labelNode);
+												div.appendChild(label);
+												div.appendChild(inputText);
+												document.querySelector(".mui-input-group").appendChild(div);
+											}
+										} else {
+											mui.alert(data.msg, function() {
+											}, "提示", "确定");
+										}
+										//点击选择保存的数据
+										document.getElementById("listSave").addEventListener("tap", function() {
+											var checks = document.querySelectorAll(".mui-input-group input");
+											for(var n = 0; n < checks.length; n++) {
+												if(checks[n].checked) {
+													var aa = checks[n].previousSibling.innerHTML;
+													check_val.push(aa);
+													var groupId = data.data[n].id;
+													ids.push(groupId);
+												}
+											};
+											//将选取的群组加入到页面中
+											for(var j = 0; j < check_val.length; j++) {
+												var li = document.createElement("li");
+												li.className = "mui-table-view-cell";
+												var sliderDiv = document.createElement("div");
+												sliderDiv.className = "mui-slider-right mui-disabled";
+												var aOne = document.createElement("a");
+												aOne.className = "mui-btn mui-btn-green";
+												aOneText = document.createTextNode("默认");
+												aOne.appendChild(aOneText);
+												var aTwo = document.createElement("a");
+												aTwo.className = "mui-btn mui-btn-red";
+												aTwoText = document.createTextNode("移除");
+												aTwo.appendChild(aTwoText);
+												sliderDiv.appendChild(aOne);
+												sliderDiv.appendChild(aTwo);
+												var handleDiv = document.createElement("div");
+												handleDiv.className = "mui-slider-handle";
+												var handleText = document.createElement("div");
+												handleText.className = "mui-table-cell";
+												handleTextNode = document.createTextNode(check_val[j]);
+												handleText.appendChild(handleTextNode);
+												handleDiv.appendChild(handleText);
+												li.appendChild(sliderDiv);
+												li.appendChild(handleDiv);
+												document.getElementById("OA_task_2").appendChild(li);
+											}
+										})
+									
+									},
+									error: function(xhr, type, errorThrown) {
+										console.log(type);
+									}
+								});
+							} else {
+								mui.alert(data.msg, function() {
+
+								}, "提示", "确定");
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+						}
+					});
+
+				});
+				/**
+				 * 点击保存创建用户信息
+				 */
+				document.getElementById("save").addEventListener('tap', function(event) {
+					var username = document.getElementById("username").value;
+					var iccid = document.getElementById("iccid").value;
+					var gpsStatus = document.getElementById("gps").classList.contains("mui-active");
+					var enableStatus = document.getElementById("enable").classList.contains("mui-active");
+					var audioStatus = document.getElementById("audio").classList.contains("mui-active");
+					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								var id = data.data.orginfo.id;
+								var groups = null;
+								for(var idd in ids) {
+									groups.push({
+										'id': idd
+									});
+								}
+								mui.ajax(req_url + '/api/v1/terminal/add?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json', //服务器返回json格式数据
+									data: {
+										'org_id': id, //企业编号
+										'nickname': username, //账户昵称
+										'user_account': iccid, //ICCID卡号
+										'enable': enableStatus,
+										'allow_audio': audioStatus,
+										'allow_gps': gpsStatus,
+										'groups': groups
+									},
+									type: 'POST', //HTTP请求类型
+									timeout: 10000, //超时时间设置为10秒；
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									success: function(data) {
+										if(data.code==20001){
+											mui.alert("添加成功",function(){
+												
+											},"提示","确定");
+										}else{
+											mui.alert(data.msg,function(){
+												
+											},"提示","确定");
+										}
+									},
+									error: function(xhr, type, errorThrown) {
+										console.log(type);
+									}
+								});
+							}else{
+								
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+						}
+					});
+				});
+			}(mui, document))
+		</script>
+
+	</body>
+
+</html>

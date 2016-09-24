@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="addUnit.css" />
+		<title>创建单位</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">创建单位</h1>
+			<a class="mui-pull-right pui-a-right" id="save">保存</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入单位名称" id="unitName" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入管理员账户" id="unitAccount" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入管理员密码" id="unitPassword" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="输入管理员姓名" id="adminName" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt30">
+				<li class="mui-table-view-cell">
+					<label for="">位置上报</label>
+					<span></span>
+					<div class="mui-switch mui-active" id="locationSwitch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<label for="">文字广播</label>
+					<span></span>
+					<div class="mui-switch mui-active" id="nofifySwitch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<label for="">群组录音</label>
+					<span></span>
+					<div class="mui-switch mui-active" id="recordSwitch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script>
+			(function($) {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				document.getElementById("save").addEventListener('tap', function() {
+					var unitAddUrl = req_url + "/api/v1/org/add?access_token=" + access_token + "&openid=" + openid;
+					var unitName = document.getElementById("unitName").value;
+					var unitAccount = document.getElementById("unitAccount").value;
+					var unitPassword = document.getElementById("unitPassword").value;
+					var adminName = document.getElementById("adminName").value;
+					var locationSwitch = true;
+					var locationSwitchIsActive = document.getElementById("locationSwitch").classList.contains("mui-active");
+					if(locationSwitchIsActive) {
+						locationSwitch = true;
+					} else {
+						locationSwitch = false;
+					}
+					var notifySwitch = true;
+					var notifySwitchIsActive = document.getElementById("nofifySwitch").classList.contains("mui-active");
+					if(notifySwitchIsActive) {
+						notifySwitch = true;
+					} else {
+						notifySwitch = false;
+					}
+					var recordSwitch = true;
+					var recordSwitchIsActive = document.getElementById("recordSwitch").classList.contains("mui-active");
+					if(recordSwitchIsActive) {
+						recordSwitch = true;
+					} else {
+						recordSwitch = false;
+					}
+					if(unitName == undefined || unitName == null || unitName == "") {
+						$.alert("请填写单位名称", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					if(unitAccount == undefined || unitAccount == null || unitAccount == "") {
+						$.alert("请填写管理员账号", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					if(unitPassword == undefined || unitPassword == null || unitPassword == "") {
+						$.alert("请填写管理员密码", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					if(adminName == undefined || adminName == null || adminName == "") {
+						$.alert("请填写管理员姓名", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					$.ajax(unitAddUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒;
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								$.alert("添加成功", function() {}, "提示", "确定");
+							} else {
+								$.alert(data.msg, function() {}, "提示", "确定");
+							}
+						},
+						error: function() {
+
+						}
+					});
+				}, false);
+			})(mui)
+		</script>
+	</body>
+
+</html>

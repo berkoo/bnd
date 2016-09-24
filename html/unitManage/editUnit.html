@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="editUnit.css"/>
+		<title>编辑单位信息</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">编辑单位信息</h1>
+			<a class="mui-pull-right pui-a-right" href="#">删除</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input mui-input-row">
+					<a href="#">
+						<!--<i class="icon icon-broad pui-icon-edit" data-href="../accountSetting/changeInfo.html">&#xe607;</i>-->
+						<label for="">单位名称</label>
+						<input id="unitName" type="text" value="" />
+					</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10"> 
+				<li class="mui-table-view-cell pui-list" data-href = "../accountSetting/changePwd.html">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe601;</i>
+						<span class="fz14">修改密码</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell pui-list" data-href = "unitContactInfo.html">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe612;</i>
+						<span class="fz14">联系人信息</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell pui-list" data-href = "unitFunctionSetting.html">
+					<a class="mui-navigate-right" href="#">
+						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe61e;</i>
+						<span class="fz14">功能设置</span>
+					</a>
+				</li>
+			</ul>
+			<div class="pui-btn">
+				<button class="mui-btn mui-block" data-href="unitManage.html">进入单位管理平台</button>	
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			mui(".mui-table-view").on("tap",".pui-icon-edit",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			mui(".pui-btn").on("tap",".mui-btn",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+		</script>
+		
+		<script type="text/javascript">
+			(function($, doc) {
+				$.init({});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var nickName = document.getElementById("nickname");
+				var corg_name = document.getElementById("corg_name");
+				mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'get', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							document.getElementById("unitName").value = data.data.orginfo.corg_name;
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}(mui, document));
+		</script>
+	</body>
+</html>

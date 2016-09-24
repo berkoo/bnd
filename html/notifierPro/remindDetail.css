@@ -1,0 +1,10 @@
+
+.mui-content ul li span:nth-child(1) {
+	font-size: 14px;
+	color: #333;
+}
+.mui-content ul li span:nth-child(2) {
+	margin-left: 35px;
+	font-size: 14px;
+	color: #ccc;
+}

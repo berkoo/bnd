@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="notifierPro.css"/>
+		<title>通知提醒</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 id="title" class="mui-title">通知提醒</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<!--<li class="mui-table-view-cell" data-href = "renewDetail.html">
+					<a class="mui-navigate-right" href="#">
+						<div>
+							<p>
+								<span class="pui-span-left-top">续费提醒</span>
+								<span class="pui-span-dot"></span>
+							</p>
+							<p class="pui-p-down">
+								您有3个账户即将到期
+							</p>
+						</div>
+						<span class="mui-pull-right pui-span-right">2015-12-25</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell" data-href = "dueDetail.html">
+					<a class="mui-navigate-right" href="#">
+						<div>
+							<p>
+								<span class="pui-span-left-top">到期提醒</span>
+								<span class="pui-span-dot"></span>
+							</p>
+							<p class="pui-p-down">
+								您有3个账户即将到期
+							</p>
+						</div>
+						<span class="mui-pull-right pui-span-right">2015-12-25</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell" data-href = "pasteDueDetail.html">
+					<a class="mui-navigate-right" href="#">
+						<div>
+							<p>
+								<span class="pui-span-left-top">过期提醒</span>
+							</p>
+							<p class="pui-p-down">
+								您有3个账户即将到期
+							</p>
+						</div>
+						<span class="mui-pull-right pui-span-right">2015-12-25</span>
+					</a>
+				</li>-->
+			</ul>
+			<div id="modal" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal"></a>
+					<h1 class="mui-title">列表</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<p class="mui-content-padded">显示用户列表同用户管理的列表</p>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($, doc) {
+				$.init({});
+				$(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
+					var href = this.getAttribute("data-href");
+					var msgId = this.getAttribute("data-id");
+					$.ajax(req_url + "/api/v1/notice/read?access_token=" + access_token + "&openid=" + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"id": msgId
+						},
+						success: function(data) {},
+						error: function() {}
+					});
+					$.openWindow({
+						url: href
+					});
+				});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				$.ajax(req_url + '/api/v1/notice/list?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						localStorage.setItem("msgData", JSON.stringify(data));
+						for(var i = 0; i < data.length; i++) {
+							var li = document.createElement("li");
+							li.className = "mui-table-view-cell";
+							li.innerHTML = '<a class="mui-navigate-right">'
+							li.innerHTML += ' <div>'
+							li.innerHTML += '<p>'
+							if(data.data.type == "1") {
+								li.innerHTML += '<span class="pui-span-left-top">到期提醒</span>';
+								li.setAttribute("data-href", "dureDetail.html");
+							} else if(data.data.type == "2") {
+								li.innerHTML += '<span class="pui-span-left-top">过期提醒</span>';
+								li.setAttribute("data-href", "pasteDueDetail.html");
+							} else if(data.data.type == "3") {
+								li.innerHTML += '<span class="pui-span-left-top">续费提醒</span>';
+								li.setAttribute("data-href", "renewDetail.html");
+							}
+							li.setAttribute("data-msgId", data.data[i].id);
+							li.innerHTML += '<span class="pui-span-dot"></span>';
+							li.innerHTML += '</p>';
+							li.innerHTML += '<p class="pui-p-down">您有' + data.data[i].context.beExpiredCount + '个账户即将到期</p>';
+							li.innerHTML += '</div>';
+							li.innerHTML + '<span class="mui-pull-right pui-span-right">' + data.data[i].context.create_at + '</span>';
+							li.innerHTML + '</a>';
+							document.querySelector(".mui-table-view").appendChild(li);
+						}
+
+					},
+					error: function(xhr, type, errorThrown) {
+						//异常处理；
+						console.log(type);
+					}
+				});
+			}(mui, document));
+		</script>
+	</body>
+</html>

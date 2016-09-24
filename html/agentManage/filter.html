@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link href="../../css/mui.picker.min.css" rel="stylesheet" />
+		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="filter.css"/>
+		<title>代理商筛选</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">筛选</h1>
+		</header>
+		
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input">
+					<input type="text" name="" id="" value="" placeholder="请输入代理商名称" />
+				</li>
+			</ul>
+			<ul class="mui-table-view mt20" data-toggle="distpicker">
+				<!--<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#">
+						<div>
+			         		<label class="sr-only" for="province1">Province</label>
+			          		<select class="form-control" id="province1"></select>
+			        	</div>
+					</a>
+				</li>
+			    <li class="mui-table-view-cell">
+			    	<a class="mui-navigate-right" href="#">
+			    		<div>
+			          		<label class="sr-only" for="city1">City</label>
+			          		<select class="form-control" id="city1"></select>
+			        	</div>
+			    	</a>
+			    </li>
+			    <li class="mui-table-view-cell">
+			    	<a class="mui-navigate-right" href="#">
+			    		<div>
+				        	<label class="sr-only" for="district1">District</label>
+				        	<select class="form-control" id="district1"></select>
+			        	</div>
+			    	</a>
+			    </li>-->
+			    <li id="showCityPicker3" class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#">
+						<label for="">选择地址</label>
+						<span class="mui-pull-right pui-address">
+							<span id="province">省</span>
+							<span>></span>
+							<span id="city">市</span>
+							<span>></span>
+							<span id="area">区</span>
+						</span>
+						
+					</a>
+				</li>
+			</ul>
+			<div class="pui-btn">
+				<button class="mui-btn mui-btn-grey pui-btn-reset">重置</button><button class="mui-btn mui-btn-green">确定</button>
+			</div>
+		</div>
+		<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.picker.min.js"></script>
+		<script src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					var cityPicker3 = new $.PopPicker({
+						layer: 3
+					});
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = doc.getElementById('showCityPicker3');
+					var cityResult3 = doc.getElementById('cityResult3');
+					var province = doc.getElementById("province");
+					var city = doc.getElementById("city");
+					var area = doc.getElementById("area");
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							//返回 false 可以阻止选择框的关闭
+							province.innerText = (items[0] || {}).text;
+							city.innerText = (items[1] || {}).text;
+							area.innerText = (items[2] || {}).text;
+							//return false;
+						});
+					}, false);
+				});
+			})(mui, document);
+		</script>
+	</body>
+</html>

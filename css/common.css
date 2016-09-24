@@ -1,0 +1,242 @@
+.fz14 {
+	font-size: 14px;
+}
+.c333 {
+	color: #333;
+}
+.mt20 {
+	margin-top: 20px;
+}
+.mt10 {
+	margin-top: 10px;
+}
+.mt30 {
+	margin-top: 30px;
+}
+.mt15 {
+	margin-top: 15px;
+}
+.ml10 {
+	margin-left: 10px;
+}
+.c56abe4 {
+	color: #c56abe4 !important;
+}
+body {
+	font-size: 16px;
+}
+.mui-bar .mui-title {
+	font-weight: bold;
+}
+.pui-disable-input {
+	padding-right: 15px !important;
+}
+/**
+ * 复选框
+ */
+.mui-input-group .mui-input-row {
+	height: 46px;
+}
+.mui-checkbox input[type=checkbox] {
+	top: 9px;
+}
+.mui-modal1 {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    overflow: hidden;
+    width: 100%;
+    min-height: 100%;
+    -webkit-transition: -webkit-transform .25s,opacity 1ms .25s;
+    transition: transform .25s,opacity 1ms .25s;
+    -webkit-transition-timing-function: cubic-bezier(.1,.5,.1,1);
+    transition-timing-function: cubic-bezier(.1,.5,.1,1);
+    -webkit-transform: translate3d(0,100%,0);
+    transform: translate3d(0,100%,0);
+    opacity: 0;
+    background-color: #fff;
+}
+/**
+ * 修改内容弹出框
+ */
+.pui-dialog {
+	padding-top: 10px;
+	position: fixed;
+	width: 80%;
+	left: 50%;
+	margin: -40%;
+	top: 50%;
+	margin-top: -50px;
+	height: 180px;
+	z-index: 20;
+	background: #fff;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+.pui-dialog p {
+	font-size: 16px;
+	text-align: center;
+	width: 100%;
+}
+.pui-dialog input {
+	margin-bottom: 0;
+}
+.pui-dialog button {
+	margin-top: 15px;
+	margin-left: 10%;
+	width: 80%;
+	text-align: center;
+}
+/**
+ * 蒙版
+ */
+.pui-mask {
+	position: fixed;
+	z-index: 19;
+	background: #000;
+	opacity: 0.3;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	
+}
+/**
+ * 输入框
+ */
+/*input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, {
+	height: 46px;
+}*/
+input[type=text] {
+	height: 46px !important;
+}
+
+.mui-input-row label {
+	display: inline-block;
+	padding: 0px 15px;
+	height: 46px;
+	line-height: 46px;
+}
+.pui-icon-add {
+	color: #aab8b8;
+	font-weight: bold;
+}
+.pui-clear {
+	clear: both;
+	height: 0;
+	line-height: 0;
+	font-size: 0;
+	overflow: hidden;
+}
+.pui-initial .mui-table-view-cell>a:not(.mui-btn) {
+	padding: initial;
+}
+.mui-btn-red {
+	background-color: rgba(255, 0, 0, 1);
+}
+.mui-bar .pui-a-left {
+	color: #a9b7b7;
+}
+header .pui-a-right {
+	display: inline-block;
+	height: 44px;
+	line-height: 44px;
+	font-size: 18px;
+	color: #0000FF !important;
+}
+
+/**
+ * 顶部样式
+ */
+.mui-bar {
+	background: #ebebeb;
+}
+.mui-title {
+	font-size:14px;
+}
+.mui-content>.mui-table-view:first-child {
+    margin-top: 44px;
+}
+.mui-bar {
+	height: 44px;
+	top: 0;
+}
+/**
+ * 输入框
+ */
+.mui-input-row label {
+	font-size: 16px;
+}
+.mui-input-row input {
+	font-size:14px;
+}
+.mui-table-view-cell label {
+	font-size: 16px;
+}
+
+/**
+ * input列表的边框
+ */
+.mui-ios .mui-table-view-input {
+	transform-style: preserve-3d;
+}
+.mui-table-view-input {
+    position: relative;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+}
+.mui-table-view-input:after {
+    background-color: #c8c7cc;
+}
+.mui-table-view-input:after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    content: '';
+    -webkit-transform: scaleY(.5);
+    transform: scaleY(.5);
+    background-color: #c8c7cc;
+}
+.mui-input-group .mui-input-row:after {
+	left: 0;
+}
+.mui-table-view-cell:after {
+	left: 0;
+}
+/**
+ * 长按钮
+ */
+.pui-btn {
+	margin-top: 25px;
+	padding: 0 15px;
+}
+.pui-btn button {
+	width: 100%;
+	font-size: 13px;
+	padding: 11px 12px;
+	border-radius: 0;
+}
+/**
+ * 返回按钮
+ */
+.mui-bar .mui-icon {
+    font-size: 30px;
+    padding-top: 6px;
+}
+
+/**
+ * 修改按钮
+ */
+.pui-icon-edit {
+	position: absolute;
+	right: 15px;
+	top: 14px;
+	color: #ccc;
+}
+
+.mui-content ul li span {
+	font-size: 16px;
+	color: #333;
+}

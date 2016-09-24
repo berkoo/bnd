@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="groupManage.css"/>
+		<title>群组管理</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">群组管理</h1>
+			<a class="mui-pull-right pui-a-right" data-href="createGroup.html" href="#">新建</a>
+		</header>
+		<div class="mui-content">
+			<!--<ul id="OA_task_2" class="mui-table-view">
+				<li class="mui-table-view-cell" data-href = "editGroup.html">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle mui-table">
+						<div class="mui-table-cell">
+							<p>
+								<span>测试群组100</span>
+							</p>
+							<p class="pui-p-down">
+								<i class="icon icon-broad">&#xe605;</i>
+								<span>3</span>
+							</p>
+							<span class="mui-pull-right pui-slider-right">2015-12-25</span>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" data-href = "editGroup.html">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle mui-table">
+						<div class="mui-table-cell">
+							<p>
+								<span>测试群组100</span>
+							</p>
+							<p class="pui-p-down">
+								<i class="icon icon-broad">&#xe605;</i>
+								<span>3</span>
+							</p>
+							<span class="mui-pull-right pui-slider-right">2015-12-25</span>
+						</div>
+					</div>
+				</li>
+				<li class="mui-table-view-cell" data-href = "editGroup.html">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle mui-table">
+						<div class="mui-table-cell">
+							<p>
+								<span>测试群组100</span>
+							</p>
+							<p class="pui-p-down">
+								<i class="icon icon-broad">&#xe605;</i>
+								<span>3</span>
+							</p>
+							<span class="mui-pull-right pui-slider-right">2015-12-25</span>
+						</div>
+					</div>
+				</li>
+			</ul>
+		-->
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		//启用双击监听
+		mui.init({
+			gestureConfig:{
+				doubletap:true
+			},
+			subpages:[{
+				url:'groupManage_sub1.html',
+				id:'groupManage_sub1.html',
+				styles:{
+					top: '45px',
+					bottom: '0px',
+				}
+			}]
+		});
+	
+		var contentWebview = null;
+		document.querySelector('header').addEventListener('doubletap',function () {
+			if(contentWebview==null){
+				contentWebview = plus.webview.currentWebview().children()[0];
+			}
+			contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+		});
+		</script>
+		<script type="text/javascript">
+			mui.init();
+			(function($) {
+				var btnArray = ['确认', '取消'];
+				//第二个demo，向左拖拽后显示操作图标，释放后自动触发的业务逻辑
+				$('#OA_task_2').on('slideleft', '.mui-table-view-cell', function(event) {
+					var elem = this;
+					mui.confirm('确认删除该条记录？', '', btnArray, function(e) {
+						if (e.index == 0) {
+//							deleteGroupFun('/v1/group/delete')
+							elem.parentNode.removeChild(elem);
+						} else {
+							setTimeout(function() {
+								$.swipeoutClose(elem);
+							}, 0);
+						}
+					});
+				});
+			})(mui);
+			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			mui(".mui-bar").on("tap",".pui-a-right",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+			
+		</script>
+	</body>
+</html>

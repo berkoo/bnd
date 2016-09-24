@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="vedio.css" />
+		<title>文字广播</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">文字广播</h1>
+			<a class="mui-pull-right pui-a-right" id="btnSend">发送</a>
+		</header>
+		<div class="mui-content">
+			<p class="pui-problem-title">
+				<span class="pui-span-left">输入广播内容</span>
+				<!--<span class="pui-span-right mui-pull-right">快捷输入</span>
+				<i class="icon icon-broad mui-pull-right">&#xe618;</i>-->
+			</p>
+			<div class="mui-input-row">
+				<textarea id="textarea" rows="5" placeholder="输入广播内容"></textarea>
+			</div>
+			<ul class="mui-table-view mt10" id="groupSend">
+				<li class="mui-table-view-cell">
+					<span>选择群组</span>
+					<a class="mui-pull-right" href="#modal">
+						<i class=" mui-icon mui-icon-plusempty pui-icon-add"></i>
+					</a>
+				</li>
+
+			</ul>
+			<ul class="mui-table-view mt15" id="userSend">
+				<li class="mui-table-view-cell"><span>选择用户</span>
+					<a class="mui-pull-right" href="#modal1"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
+				</li>
+			</ul>
+			<div id="modal" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal">保存</a>
+					<h1 class="mui-title">选择加入的群组</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<form class="mui-input-group" id="modalList">
+					</form>
+				</div>
+			</div>
+			<div id="modal1" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a id="list1Save" class="mui-pull-right pui-a-right" href="#modal1">保存</a>
+					<h1 class="mui-title">选择加入的用户</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<form class="mui-input-group" id="modal1List">
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			(function($, doc) {
+				$.init({});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var groupListUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+				var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
+				var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
+				var sendMsgUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+				var groupList = new Array();
+				var userList = new Array();
+				var getOrgId = function() {
+					$.ajax(orgIdUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								if(data.data.orginfo != null) {
+									var orgId = data.data.orginfo.id;
+									console.log("orgId:" + orgId);
+									getGroupList(orgId);
+									getUserList(orgId);
+								}
+							}
+						},
+						error: function() {}
+					});
+				};
+				var getGroupList = function(orgId) {
+					$.ajax(groupListUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"org_id": orgId
+						},
+						success: function(data) {
+							console.log("data:" + JSON.stringify(data));
+							if(data.code == 20001) {
+								var html = "";
+								for(var i = 0; i < data.data.length; i++) {
+									html += '<div class="mui-input-row mui-checkbox mui-left">';
+									html += '<label>' + data.data[i].name + '</label>';
+									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
+								}
+								document.getElementById("modalList").innerHTML = html;
+							}
+						},
+						error: function() {}
+					});
+				};
+				var getUserList = function(orgId) {
+					$.ajax(userListUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"org_id": orgId
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								var html = "";
+								for(var i = 0; i < data.data.length; i++) {
+									html += '<div class="mui-input-row mui-checkbox mui-left">';
+									html += '<label>' + data.data[i].user_account + '</label>';
+									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="0" data-account="' + data.data[i].id + '"></div>';
+								}
+								document.getElementById("modalList").innerHTML = html;
+							}
+						},
+						error: function() {}
+					});
+				};
+				getOrgId();
+				doc.getElementById("listSave").addEventListener('tap', function() {
+					var tags = doc.getElementsByTagName("input");
+					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组</span><a class="mui-pull-right" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
+					var html = "";
+					for(var i = 0; i < tags.length; i++) {
+						if(tags[i].getAttribute("data-receiverType") == "4" && tags[i].checked) {
+							groupList.push("text", tags[i].value);
+							html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
+							html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+						}
+					}
+					document.getElementById("groupSend").innerHTML += html;
+				}, false);
+				doc.getElementById("list1Save").addEventListener('tap', function() {
+					var tags = doc.getElementsByTagName("input");
+					document.getElementById("userSend").innerHTML = '<li class="mui-table-view-cell"><span>选择用户</span><a class="mui-pull-right" href="#modal1"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
+					var html = "";
+					for(var i = 0; i < tags.length; i++) {
+						if(tags[i].getAttribute("data-receiverType") == "0" && tags[i].checked) {
+							userList.push(tags[i].value);
+						}
+						html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a></div>';
+						html += '<div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+					}
+					document.getElementById("userSend").innerHTML += html;
+				}, false);
+				document.getElementById("btnSend").addEventListener('tap', function() {
+					var content = document.getElementById("textarea").value;
+					if(content == undefined || content == null || content == "") {
+						$.alert("请填写要发送的内容", function() {}, "提示", "确定");
+						return;
+					}
+					var sendMsg = new Array();
+					for(var group in groupList) {
+						sendMsg.push({
+							"receiver": group,
+							"receiver_type": "1"
+						});
+					}
+					for(var user in userList) {
+						sendMsg.push({
+							"receiver": user,
+							"receiver_type": "0"
+						});
+					}
+					$.ajax(sendMsgUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"context": content,
+							"send": sendMsg
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								$.alert("发送成功", function() {
+									$.back();
+								}, "提示", "确定");
+							} else {
+								$.alert(data.msg, function() {}, "提示", "确定");
+							}
+						},
+						error: function() {}
+					});
+				}, false);
+				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
+					var id = this.getAttribute("data-id");
+					this.parentNode.parentNode.remove(this.parentNode);
+					for(var i = 0; i < groupList.length; i++) {
+						groupList.remove(id);
+					}
+					for(var i = 0; i < userList.length; i++) {
+						groupList.remove(id);
+					}
+				});
+			}(mui, document));
+		</script>
+	</body>
+
+</html>

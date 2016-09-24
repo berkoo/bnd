@@ -1,0 +1,27 @@
+ul,li {
+	list-style: none;
+}
+.mui-content {
+	margin-top: 44px;
+}
+.mui-bar {
+	box-shadow: none;
+}
+table {
+	width: 100%;
+	background: #fff;
+}
+table td {
+	width: 25%;
+	height: 30px;
+	text-align: center;
+	font-size: 14px;
+}
+.mui-card {
+	margin: 0;
+	box-shadow:none;
+	/*border-bottom: 1px #797979 solid;*/
+}
+.mui-table-view-cell.mui-collapse .mui-collapse-content {
+	padding: 0;
+}

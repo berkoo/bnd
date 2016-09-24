@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" href="../../css/mui.picker.css" />
+		<link rel="stylesheet" href="../../css/mui.poppicker.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="filter.css" />
+		<link rel="stylesheet" type="text/css" href="agentManage.css" />
+		<title>代理商管理</title>
+	</head>
+
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">代理商管理</h1>
+			<a class="mui-pull-right mui-icon icon icon-broad pui-filter" href="#modal">&#xe61f;</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view" id="tableView">
+			</ul>
+			<div class="pui-btn">
+				<button class="mui-btn pui-btn-one"></button><button class="mui-btn mui-btn-primary pui-btn-two" data-href="createAgent.html">新建代理商</button>
+			</div>
+			<div id="modal" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-icon-search mui-pull-right" href="#modal" id="search"></a>
+					<h1 class="mui-title">筛选代理商</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<form class="mui-input-group" id="modal1List">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-input">
+								<input type="text" name="" id="searchName" value="" placeholder="请输入代理商名称" />
+							</li>
+						</ul>
+						<ul class="mui-table-view mt20" data-toggle="distpicker">
+							<li id="showCityPicker3" class="mui-table-view-cell">
+								<a class="mui-navigate-right" href="#">
+									<label for="">选择地址</label>
+									<span class="mui-pull-right pui-address">
+									<span id="province">省</span>
+									<span>></span>
+									<span id="city">市</span>
+									<span>></span>
+									<span id="area">区</span>
+									</span>
+								</a>
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/mui.picker.js"></script>
+		<script type="text/javascript" src="../../js/mui.poppicker.js"></script>
+		<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					var cityPicker3 = new $.PopPicker({
+						layer: 3
+					});
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = doc.getElementById('showCityPicker3');
+					var cityResult3 = doc.getElementById('cityResult3');
+					var province = doc.getElementById("province");
+					var city = doc.getElementById("city");
+					var areas = doc.getElementById("area");
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							//返回 false 可以阻止选择框的关闭
+							province.innerText = (items[0] || {}).text;
+							city.innerText = (items[1] || {}).text;
+							areas.innerText = (items[2] || {}).text;
+							province.setAttribute("data-id", items[0].value);
+							city.setAttribute("data-id", items[1].value);
+							areas.setAttribute("data-id", items[2].value);
+						});
+					}, false);
+				});
+			})(mui, document);
+		</script>
+		<script type="text/javascript">
+			(function($, undefined) {
+				document.querySelector(".pui-btn-two").addEventListener("tap", function() {
+					var href = this.getAttribute("data-href");
+					var id = this.getAttribute("data-id");
+					localStorage.setItem("agentDetailId", id);
+					mui.openWindow({
+						url: href
+					});
+				});
+				var getAgentList = function(name, province_id, city_id, district_id, length, start) {
+					var openid = localStorage.getItem("ptt_openid");
+					var access_token = localStorage.getItem("access_token");
+					var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
+					$.ajax(agentListUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒;
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"name": document.getElementById("searchName").value,
+							"province_id": document.getElementById("province").getAttribute("data-id") || "110000",
+							"city_id": document.getElementById("city").getAttribute("data-id") || "110101",
+							"district_id": document.getElementById("area").getAttribute("data-id") || "110101",
+						},
+						success: function(data) {
+							console.log("data:" + JSON.stringify(data));
+							var tableView = document.getElementById("tableView");
+							tableView.innerHTML = "";
+							var html = "";
+							for(var i = 0; i < data.data.length; i++) {
+								html += '<li class="mui-table-view-cell" data-id="' + data.data[i].id + '" data-href="agentDetail.html"><p class="pui-p-up">' + data.data[i].name + '</p>';
+								html += '<p class="pui-p-down">' + data.data[i].contact + '</p><span class="mui-pull-right pui-time-right">' + data.data[i].create_at + '</span></li>';
+							}
+							tableView.innerHTML = html;
+						},
+						error: function() {}
+					});
+				}
+				document.getElementById("search").addEventListener('tap', function() {
+					getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
+				}, false);
+			})(mui);
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="userFilter.css"/>
+		<title>用户查询</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">用户查询</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input">
+					<input type="text" placeholder="请输入ICCID/姓名"/>
+				</li>
+			</ul>
+			<form class="mui-input-group mt20">
+				<div class="mui-input-row mui-checkbox mui-left">
+					<label>正常</label>
+					<input name="checkbox" value="Item 1" type="checkbox" >
+				</div>
+				<div class="mui-input-row mui-checkbox mui-left">
+					<label>已过期</label>
+					<input name="checkbox" value="Item 2" type="checkbox" >
+				</div>
+				<div class="mui-input-row mui-checkbox mui-left">
+					<label>即将过期</label>
+					<input name="checkbox" value="Item 2" type="checkbox">
+				</div>
+			</form>
+			<form class="mui-input-group mt10">
+				<div class="mui-input-row mui-radio mui-left">
+					<label>换卡状态</label>
+					<input name="radio1" type="radio">
+				</div>
+			</form>
+			<div class="pui-btn">
+				<button class="mui-btn mui-btn-grey pui-btn-reset">重置</button><button class="mui-btn mui-btn-green">确定</button>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>

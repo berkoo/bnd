@@ -1,0 +1,54 @@
+.pui-a-right {
+	color: #f00;
+}
+header .pui-a-right {
+	color: #f00 !important;
+}
+.mui-content>.mui-table-view:first-child {
+	margin-top: 44px;
+}
+
+.mui-content ul li {
+	position: relative;
+}
+.mui-content ul li label {
+	color:#333
+}
+.mui-content ul li input {
+	text-align: right;
+	color: #ccc;
+	padding-right: 11px;
+}
+
+.pui-list-icon {
+	position: absolute;
+	width: 50px;
+	
+	left: 15px;
+	color: #f4c600;
+	height: 100%;
+	text-align: center;
+}
+.pui-list-icon-one {
+	top: 10px;
+	font-size: 26px;
+}
+.pui-list-icon-two {
+	top: 12px;
+	font-size: 20px;
+}
+.pui-list span {
+	margin-left: 92px;
+}
+.pui-btn {
+	padding: 0;
+}
+.pui-btn button {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	font-size: 16px;
+	color: #fff;
+	background: #008000;
+	padding: 13px 12px;
+}

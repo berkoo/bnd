@@ -1,0 +1,17 @@
+.mui-content>.mui-table-view:first-child {
+	margin-top: 44px;
+}
+
+
+.mui-content ul li {
+	position: relative;
+}
+
+.mui-content ul li label {
+	color:#333
+}
+.mui-content ul li input {
+	text-align: right;
+	color: #ccc;
+	padding-right: 36px;
+}

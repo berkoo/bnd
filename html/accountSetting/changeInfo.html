@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<title>修改账户信息</title>
+		<style type="text/css">
+			input {
+				border: 0 !important;
+				height: 40px !important;
+				line-height: 40px !important;
+				margin-bottom: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">修改账户信息</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input mui-input-row">
+					<input type="text" class="mui-input-clear pui-account pui-input" placeholder="请输入需要修改的内容">
+				</li>
+			</ul>
+			<div class="pui-btn">
+				<button id="save" class="mui-btn mui-btn-primary mui-block">保存</button>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+				<script>
+			(function($, doc) {
+				$.init({});
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				document.getElementById("save").addEventListener("tap",function(){
+					mui.ajax(req_url + '/api/v1/profile/mobile?access_token='+access_token+'&openid='+openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'post', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒;
+						data:{
+							'mobile':18931880683
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							console.log(data)
+							if(data.code == 20001) {
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+							}
+						});
+					})
+			}(mui, document));
+		</script>
+	</body>
+</html>

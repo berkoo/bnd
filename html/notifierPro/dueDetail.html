@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="remindDetail.css"/>
+		<title>到期提醒</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 id="title" class="mui-title">到期提醒</h1>
+			<a id="type" class="mui-pull-right pui-a-right" href="#" data-href="../renew/renew.html">续费</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#">
+						<span>通知类型</span>
+						<span>即将到期</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#">
+						<span>到期日期</span>
+						<span>2015-01-12</span>
+					</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a class="mui-navigate-right" href="#modal">
+						<span>到期人数</span>
+						<span>3人</span>
+					</a>
+				</li>
+			</ul>
+			<div id="modal" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal"></a>
+					<h1 class="mui-title">列表</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<p class="mui-content-padded">显示用户列表同用户管理的列表</p>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui(".mui-bar").on("tap",".pui-a-right",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
+		</script>
+	</body>
+</html>

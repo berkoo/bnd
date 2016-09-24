@@ -1,0 +1,31 @@
+.mui-content {
+	margin-top: 44px;
+}
+.mui-content ul li {
+	position: relative;
+}
+.pui-span-left-top {
+	font-size: 16px;
+	color: #333;
+}
+.pui-span-dot {
+	margin-left: 5px;
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	color: #f00;
+	background: #f00;
+}
+.pui-p-down {
+	font-size: 14px;
+	color: #333;
+}
+.pui-span-right {
+	position: absolute;
+	right: 38px;
+	top: 24px;
+	font-size: 14px;
+	color: #333;
+}
