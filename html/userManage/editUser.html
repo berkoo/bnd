@@ -67,6 +67,7 @@
 		<script type="text/javascript">
 			mui.plusReady(function() {
                 var wv = plus.webview.currentWebview();
+                alert(wv.userId);
             });
 			mui(".mui-table-view").on("tap",".pui-icon-edit",function(e){
 				e.detail.gesture.preventDefault(); //修复iOS 8.x平台存在的bug，使用plus.nativeUI.prompt会造成输入法闪一下又没了
