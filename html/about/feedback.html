@@ -56,7 +56,10 @@
 						},
 						success: function(data) {
 							if(data.code == 20001) {
-								mui.openWindow("about.html");	
+								$.alert("发送成功",function(){
+									
+								},"提示",'确定')
+									
 							}
 						},
 						error: function(xhr, type, errorThrown) {

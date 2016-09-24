@@ -115,6 +115,7 @@
 				var access_token = localStorage.getItem("access_token");
 				check_val = [];
 				ids = [];
+				idds = [];
 				/**
 				 * 获取到群组列表
 				 */
@@ -171,10 +172,12 @@
 													ids.push(groupId);
 												}
 											};
+											alert(ids)
 											//将选取的群组加入到页面中
 											for(var j = 0; j < check_val.length; j++) {
 												var li = document.createElement("li");
-												li.className = "mui-table-view-cell";
+												li.className = "mui-table-view-cell pui-id";
+												li.setAttribute("data-id",ids[j]);
 												var sliderDiv = document.createElement("div");
 												sliderDiv.className = "mui-slider-right mui-disabled";
 												var aOne = document.createElement("a");
@@ -216,8 +219,32 @@
 							console.log(type);
 						}
 					});
-
 				});
+				//删除选中的群组
+				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+					this.parentNode.parentNode.remove(this.parentNode)
+				});
+				//设置默认群组
+				$(".mui-table-view").on('tap','a.mui-btn-green',function(){
+					mui.ajax(req_url + '/api/v1/terminal/groups/default?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'POST', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data:{
+							'id':'ce109456e867425297955b3c40406d7e',
+							'group_id':'b0534d9d6d524c7f964346eaa09fca85'
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded' 
+						},
+						success: function(data) {
+							console.log(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+						}
+					});
+				})
 				/**
 				 * 点击保存创建用户信息
 				 */
@@ -227,6 +254,22 @@
 					var gpsStatus = document.getElementById("gps").classList.contains("mui-active");
 					var enableStatus = document.getElementById("enable").classList.contains("mui-active");
 					var audioStatus = document.getElementById("audio").classList.contains("mui-active");
+					var idnum = document.querySelectorAll(".pui-id").length;
+					if(username=="") {
+						$.alert("请输入姓名", function() {
+							$.back();
+						}, "提示", "确定");
+					}
+					if(iccid == "") {
+						$.alert("请输入ICCID",function(){
+							$.back()
+						},"提示","确定")
+					}
+					for(var h = 0;h<idnum;h++) {
+						var ik = document.querySelectorAll(".pui-id")[h].getAttribute("data-id");
+						idds.push(ik);
+					}
+					
 					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
 						dataType: 'json', //服务器返回json格式数据
 						type: 'GET', //HTTP请求类型
@@ -237,11 +280,11 @@
 						success: function(data) {
 							if(data.code == 20001) {
 								var id = data.data.orginfo.id;
-								var groups = null;
-								for(var idd in ids) {
+								var groups = new Array();
+								for(var idd in idds) {
 									groups.push({
-										'id': idd
-									});
+										'id':idd
+									})
 								}
 								mui.ajax(req_url + '/api/v1/terminal/add?access_token=' + access_token + '&openid=' + openid, {
 									dataType: 'json', //服务器返回json格式数据

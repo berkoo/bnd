@@ -117,13 +117,15 @@
 					});
 				});
 			})(mui);
-			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
-				var href = this.getAttribute("data-href");
-				mui.openWindow(href);
-			})
+			
 			mui(".mui-bar").on("tap",".pui-a-right",function(){
 				var href = this.getAttribute("data-href");
-				mui.openWindow(href);
+				mui.openWindow({
+					url:href,
+					extras:{ 
+						name:
+					}
+				});
 			})
 			
 		</script>

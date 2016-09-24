@@ -55,9 +55,8 @@
 				var btnArray = ['取消', '确定'];
 				mui.prompt('', '', '编辑群组', btnArray, function(e) {
 					if (e.index == 1) {
-						info.innerText = '谢谢你的评语：' + e.value;
+						document.getElementById("name").value = e.value;
 					} else {
-						info.innerText = '你点了取消按钮';
 					}
 				})
 			})

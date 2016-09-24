@@ -89,32 +89,14 @@
 				mui.openWindow(href)
 			})
 		</script>
-		<script>
-			mui.init();
-			(function($) {
-				var btnArray = ['确认', '取消'];
-				//第二个demo，向左拖拽后显示操作图标，释放后自动触发的业务逻辑
-				$('#OA_task_2').on('slideleft', '.mui-table-view-cell', function(event) {
-					var elem = this;
-					mui.confirm('确认删除该条记录？', 'Hello MUI', btnArray, function(e) {
-						if (e.index == 0) {
-							elem.parentNode.removeChild(elem);
-						} else {
-							setTimeout(function() {
-								$.swipeoutClose(elem);
-							}, 0);
-						}
-					});
-				});
-			})(mui);
-		</script>
-				<script type="text/javascript">
+		<script type="text/javascript">
 			(function($, doc) {
 				$.init({});
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				check_val = [];
 				ids = [];
+				idds = [];
 				/**
 				 * 获取到群组列表
 				 */
@@ -169,12 +151,13 @@
 											//将选取的群组加入到页面中
 											for(var j = 0; j < check_val.length; j++) {
 												var li = document.createElement("li");
-												li.className = "mui-table-view-cell";
+												li.className = "mui-table-view-cell pui-id";
+												li.setAttribute("data-id",ids[j]);
 												var sliderDiv = document.createElement("div");
 												sliderDiv.className = "mui-slider-right mui-disabled";
 												var aOne = document.createElement("a");
 												aOne.className = "mui-btn mui-btn-green";
-												aOneText = document.createTextNode("默认");
+												aOneText = document.createTextNode("优先级");
 												aOne.appendChild(aOneText);
 												var aTwo = document.createElement("a");
 												aTwo.className = "mui-btn mui-btn-red";
@@ -213,15 +196,47 @@
 					});
 
 				});
+				//删除选中的群组
+				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+					this.parentNode.parentNode.remove(this.parentNode)
+				});
+				//设置优先级
+				$(".mui-table-view").on('tap','a.mui-btn-green',function(){
+					mui.ajax(req_url + '/group/members/priorities?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'POST', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data:{
+							'id':'ce109456e867425297955b3c40406d7e',
+							'group_id':'b0534d9d6d524c7f964346eaa09fca85'
+						},
+						headers: {
+							'Content-Type': 'application/json' 
+						},
+						success: function(data) {
+							console.log(data);
+						},
+						error: function(xhr, type, errorThrown) {
+							console.log(type);
+						}
+					});
+				})
 				/**
 				 * 点击保存创建用户信息
 				 */
 				document.getElementById("save").addEventListener('tap', function(event) {
-					var username = document.getElementById("username").value;
-					var iccid = document.getElementById("iccid").value;
-					var gpsStatus = document.getElementById("gps").classList.contains("mui-active");
+					var username = document.getElementById("groupName").value;
 					var enableStatus = document.getElementById("enable").classList.contains("mui-active");
-					var audioStatus = document.getElementById("audio").classList.contains("mui-active");
+					var idnum = document.querySelectorAll(".pui-id").length;
+					if(username == "") {
+						$.alert("请输入群组名称",function(){
+							$.back()
+						},"提示","确定")
+					}
+					for(var h = 0;h<idnum;h++) {
+						var ik = document.querySelectorAll(".pui-id")[h].getAttribute("data-id");
+						idds.push(ik);
+					}
 					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
 						dataType: 'json', //服务器返回json格式数据
 						type: 'GET', //HTTP请求类型
@@ -232,20 +247,21 @@
 						success: function(data) {
 							if(data.code == 20001) {
 								var id = data.data.orginfo.id;
-								var groups = null;
-								for(var idd in ids) {
+								var groups = new Array();
+								for(var idd in idds) {
 									groups.push({
-										'id': idd
-									});
+										'id':idd,
+										'priorities': 1
+									})
 								}
 								mui.ajax(req_url + '/api/v1/group/add?access_token=' + access_token + '&openid=' + openid, {
 									dataType: 'json', //服务器返回json格式数据
 									data: {
 										'org_id': id, //企业编号
-										"disabled":false,
-										'name': username, //账户昵称
-										'enable': enableStatus,
-										'groups': groups
+										'name':username,
+										'enable':enableStatus,
+										'disabled': false,
+										'members':groups
 									},
 									type: 'POST', //HTTP请求类型
 									timeout: 10000, //超时时间设置为10秒；

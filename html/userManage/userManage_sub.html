@@ -94,14 +94,21 @@
 					});
 				});
 			})(mui);
-//			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
-//				var href = this.getAttribute("data-href");
-//				mui.openWindow(href);
-//			})
-//			mui(".mui-bar").on("tap",".pui-a-right",function(){
-//				var href = this.getAttribute("data-href");
-//				mui.openWindow(href);
-//			})
+			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				var href = this.getAttribute("data-href");
+				var userId = this.getAttribute("data-id");
+				mui.openWindow({
+					url:href,
+					extras:{
+						id:'asd'
+					}
+				});
+			})
+			
+			mui(".mui-bar").on("tap",".pui-a-right",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
 		</script>
 	</body>
 
