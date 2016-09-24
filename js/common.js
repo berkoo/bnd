@@ -36,6 +36,12 @@ function refresh(url, type) {
 					success: function(data) {
 						//TODO 将获取的数据列表放入本地存储中。。。。
 						//localStorage.setItem("userListData",JSON.stringify(data));
+						if(type == "user") {
+							localStorage.setItem("userListData",JSON.stringify(data));
+						}
+						if(type == "group") {
+							localStorage.setItem("groupListData",JSON.stringify(data));
+						}
 						for(var n = 0; n < data.data.length; n++) {
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
@@ -59,7 +65,6 @@ function refresh(url, type) {
 					}
 				});
 			}
-
 		},
 		error: function(xhr, type, errorThrown) {
 			console.log(type);
