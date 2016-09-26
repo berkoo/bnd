@@ -98,8 +98,11 @@
 										'Content-Type': 'application/x-www-form-urlencoded'
 									},
 									success: function(data) {
-										console.log(data)
-										if(data.code == 20001) {}
+										if(data.code == 20001) {
+											mui.alert(data.msg, function() {
+												
+											}, "提示", "确定")
+										}
 									},
 									error: function(xhr, type, errorThrown) {
 										//异常处理；
@@ -127,7 +130,13 @@
 									},
 									success: function(data) {
 										console.log(data)
-										if(data.code == 20001) {}
+										if(data.code == 20001) {
+											if(data.code == 20001) {
+												mui.alert(data.msg, function() {
+													
+												}, "提示", "确定")
+											}
+										}
 									},
 									error: function(xhr, type, errorThrown) {
 										//异常处理；
@@ -155,7 +164,13 @@
 									},
 									success: function(data) {
 										console.log(data)
-										if(data.code == 20001) {}
+										if(data.code == 20001) {
+											if(data.code == 20001) {
+												mui.alert(data.msg, function() {
+													
+												}, "提示", "确定")
+											}
+										}
 									},
 									error: function(xhr, type, errorThrown) {
 										//异常处理；
@@ -183,7 +198,13 @@
 									},
 									success: function(data) {
 										console.log(data)
-										if(data.code == 20001) {}
+										if(data.code == 20001) {
+											if(data.code == 20001) {
+												mui.alert(data.msg, function() {
+													
+												}, "提示", "确定")
+											}
+										}
 									},
 									error: function(xhr, type, errorThrown) {
 										//异常处理；
