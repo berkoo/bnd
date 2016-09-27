@@ -13,40 +13,125 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">功能设置</h1>
-			<a class="mui-pull-right pui-a-right" href="#">保存</a>
+			<a id="save" class="mui-pull-right pui-a-right" href="#">保存</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view mt30">
 				<li class="mui-table-view-cell">
 					<label for="">位置上报</label>
 					<span></span>
-					<div class="mui-switch mui-active">
+					<div id="gpsStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">语音状态</label>
 					<span></span>
-					<div class="mui-switch mui-active">
+					<div id="voiceStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">是否启用</label>
 					<span></span>
-					<div class="mui-switch">
+					<div id="enableStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">自助换卡</label>
 					<span></span>
-					<div class="mui-switch">
+					<div id="autochangeStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var userList =localStorage.getItem("userListData");
+			if(userList!=null){
+				userList = JSON.parse(userList).data;
+				for (var i=0;i<userList.length;i++) {
+					if(userList[i].id==localStorage.getItem("userId")){
+						//用户功能设置
+						mui.ajax(req_url + '/api/v1/terminal/setting/info?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'GET', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							data:{
+								'id':localStorage.getItem("userId"),
+							},
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded' 
+							},
+							success: function(data) {
+								if(data.code == 20001) {
+									console.log(data)
+									console.log(data.data.allow_gps);
+									if(data.data.allow_gps == true) {
+										document.getElementById("gpsStatus").className += " mui-active";
+									}
+									if(data.data.allow_audio == true) {
+										document.getElementById("voiceStatus").className += " mui-active";
+									}
+									if(data.data.enable == true) {
+										document.getElementById("enableStatus").className += " mui-active";
+									}
+									if(data.data.allow_autochange == true) {
+										document.getElementById("gpsStatus").className += " mui-active";
+									}
+								}else {
+									mui.alert(data.msg,function(){
+										
+									},"提示","确定")
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log(type);
+							}
+						});
+						
+						//保存功能设置
+						document.getElementById("save").addEventListener("tap",function(){
+							var gpsStatus = document.getElementById("gpsStatus").classList.contains("mui-active");
+							var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
+							var autochangeStatus = document.getElementById("autochangeStatus").classList.contains("mui-active");
+							var voiceStatus = document.getElementById("voiceStatus").classList.contains("mui-active");					//用户功能设置
+							mui.ajax(req_url + '/api/v1/terminal/setting?access_token=' + access_token + '&openid=' + openid, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								data:{
+									'id':localStorage.getItem("userId"),
+									'enable':enableStatus,
+									'allow_audio':voiceStatus,
+									'allow_gps':gpsStatus,
+									'allow_autochange':autochangeStatus
+								},
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded' 
+								},
+								success: function(data) {
+									console.log(data)
+									if(data.code == 20001) {
+										mui.alert("保存成功",function(){
+//											mui.back();
+										},"提示","确定");
+									};
+								},
+								error: function(xhr, type, errorThrown) {
+									console.log(type);
+								}
+							});
+						});
+					}
+				}	
+			}
+		</script>
+	
 	</body>
 </html>
