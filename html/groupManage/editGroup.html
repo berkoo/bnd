@@ -29,7 +29,7 @@
 					<a href="#">
 						<i class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">群组名称</label>
-						<input id="name" type="text" value="测试群组100" />
+						<input id="name" type="text" value="测试群组100" disabled="disabled" />
 					</a>
 				</li>
 			</ul>
@@ -49,24 +49,48 @@
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
 			document.querySelector(".pui-icon-edit").addEventListener("tap",function(e){
-				e.detail.gesture.preventDefault(); //修复iOS 8.x平台存在的bug，使用plus.nativeUI.prompt会造成输入法闪一下又没了
-				var btnArray = ['取消', '确定'];
-				mui.prompt('', '', '编辑群组', btnArray, function(e) {
-					if (e.index == 1) {
-						document.getElementById("name").value = e.value;
-					} else {
+				var groupList =localStorage.getItem("groupListData");
+				groupList = JSON.parse(groupList).data;
+				if(groupList!=null){
+					for (var i=0;i<groupList.length;i++) {
+						if(groupList[i].id==localStorage.getItem("groupId")){
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('', '', '编辑群组', btnArray, function(e) {
+								if (e.index == 1) {
+									document.getElementById("name").value = e.value;
+									mui.ajax(req_url + '/api/v1/group/name?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'POST',
+										timeout: 10000,
+										data: {
+											'id':localStorage.getItem("groupId"),
+											'name': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded'
+										},
+										success: function(data) {
+											if(data.code == 20001) {
+												
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
+								}
+							})
+						}
 					}
-				})
+				}
 			})
-		</script>
-		<script type="text/javascript">
-			 mui.plusReady(function() {
-                var wv = plus.webview.currentWebview();
-                var vText = wv.ProjectName;//这样就能接收到上个页面传过来的值了
-                document.getElementById("lbProjectName").innerHTML = vText;                
-            }); 
 		</script>
 		<script type="text/javascript">
 			mui(".mui-table-view").on("tap",".pui-icon-edit",function(){
@@ -77,46 +101,6 @@
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			})
-		</script>
-		<script type="text/javascript">
-			var openid = localStorage.getItem("ptt_openid");
-			var access_token = localStorage.getItem("access_token");
-			//请求删除
-			mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
-				dataType: 'json', //服务器返回json格式数据
-				type: 'DELETE', //HTTP请求类型
-				timeout: 10000, //超时时间设置为10秒；
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				},
-				success: function(data) {
-					if (data.code == 20001) {
-						var id = data.data.orginfo.id;
-						mui.ajax(req_url + '/v1/group/name?access_token=' + access_token + '&openid=' + openid, {
-							dataType: 'json', //服务器返回json格式数据
-							data: {
-								'org_id': id,
-								'id':'8b13dd67190f4d74bac1e0b9e4f240cd'
-								'name':name
-							},
-							type: 'get', //HTTP请求类型
-							timeout: 10000, //超时时间设置为10秒；
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							success: function(data) {
-								console.log(data)
-							},
-							error: function(xhr, type, errorThrown) {
-								console.log(type);
-							}
-						});
-					}
-				},
-				error: function(xhr, type, errorThrown) {
-					console.log(type);
-				}
-			});
 		</script>
 	</body>
 </html>

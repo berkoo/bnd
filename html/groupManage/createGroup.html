@@ -98,7 +98,7 @@
 				ids = [];
 				idds = [];
 				/**
-				 * 获取到群组列表
+				 * 获取成员列表
 				 */
 				document.getElementById("add").addEventListener("tap", function() {
 					document.querySelector(".mui-input-group").innerHTML = "";//点击获取群组之前 将上一次获取到的数据清空
@@ -196,6 +196,7 @@
 					});
 
 				});
+				
 				//删除选中的群组
 				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
 					this.parentNode.parentNode.remove(this.parentNode)
@@ -250,7 +251,7 @@
 								var groups = new Array();
 								for(var idd in idds) {
 									groups.push({
-										'id':idd,
+										'id':idd[idd],
 										'priorities': 1
 									})
 								}

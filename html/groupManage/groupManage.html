@@ -100,31 +100,10 @@
 		</script>
 		<script type="text/javascript">
 			mui.init();
-			(function($) {
-				var btnArray = ['确认', '取消'];
-				//第二个demo，向左拖拽后显示操作图标，释放后自动触发的业务逻辑
-				$('#OA_task_2').on('slideleft', '.mui-table-view-cell', function(event) {
-					var elem = this;
-					mui.confirm('确认删除该条记录？', '', btnArray, function(e) {
-						if (e.index == 0) {
-//							deleteGroupFun('/v1/group/delete')
-							elem.parentNode.removeChild(elem);
-						} else {
-							setTimeout(function() {
-								$.swipeoutClose(elem);
-							}, 0);
-						}
-					});
-				});
-			})(mui);
-			
 			mui(".mui-bar").on("tap",".pui-a-right",function(){
 				var href = this.getAttribute("data-href");
 				mui.openWindow({
-					url:href,
-					extras:{ 
-						name:
-					}
+					url:href
 				});
 			})
 			

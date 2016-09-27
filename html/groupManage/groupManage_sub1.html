@@ -43,7 +43,6 @@
 			 */
 			function pulldownRefresh() {
 				setTimeout(function() {
-					
 					refresh('/api/v1/group/list','group');
 					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
 				}, 1500);
@@ -72,8 +71,40 @@
 			}
 			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
 				var href = this.getAttribute("data-href");
+				var groupId = this.getAttribute("data-id");
+				//TODO 将点击的用户的id写入本地存储，在下一个页面取出来
+				localStorage.setItem("groupId",groupId);
 				mui.openWindow(href);
 			})
+
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			//删除群组
+			mui(".mui-table-view").on('tap', 'a.mui-btn', function() {
+				var groupId = this.parentNode.parentNode.getAttribute("data-id");
+				this.parentNode.parentNode.remove(this.parentNode);
+				mui.ajax(req_url + '/api/v1/group/delete?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data:{
+						'id':groupId,
+					},
+					headers: {
+						'Content-Type': 'application/json' 
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							mui.alert("删除成功",function(){
+								
+							},"提示","确定");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+					}
+				});
+			});
 		</script>
 	</body>
 
