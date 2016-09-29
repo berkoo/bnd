@@ -7,7 +7,18 @@ var refreshTokenMethod = function() {
 
 	})
 }
-
+function add0(m){return m<10?'0'+m:m }
+function format(shijianchuo){
+	//shijianchuo是整数，否则要parseInt转换
+	var time = new Date(shijianchuo);
+	var y = time.getFullYear();
+	var m = time.getMonth()+1;
+	var d = time.getDate();
+	var h = time.getHours();
+	var mm = time.getMinutes();
+	var s = time.getSeconds();
+	return y+'-'+add0(m)+'-'+add0(d);
+}
 //下拉加载 上拉刷新
 function refresh(url, type) {
 	var openid = localStorage.getItem("ptt_openid");
@@ -53,9 +64,17 @@ function refresh(url, type) {
 								document.body.querySelector('.mui-table-view').appendChild(li);
 							}
 							if(type == 'user') {
+								console.log(data);
 								li.setAttribute("data-href","editUser.html");
 								li.setAttribute('data-id',data.data[n].id);
-								li.innerHTML = '<div class="mui-slider-handle mui-table"><div class="mui-table-cell"><p><span>'+data.data[n].user_name+'</span></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>3</span></p><span class="mui-pull-right pui-slider-right">2015-12-25</span><i class="icon icon-broad pui-icon-pastDue">&#xe626;</i><i class="icon icon-broad pui-icon-gps">&#xe604;</i></div></div>';
+								li.innerHTML = '<div class="mui-slider-handle mui-table"><div class="mui-table-cell">';
+								li.innerHTML += '<p><span>'+data.data[n].user_name+'</span></p>';
+								li.innerHTML += '<p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].user_account+'</span></p>';
+								li.innerHTML += '<span class="mui-pull-right pui-slider-right"></span>';
+								li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe626;</i>';
+								if(data.data[n].allow_gps == 1) {
+									li.innerHTML += '<i class="icon icon-broad pui-icon-gps">&#xe604;</i></div></div>';
+								}
 								document.body.querySelector(".mui-table-view").appendChild(li);
 							}
 						}

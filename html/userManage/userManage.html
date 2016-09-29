@@ -67,9 +67,9 @@
 					</div>
 				</li>-->
 			</ul>
-			<div class="pui-btn">
+			<!--<div class="pui-btn">
 				<button class="pui-btn-one" class="mui-btn"></button><button class="mui-btn mui-btn-primary pui-btn-two" data-href="createUser.html">新建用户</button>
-			</div>
+			</div>-->
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
@@ -84,7 +84,7 @@
 				id:'userManage_sub.html',
 				styles:{
 					top: '45px',
-					bottom: '42px',
+					bottom: '0',
 				}
 			}]
 		});
@@ -95,10 +95,6 @@
 			}
 			contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
 		});
-		document.querySelector(".pui-btn-two").addEventListener("tap",function(){
-			var href = this.getAttribute("data-href");
-			mui.openWindow(href);
-		})
 		document.querySelector(".pui-a-right").addEventListener("tap",function(){
 			var href = this.getAttribute("data-href");
 			mui.openWindow(href);

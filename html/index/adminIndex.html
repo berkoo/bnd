@@ -29,7 +29,7 @@
 				</li>
 			</ul>
 			<ul class="mui-table-view pui-statistics pui-initial">
-				<li class="mui-table-view-cell" data-href = "../dataStatistics/dataStatistics.html">
+				<li class="mui-table-view-cell">
 					<a href="#">
 						<span class="pui-span-left fz14">数据统计</span>
 						<span class="icon icon-broad mui-icon icon-one">&#xe60e;</span>
@@ -38,12 +38,12 @@
 						<span class="fz14"><span id="satis-company"></span>家</span>
 					</a>
 				</li>
-				<li class="mui-table-view-cell pui-list" data-href = "../userManage/createUser.html">
+				<!--<li class="mui-table-view-cell pui-list" data-href = "../userManage/createUser.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe601;</i>
 						<span class="fz14">创建用户</span>
 					</a>
-				</li>
+				</li>-->
 				<li class="mui-table-view-cell pui-list" data-href = "../groupManage/createGroup.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe612;</i>
@@ -77,6 +77,7 @@
 				$.init({});
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
+				
 				var nickName = document.getElementById("nickname");
 				var corg_name = document.getElementById("corg_name");
 				mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
@@ -88,6 +89,8 @@
 					},
 					success: function(data) {
 						if(data.code == 20001) {
+//							localStorage.setItem("uniteAdminName",data.data.nickname);
+							localStorage.setItem("uniteCorgName",data.data.orginfo.corg_name);
 							nickName.innerHTML = data.data.nickname;
 							corg_name.innerHTML = data.data.orginfo.corg_name;
 						}

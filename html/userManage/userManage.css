@@ -6,14 +6,14 @@ header .pui-a-right {
 }
 .pui-slider-right {
 	position: absolute;
-	right: 0;
-	top: 26px;
+	right: 10px;
+	top: 38px;
 	font-size: 14px;
 }
 .pui-icon-gps {
 	position: absolute;
-	right: 38px;
-	top: -4px;
+	right: 72px;
+	top: 10px;
 	color: #56abe4;
 }
 .pui-p-down {
@@ -41,8 +41,8 @@ header .pui-a-right {
 
 .pui-icon-pastDue {
 	position: absolute;
-	right: -15px;
-	top:-6px;
+	right: 10px;
+	top:7px;
 	font-size: 26px;
 	color: #f00;
 }

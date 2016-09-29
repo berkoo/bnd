@@ -14,36 +14,36 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">编辑用户信息</h1>
-			<a class="mui-pull-right pui-a-right" href="#">删除</a>
+			<!--<a class="mui-pull-right pui-a-right" href="#">删除</a>-->
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" href="#">
-						<span>深圳宝安消防支队</span>
+						<span id="corg_name">深圳宝安消防支队</span>
 					</a>
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<!--<i class="icon icon-broad pui-icon-edit">&#xe607;</i>-->
 						<label for="">ICCID</label>
 						<input id="iccid" type="text" value="1111111111111111" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id = "username" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">姓名</label>
 						<input id="username" type="text" value="刘德华" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i class="icon icon-broad pui-icon-edit">&#xe607;</i>
-						<label for="">手机号</label>
-						<input id="tel" type="text" value="122132123123" />
+						<i class="icon icon-broad pui-icon-edit" data-id="phoneNumber" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
+						<label for="">联系电话</label>
+						<input id="phoneNumber" type="text" name="" id="" value="100000000" disabled="disabled" />
 					</a>
 				</li>
 			</ul>
@@ -74,17 +74,82 @@
 				console.log(userList);
 				for (var i=0;i<userList.length;i++) {
 					if(userList[i].id==localStorage.getItem("userId")){
-						document.getElementById("username").value = userList[i].user_name;
-					}
-					mui(".mui-table-view").on("tap",".pui-icon-edit",function(e){
-						e.detail.gesture.preventDefault(); //修复iOS 8.x平台存在的bug，使用plus.nativeUI.prompt会造成输入法闪一下又没了
+						document.getElementById("username").value = userList[i].nickname;
+						document.getElementById("phoneNumber").value = userList[i].user_mobile;
+						document.getElementById('iccid').value = userList[i].user_account;
+						document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName")
+				}
+			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
+				var id = this.getAttribute("data-id")
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				switch(id) {
+					case 'username':
+						e.detail.gesture.preventDefault();
 						var btnArray = ['取消', '确定'];
-						mui.prompt('', '', '修改内容', btnArray, function(e) {
-							if (e.index == 1) {
-							} else {
-		//						info.innerText = '你点了取消按钮';
+						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+							if(e.index == 1) {
+								document.getElementById("username").value = e.value;
+								mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+									dataType: 'json',
+									type: 'post',
+									timeout: 10000,
+									data: {
+										'contact': e.value
+									},
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded'
+									},
+									success: function(data) {
+										if(data.code == 20001) {
+											mui.alert(data.msg, function() {
+												
+											}, "提示", "确定")
+										}
+									},
+									error: function(xhr, type, errorThrown) {
+										//异常处理；
+										console.log(type);
+									}
+								});
 							}
 						})
+						break;
+						case 'phoneNumber':
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+								if(e.index == 1) {
+									document.getElementById("phoneNumber").value = e.value;
+									mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'mobile': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded'
+										},
+										success: function(data) {
+											console.log(data)
+											if(data.code == 20001) {
+												if(data.code == 20001) {
+													mui.alert(data.msg, function() {
+														
+													}, "提示", "确定")
+												}
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
+								}
+							})
+							break;
+						}
 					})
 				}
 			}
