@@ -57,10 +57,11 @@ function refresh(url, type) {
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
 							if(type == "group") {
+								console.log(data)
 								li.setAttribute("data-href", "editGroup.html");
 								li.setAttribute('data-id',data.data[n].id);
 								li.innerHTML = '<div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red">删除</a></div>';
-								li.innerHTML += '<div class="mui-slider-handle mui-table"><div class="mui-table-cell"><p><span>' + data.data[n].name + '</span></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>3</span></p><span class="mui-pull-right pui-slider-right">' + data.data[n].cg_createtime + '</span></div></div>';
+								li.innerHTML += '<div class="mui-slider-handle mui-table"><div class="mui-table-cell"><p><span>' + data.data[n].name + '</span></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].members_count+'</span></p><span class="mui-pull-right pui-slider-right">'+format(data.data[n].cg_createtime)+'</span></div></div>';
 								document.body.querySelector('.mui-table-view').appendChild(li);
 							}
 							if(type == 'user') {
@@ -69,9 +70,14 @@ function refresh(url, type) {
 								li.setAttribute('data-id',data.data[n].id);
 								li.innerHTML = '<div class="mui-slider-handle mui-table"><div class="mui-table-cell">';
 								li.innerHTML += '<p><span>'+data.data[n].user_name+'</span></p>';
-								li.innerHTML += '<p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].user_account+'</span></p>';
-								li.innerHTML += '<span class="mui-pull-right pui-slider-right"></span>';
-								li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe626;</i>';
+								li.innerHTML += '<p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].group_count+'</span></p>';
+								li.innerHTML += '<span class="mui-pull-right pui-slider-right">'+format(data.data[n].createat)+'</span>';
+								if(data.data[n].status == 2) {
+									li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe626;</i>';
+								}else if(data.data[n].status == 1) {
+									li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe625;</i>';
+								}
+								
 								if(data.data[n].allow_gps == 1) {
 									li.innerHTML += '<i class="icon icon-broad pui-icon-gps">&#xe604;</i></div></div>';
 								}
