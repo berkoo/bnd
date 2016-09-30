@@ -17,8 +17,8 @@
 			<a id="add" class="mui-pull-right mui-icon mui-icon-plusempty pui-header-icon-right" href="#modal"></a>
 		</header>
 		<div class="mui-content">
-			<ul id="OA_task_2" class="mui-table-view">
-				<li class="mui-table-view-cell">
+			<ul id="lis" class="mui-table-view">
+				<!--<li class="mui-table-view-cell">
 					<div class="mui-slider-right mui-disabled">
 						<a class="mui-btn mui-btn-green">默认</a>
 						<a class="mui-btn mui-btn-red">移除</a>
@@ -39,7 +39,7 @@
 							测试群组100
 						</div>
 					</div>
-				</li>
+				</li>-->
 			</ul>
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
@@ -47,11 +47,7 @@
 					<h1 class="mui-title">选择加入的群组</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
-					<form class="mui-input-group">
-						<!--<div class="mui-input-row mui-checkbox mui-left">
-							<label>checked：false</label>
-							<input name="checkbox" type="checkbox" >
-						</div>-->
+					<form class="mui-input-group" id="modalList">
 					</form>
 				</div>
 			</div>
@@ -61,212 +57,199 @@
 		<script type="text/javascript">
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
-			var access_token = localStorage.getItem("access_token");
-			check_val = [];
+			var groupListUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+			var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
+			var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
+			var sendMsgUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+			var groupList = new Array();
+			var userList = new Array();
 			ids = [];
+			//获取企业编号
+			var getOrgId = function() {
+				mui.ajax(orgIdUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							if(data.data.orginfo != null) {
+								var orgId = data.data.orginfo.id;
+								console.log("orgId:" + orgId);
+								getGroupList(orgId)
+							}
+						}
+					},
+					error: function() {}
+				});
+			};
+			getOrgId();
 			var userList =localStorage.getItem("userListData");
-			if(userList!=null){
-				userList = JSON.parse(userList).data;
-				for (var i=0;i<userList.length;i++) {
-					if(userList[i].id==localStorage.getItem("userId")){
-						
-						/**
-						 * 获取到群组列表
-						 */
-						document.getElementById("add").addEventListener("tap", function() {
-							document.querySelector(".mui-input-group").innerHTML = "";//点击获取群组之前 将上一次获取到的数据清空
-							//请求列表数据
-							mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
+			//获取用户群组
+			var menberList = function(){
+				if(userList!=null){
+					userList = JSON.parse(userList).data;
+					for (var i=0;i<userList.length;i++) {
+						if(userList[i].id==localStorage.getItem("userId")){
+							mui.ajax(req_url + '/api/v1/terminal/group/list?access_token=' + access_token + '&openid=' + openid, {
 								dataType: 'json', //服务器返回json格式数据
 								type: 'GET', //HTTP请求类型
 								timeout: 10000, //超时时间设置为10秒；
+								data:{
+									'id':localStorage.getItem("userId")
+								},
 								headers: {
 									'Content-Type': 'application/x-www-form-urlencoded'
 								},
 								success: function(data) {
 									if(data.code == 20001) {
-										var id = data.data.orginfo.id;
-										mui.ajax(req_url + '/api/v1/group/list?access_token=' + access_token + '&openid=' + openid, {
-											dataType: 'json', //服务器返回json格式数据
-											data: {
-												'org_id': id //企业编号
-											},
-											type: 'GET', //HTTP请求类型
-											timeout: 10000, //超时时间设置为10秒；
-											headers: {
-												'Content-Type': 'application/x-www-form-urlencoded'
-											},
-											success: function(data) {
-												if(data.code == 20001) {
-													for(var i = 0; i < data.data.length; i++) {
-														var div = document.createElement("div");
-														div.className = "mui-input-row mui-checkbox mui-left"
-														var label = document.createElement("label");
-														var labelNode = document.createTextNode(data.data[i].name);
-														var inputText = document.createElement("input");
-														inputText.type = "checkbox";
-														inputText.name = "checkbox";
-														label.appendChild(labelNode);
-														div.appendChild(label);
-														div.appendChild(inputText);
-														document.querySelector(".mui-input-group").appendChild(div);
-													}
-												} else {
-													mui.alert(data.msg, function() {
-													}, "提示", "确定");
-												}
-												//点击选择保存的数据
-												document.getElementById("listSave").addEventListener("tap", function() {
-													var checks = document.querySelectorAll(".mui-input-group input");
-													for(var n = 0; n < checks.length; n++) {
-														if(checks[n].checked) {
-															var aa = checks[n].previousSibling.innerHTML;
-															check_val.push(aa);
-															var groupId = data.data[n].id;
-															ids.push(groupId);
-														}
-													};
-													var groups = new Array();
-													for(var idd in ids) {
-														groups.push({
-															'id':ids[idd]
-														})
-													}
-													//将选取的群组加入到页面中
-													for(var j = 0; j < check_val.length; j++) {
-														var li = document.createElement("li");
-														li.className = "mui-table-view-cell pui-id";
-														li.setAttribute("data-id",ids[j]);
-														var sliderDiv = document.createElement("div");
-														sliderDiv.className = "mui-slider-right mui-disabled";
-														var aOne = document.createElement("a");
-														aOne.className = "mui-btn mui-btn-green";
-														aOneText = document.createTextNode("默认");
-														aOne.appendChild(aOneText);
-														var aTwo = document.createElement("a");
-														aTwo.className = "mui-btn mui-btn-red";
-														aTwoText = document.createTextNode("移除");
-														aTwo.appendChild(aTwoText);
-														sliderDiv.appendChild(aOne);
-														sliderDiv.appendChild(aTwo);
-														var handleDiv = document.createElement("div");
-														handleDiv.className = "mui-slider-handle";
-														var handleText = document.createElement("div");
-														handleText.className = "mui-table-cell";
-														handleTextNode = document.createTextNode(check_val[j]);
-														handleText.appendChild(handleTextNode);
-														handleDiv.appendChild(handleText);
-														li.appendChild(sliderDiv);
-														li.appendChild(handleDiv);
-														document.getElementById("OA_task_2").appendChild(li);
-													}
-													console.log(groups);
-													console.log(localStorage.getItem("userId"))
-													mui.ajax(req_url + '/api/v1/terminal/group/join?access_token=' + access_token + '&openid=' + openid, {
-														dataType: 'json',
-														type: 'POST',
-														timeout: 10000,
-														data: {
-															'id':localStorage.getItem("userId"),
-															'members':groups
-														},
-														headers: {
-															'Content-Type': 'application/json'
-														},
-														success: function(data) {
-															console.log(data)
-															if(data.code == 20001) {
-																mui.alert("成员添加成功",function(){
-																	
-																},"提示","确定")
-															}
-														},
-														error: function(xhr, type, errorThrown) {
-															//异常处理；
-															console.log(type);
-														}
-													});
-												})
-											
-											},
-											error: function(xhr, type, errorThrown) {
-												console.log(type);
-											}
-										});
-									} else {
-										mui.alert(data.msg, function() {
-		
-										}, "提示", "确定");
-									}
-		
-								},
-								error: function(xhr, type, errorThrown) {
-									console.log(type);
-								}
-							});
-						});
-						
-						
-						//删除用户
-						mui(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
-							var groupId = this.parentNode.parentNode.getAttribute("data-id");
-//							this.parentNode.parentNode.remove(this.parentNode);
-							var groups = [{'id':groupId}];
-							mui.ajax(req_url + '/api/v1/terminal/groups/remove?access_token=' + access_token + '&openid=' + openid, {
-								dataType: 'json', //服务器返回json格式数据
-								type: 'POST', //HTTP请求类型
-								timeout: 10000, //超时时间设置为10秒；
-								data:{
-									'id':localStorage.getItem("userId"),
-									'groups':groups
-								},
-								headers: {
-									'Content-Type': 'application/json' 
-								},
-								success: function(data) {
-									console.log(data)
-									if(data.code == 20001) {
-										mui.alert("删除成功",function(){
-											
-										},"提示","确定");
+										var html = "";
+										for(var i = 0;i<data.data.length;i++) {
+											html ='<li data-id ='+data.data[i].id+' class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-green">默认</a><a class="mui-btn mui-btn-red">移除</a></div><div class="mui-slider-handle"><div class="mui-table-cell">'+data.data[i].name+'</div></div></li>';
+										}
+										document.getElementById("lis").innerHTML = html;
 									}
 								},
-								error: function(xhr, type, errorThrown) {
-									console.log(type);
-								}
+								error: function() {}
 							});
-						});
-					
-						//设置默认
-						mui(".mui-table-view").on('tap', 'a.mui-btn-green', function() {
-							var groupId = this.parentNode.parentNode.getAttribute("data-id");
-							mui.ajax(req_url + '/api/v1/terminal/groups/default?access_token=' + access_token + '&openid=' + openid, {
-								dataType: 'json', //服务器返回json格式数据
-								type: 'POST', //HTTP请求类型
-								timeout: 10000, //超时时间设置为10秒；
-								data:{
-									'id':localStorage.getItem("userId"),
-									'group_id':groupId
-								},
-								headers: {
-									'Content-Type': 'application/x-www-form-urlencoded' 
-								},
-								success: function(data) {
-									console.log(data)
-									if(data.code == 20001) {
-										mui.alert("默认设置成功",function(){
-											
-										},"提示","确定");
-									}
-								},
-								error: function(xhr, type, errorThrown) {
-									console.log(type);
-								}
-							});
-						});
+						}
 					}
 				}
 			}
+			menberList();
+			//获取群组列表
+			var getGroupList = function(orgId) {
+				mui.ajax(groupListUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						"org_id": orgId
+					},
+					success: function(data) {
+						console.log("data:" + JSON.stringify(data));
+						if(data.code == 20001) {
+							var html = "";
+							for(var i = 0; i < data.data.length; i++) {
+								html += '<div class="mui-input-row mui-checkbox mui-left">';
+								html += '<label>' + data.data[i].name + '</label>';
+								html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
+							}
+							document.getElementById("modalList").innerHTML = html;
+						}
+					},
+					error: function() {}
+				});
+			};
+			getOrgId();
+			//点击保存
+			document.getElementById("listSave").addEventListener('tap', function() {
+				var tags = document.getElementsByTagName("input");
+				var html = "";
+				for(var i = 0; i < tags.length; i++) {
+					if(tags[i].getAttribute("data-receiverType") == "4" && tags[i].checked) {
+						groupList.push("text", tags[i].value);
+						html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-green" data-id="' + tags[i].getAttribute("data-account") + '">默认</a><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
+						html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+						var groupId = tags[i].getAttribute("data-account");
+						ids.push(groupId);
+					}
+				}
+				var groups = new Array();
+				for(var idd in ids) {
+					groups.push({
+						'id':ids[idd]
+					})
+				}
+				document.getElementById("lis").innerHTML += html;
+				mui.ajax(req_url + '/api/v1/terminal/groups/join?access_token=' + access_token + '&openid=' +openid, {
+				 	dataType: 'json',
+				 	type: 'POST',
+				 	timeout: 10000,
+				 	data: {
+				 		'id': localStorage.getItem("userId"),
+				 		'groups': groups
+				 	},
+				 	headers: {
+				 		'Content-Type': 'application/json'
+				 	},
+				 	success: function(data) {
+				 		console.log(data)
+				 		if(data.code == 20001) {
+				 			mui.alert("成员添加成功", function() {
+				
+				 			}, "提示", "确定")
+				 		}
+				 	},
+				 	error: function(xhr, type, errorThrown) {
+				 		//异常处理；
+				 		console.log(type);
+				 	}
+				 });
+
+ 			}, false);
+ 			//设置默认
+			mui(".mui-table-view").on('tap', 'a.mui-btn-green', function() {
+				var groupIds = this.getAttribute("data-id");
+				mui.ajax(req_url + '/api/v1/terminal/groups/default?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data:{
+						'id':localStorage.getItem("userId"),
+						'group_id':groupIds
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded' 
+					},
+					success: function(data) {
+						console.log(data)
+						if(data.code == 20001) {
+							mui.alert("默认设置成功",function(){
+									
+							},"提示","确定");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+					}
+				});
+			});
+			//删除群组
+			mui(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+				var groupIds = this.getAttribute("data-id");
+				this.parentNode.parentNode.remove(this.parentNode);
+				var groups = [{'id':groupIds}];
+				mui.ajax(req_url + '/api/v1/terminal/groups/remove?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data:{
+						'id':localStorage.getItem("userId"),
+						'groups':groups
+					},
+					headers: {
+						'Content-Type': 'application/json' 
+					},
+					success: function(data) {
+						console.log(data)
+						if(data.code == 20001) {
+							mui.alert("删除成功",function(){
+											
+						},"提示","确定");
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+					}
+				});
+			});
 		</script>
+	
 	</body>
 </html>

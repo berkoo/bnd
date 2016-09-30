@@ -13,14 +13,21 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">功能设置</h1>
-			<a class="mui-pull-right pui-a-right" href="#">保存</a>
+			<a id="save" class="mui-pull-right pui-a-right" href="#">保存</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view mt30">
-				<li class="mui-table-view-cell">
+				<li  class="mui-table-view-cell">
 					<label for="">是否启用</label>
 					<span></span>
-					<div class="mui-switch">
+					<div id="enableStatus" class="mui-switch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+				<li  class="mui-table-view-cell">
+					<label for="">群组录音</label>
+					<span></span>
+					<div id="enableStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
@@ -36,34 +43,33 @@
 				groupList = JSON.parse(groupList).data;
 				for (var i=0;i<groupList.length;i++) {
 					if(groupList[i].id==localStorage.getItem("groupId")){
-						alert("nia")
-						//用户功能设置
-						mui.ajax(req_url + '/v1/group/disabled?access_token=' + access_token + '&openid=' + openid, {
-							dataType: 'json', //服务器返回json格式数据
-							type: 'GET', //HTTP请求类型
-							timeout: 10000, //超时时间设置为10秒；
-							data:{
-								'id':localStorage.getItem("groupId"),
-							},
-							headers: {
-								'Content-Type': 'application/x-www-form-urlencoded' 
-							},
-							success: function(data) {
-								if(data.code == 20001) {
-									console.log(data)
-									console.log(data.data.allow_gps);
-									if(data.data.enable == true) {
-										document.getElementById("enableStatus").className += " mui-active";
-									}
-								}else {
-									mui.alert(data.msg,function(){
-										
-									},"提示","确定")
+						if(groupList[i].disabled == false) {
+							document.getElementById("enableStatus").className += " mui-active";
+						}
+						//保存功能设置
+						document.getElementById("save").addEventListener("tap",function(){
+							var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
+							mui.ajax(req_url + '/api/v1/group/disabled?access_token=' + access_token + '&openid=' + openid, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								data:{
+									'id':localStorage.getItem("groupId"),
+									'disabled':enableStatus
+								},
+								headers: {
+									'Content-Type': 'application/json' 
+								},
+								success: function(data) {
+									if(data.code == 20001) {
+										mui.alert("保存成功",function(){
+										},"提示","确定");
+									};
+								},
+								error: function(xhr, type, errorThrown) {
+									console.log(type);
 								}
-							},
-							error: function(xhr, type, errorThrown) {
-								console.log(type);
-							}
+							});
 						});
 					}
 				}	

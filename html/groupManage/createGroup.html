@@ -33,28 +33,46 @@
 				<li class="mui-table-view-cell">
 					<label for="">是否启用</label>
 					<span></span>
-					<div class="mui-switch">
+					<div id="enableStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10" id="groupSend">
 				<li class="mui-table-view-cell">
-					<span>选择群组</span>
+					<span>选择群组成员</span>
 					<a class="mui-pull-right" href="#modal">
 						<i class=" mui-icon mui-icon-plusempty pui-icon-add"></i>
 					</a>
 				</li>
-
+				
 			</ul>
 
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
 					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal">保存</a>
-					<h1 class="mui-title">选择加入的群组</h1>
+					<h1 class="mui-title">选择加入群组的成员</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
 					<form class="mui-input-group" id="modalList">
+					</form>
+				</div>
+			</div>
+			<div id="modal1" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal1">保存</a>
+					<h1 class="mui-title">选择加入群组的成员</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<form class="mui-input-group">
+						<div class="mui-input-row mui-radio mui-left">
+							<label>radio</label>
+							<input name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>radio</label>
+							<input name="radio1" type="radio" checked>
+						</div>
 					</form>
 				</div>
 			</div>
@@ -72,12 +90,14 @@
 				$.init({});
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
-				var groupListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
-//				var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
+//				var groupListUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+				var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
 				var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
 				var sendMsgUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+				doc.getElementById("corg_name").innerHTML = localStorage.getItem("uniteAdminName")
 				var groupList = new Array();
 				var userList = new Array();
+				var userIds = new Array();
 				var getOrgId = function() {
 					$.ajax(orgIdUrl, {
 						dataType: 'json', //服务器返回json格式数据
@@ -91,16 +111,17 @@
 								if(data.data.orginfo != null) {
 									var orgId = data.data.orginfo.id;
 									console.log("orgId:" + orgId);
-									getGroupList(orgId);
 									getUserList(orgId);
+									send(orgId);
 								}
 							}
 						},
 						error: function() {}
 					});
 				};
-				var getGroupList = function(orgId) {
-					$.ajax(groupListUrl, {
+				getOrgId();
+				var getUserList = function(orgId) {
+					$.ajax(userListUrl, {
 						dataType: 'json', //服务器返回json格式数据
 						type: 'GET', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒；
@@ -117,91 +138,79 @@
 									html += '<div class="mui-input-row mui-checkbox mui-left">';
 									html += '<label>' + data.data[i].user_name + '</label>';
 									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].user_name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
-									
 								}
 								document.getElementById("modalList").innerHTML = html;
 						},
 						error: function() {}
 					});
 				};
-//				var getUserList = function(orgId) {
-//					$.ajax(userListUrl, {
-//						dataType: 'json', //服务器返回json格式数据
-//						type: 'GET', //HTTP请求类型
-//						timeout: 10000, //超时时间设置为10秒；
-//						headers: {
-//							'Content-Type': 'application/x-www-form-urlencoded'
-//						},
-//						data: {
-//							"org_id": orgId
-//						},
-//						success: function(data) {
-//							if(data.code == 20001) {
-//								var html = "";
-//								for(var i = 0; i < data.data.length; i++) {
-//									html += '<div class="mui-input-row mui-checkbox mui-left">';
-//									html += '<label>' + data.data[i].user_account + '</label>';
-//									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="0" data-account="' + data.data[i].id + '"></div>';
-//								}
-//								document.getElementById("modalList").innerHTML = html;
-//							}
-//						},
-//						error: function() {}
-//					});
-//				};
-				getOrgId();
+				//将获取到的群组成员
 				doc.getElementById("listSave").addEventListener('tap', function() {
 					var tags = doc.getElementsByTagName("input");
 					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组</span><a class="mui-pull-right" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
 					var html = "";
 					for(var i = 0; i < tags.length; i++) {
-						if(tags[i].getAttribute("data-receiverType") == "4" && tags[i].checked) {
+						if(tags[i].checked) {
 							groupList.push("text", tags[i].value);
-							html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
+							html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-green" data-id="' + tags[i].getAttribute("data-account") + '" href="#modal1">优先级</a><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
 							html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+							var cc = tags[i].getAttribute("data-account");
+							userIds.push(cc);
 						}
 					}
+					console.log(userIds)
 					document.getElementById("groupSend").innerHTML += html;
 				}, false);
-				document.getElementById("btnSend").addEventListener('tap', function() {
-					var content = document.getElementById("textarea").value;
-					if(content == undefined || content == null || content == "") {
-						$.alert("请填写要发送的内容", function() {}, "提示", "确定");
-						return;
-					}
-					var sendMsg = new Array();
-					$.ajax(sendMsgUrl, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						data: {
-							
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								$.alert("发送成功", function() {
-									$.back();
-								}, "提示", "确定");
-							} else {
-								$.alert(data.msg, function() {}, "提示", "确定");
+				
+				//移除
+				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+					var id = this.getAttribute("data-id");
+					this.parentNode.parentNode.remove(this.parentNode);
+				});
+				//设置优先级
+				
+				//点击发送
+				var send = function(orgId){
+					doc.getElementById("btnSend").addEventListener("tap",function(){
+						var groupName = document.getElementById("groupName").value;
+						var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
+						var groups = new Array();
+							for(var idd in userIds) {
+								groups.push({
+									'id':userIds[idd],
+									'priorities':1
+								})
 							}
-						},
-						error: function() {}
-					});
-				}, false);
-//				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
-//					var id = this.getAttribute("data-id");
-//					this.parentNode.parentNode.remove(this.parentNode);
-//					for(var i = 0; i < groupList.length; i++) {
-//						groupList.remove(id);
-//					}
-//					for(var i = 0; i < userList.length; i++) {
-//						groupList.remove(id);
-//					}
-//				});
+							console.log(groups)
+						if(groupName == "") {
+							mui.alert("请输入群组名称",function(){
+								
+							},"提示","确定")
+						}else {
+							$.ajax(req_url + '/api/v1/group/add?access_token=' + access_token + '&openid=' + openid, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								data:{
+									'name':groupName,
+									'disabled':enableStatus,
+									'org_id':orgId,
+									'members':groups
+								},
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								success: function(data) {
+									$.alert("创建成功",function(){
+										
+									},"提示","确定")
+								},
+								error: function() {}
+							});
+						}
+					})
+				}
+				
 			}(mui, document));
 		</script>
 	</body>

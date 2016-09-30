@@ -14,22 +14,22 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">群组管理</h1>
-			<a class="mui-pull-right pui-a-right" href="#">删除</a>
+			<a id="delete" class="mui-pull-right pui-a-right">删除</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" href="#">
-						<span>深圳宝安消防支队</span>
+						<span id="corg_name">深圳宝安消防支队</span>
 					</a>
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id = "username" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">群组名称</label>
-						<input id="name" type="text" value="测试群组100" disabled="disabled" />
+						<input id="username" type="text" value="测试群组100" disabled="disabled" />
 					</a>
 				</li>
 			</ul>
@@ -51,52 +51,87 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+		(function ($) {
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
-			document.querySelector(".pui-icon-edit").addEventListener("tap",function(e){
-				var groupList =localStorage.getItem("groupListData");
-				groupList = JSON.parse(groupList).data;
-				if(groupList!=null){
-					for (var i=0;i<groupList.length;i++) {
-						if(groupList[i].id==localStorage.getItem("groupId")){
-							e.detail.gesture.preventDefault();
-							var btnArray = ['取消', '确定'];
-							mui.prompt('', '', '编辑群组', btnArray, function(e) {
-								if (e.index == 1) {
-									document.getElementById("name").value = e.value;
-									mui.ajax(req_url + '/api/v1/group/name?access_token=' + access_token + '&openid=' + openid, {
-										dataType: 'json',
-										type: 'POST',
-										timeout: 10000,
-										data: {
-											'id':localStorage.getItem("groupId"),
-											'name': e.value
-										},
-										headers: {
-											'Content-Type': 'application/x-www-form-urlencoded'
-										},
-										success: function(data) {
-											if(data.code == 20001) {
-												
-											}
-										},
-										error: function(xhr, type, errorThrown) {
-											//异常处理；
-											console.log(type);
-										}
-									});
+			var groupList =localStorage.getItem("groupListData");
+			groupList = JSON.parse(groupList).data;
+			if(groupList!=null){
+				console.log(groupList);
+				for (var i=0;i<groupList.length;i++) {
+					if(groupList[i].id==localStorage.getItem("groupId")){
+						//删除群组
+						document.getElementById("delete").addEventListener("tap",function(){
+							var groupId = this.parentNode.parentNode.getAttribute("data-id");
+							mui.ajax(req_url + '/api/v1/group/delete?access_token=' + access_token + '&openid=' + openid, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								data:{
+									'id':localStorage.getItem("groupId"),
+								},
+								headers: {
+									'Content-Type': 'application/json' 
+								},
+								success: function(data) {
+									if(data.code == 20001) {
+										$.alert("删除成功",function(){
+											$.back();
+										},"提示","确定");
+										
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									console.log(type);
 								}
-							})
-						}
+							});
+						})
+
+						document.getElementById("username").value = groupList[i].name;
+						document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName");
+						
+						document.querySelector(".pui-icon-edit").addEventListener("tap",function(e){
+							var id = this.getAttribute("data-id")
+							var openid = localStorage.getItem("ptt_openid");
+							var access_token = localStorage.getItem("access_token");
+							switch(id) {
+								case 'username':
+									e.detail.gesture.preventDefault();
+									var btnArray = ['取消', '确定'];
+									mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+										if(e.index == 1) {
+											document.getElementById("username").value = e.value;
+											mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+												dataType: 'json',
+												type: 'post',
+												timeout: 10000,
+												data: {
+													'contact': e.value
+												},
+												headers: {
+													'Content-Type': 'application/x-www-form-urlencoded'
+												},
+												success: function(data) {
+													if(data.code == 20001) {
+														mui.alert(data.msg, function() {
+															
+														}, "提示", "确定")
+													}
+												},
+												error: function(xhr, type, errorThrown) {
+													//异常处理；
+													console.log(type);
+												}
+											});
+										}
+									})
+								break;
+							}
+						})				
 					}
 				}
-			})
-		</script>
-		<script type="text/javascript">
-			mui(".mui-table-view").on("tap",".pui-icon-edit",function(){
-				var href = this.getAttribute("data-href");
-				mui.openWindow(href);
-			})
+			}
+		})(mui)
 			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);

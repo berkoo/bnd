@@ -14,3 +14,6 @@
 .pui-p-down {
 	margin-top: 5px;
 }
+.mui-table-view-chevron .mui-table-view-cell {
+	padding-right: 15px !important;
+}
