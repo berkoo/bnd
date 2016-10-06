@@ -14,7 +14,7 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">创建群组</h1>
-			<a id="btnSend" class="mui-pull-right pui-a-right" href="#">保存</a>
+			<a id="btnSend" class="mui-pull-right pui-a-right">保存</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view">
@@ -29,7 +29,7 @@
 					<input id="groupName" class="mui-input-clear" type="text" placeholder="输入群组名称" />
 				</li>
 			</ul>
-			<ul class="mui-table-view mt30">
+			<!--<ul class="mui-table-view mt30">
 				<li class="mui-table-view-cell">
 					<label for="">是否启用</label>
 					<span></span>
@@ -37,7 +37,7 @@
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
-			</ul>
+			</ul>-->
 			<ul class="mui-table-view mt10" id="groupSend">
 				<li class="mui-table-view-cell">
 					<span>选择群组成员</span>
@@ -47,7 +47,6 @@
 				</li>
 				
 			</ul>
-
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
 					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal">保存</a>
@@ -60,20 +59,21 @@
 			</div>
 			<div id="modal1" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
-					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal1">保存</a>
+					<a id="listSave1" class="mui-pull-right pui-a-right" href="#modal1">保存</a>
 					<h1 class="mui-title">选择加入群组的成员</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
-					<form class="mui-input-group">
+					<form class="mui-input-group" id="modalList1">
 						<div class="mui-input-row mui-radio mui-left">
-							<label>radio</label>
-							<input name="radio1" type="radio">
+							<label>普通</label>
+							<input name="radio1" type="radio" value="1" checked>
 						</div>
 						<div class="mui-input-row mui-radio mui-left">
-							<label>radio</label>
-							<input name="radio1" type="radio" checked>
+							<label>高级</label>
+							<input name="radio1" type="radio" value="2">
 						</div>
 					</form>
+					
 				</div>
 			</div>
 		</div>
@@ -94,10 +94,11 @@
 				var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
 				var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
 				var sendMsgUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
-				doc.getElementById("corg_name").innerHTML = localStorage.getItem("uniteAdminName")
+				doc.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName");
 				var groupList = new Array();
 				var userList = new Array();
 				var userIds = new Array();
+				var priority = 1;
 				var getOrgId = function() {
 					$.ajax(orgIdUrl, {
 						dataType: 'json', //服务器返回json格式数据
@@ -146,9 +147,11 @@
 				};
 				//将获取到的群组成员
 				doc.getElementById("listSave").addEventListener('tap', function() {
-					var tags = doc.getElementsByTagName("input");
+//					var tags = doc.getElementsByTagName("input");
+					var tags = doc.querySelectorAll("#modal input")
 					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组</span><a class="mui-pull-right" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
 					var html = "";
+					userIds = [];//清空之前的数据
 					for(var i = 0; i < tags.length; i++) {
 						if(tags[i].checked) {
 							groupList.push("text", tags[i].value);
@@ -158,27 +161,37 @@
 							userIds.push(cc);
 						}
 					}
-					console.log(userIds)
+					console.log(userIds);
 					document.getElementById("groupSend").innerHTML += html;
 				}, false);
+				
+				//设置优先级
+				doc.getElementById("listSave1").addEventListener("tap",function(){
+					var chec = doc.querySelectorAll("#modal1 input");
+					for(var k = 0;k<chec.length;k++) {
+						if(chec[k].checked) {
+							priority = chec[k].value;
+						}
+					}
+				});
 				
 				//移除
 				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
 					var id = this.getAttribute("data-id");
 					this.parentNode.parentNode.remove(this.parentNode);
 				});
-				//设置优先级
+				
 				
 				//点击发送
 				var send = function(orgId){
 					doc.getElementById("btnSend").addEventListener("tap",function(){
 						var groupName = document.getElementById("groupName").value;
-						var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
+//						var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
 						var groups = new Array();
 							for(var idd in userIds) {
 								groups.push({
 									'id':userIds[idd],
-									'priorities':1
+									'priorities':priority
 								})
 							}
 							console.log(groups)
@@ -193,7 +206,7 @@
 								timeout: 10000, //超时时间设置为10秒；
 								data:{
 									'name':groupName,
-									'disabled':enableStatus,
+//									'disabled':enableStatus,
 									'org_id':orgId,
 									'members':groups
 								},
@@ -202,7 +215,7 @@
 								},
 								success: function(data) {
 									$.alert("创建成功",function(){
-										
+										$.openWindow("groupManage.html")
 									},"提示","确定")
 								},
 								error: function() {}

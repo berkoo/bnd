@@ -5,3 +5,7 @@
 .mui-slider-right a {
 	font-size: 14px;
 }
+
+.mui-radio input[type=radio] {
+	top: 9px;
+}

@@ -13,7 +13,7 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">功能设置</h1>
-			<a id="save" class="mui-pull-right pui-a-right" href="#">保存</a>
+			<a id="save" class="mui-pull-right pui-a-right">保存</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view mt30">
@@ -63,6 +63,7 @@
 								success: function(data) {
 									if(data.code == 20001) {
 										mui.alert("保存成功",function(){
+											mui.back();
 										},"提示","确定");
 									};
 								},

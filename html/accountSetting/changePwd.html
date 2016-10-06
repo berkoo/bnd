@@ -28,7 +28,7 @@
 			<ul class="mui-table-view mt15">
 				<li class="mui-table-view-input mui-input-row">
 					<label>新密码</label>
-					<input id="newPwd" type="text" class="mui-input-clear pui-account" placeholder="请输入要设置的新密码">
+					<input id="newPwd" type="text" class="mui-input-clear pui-account" placeholder="请输入大于或等于6位的新密码">
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<label>确认新密码</label>
@@ -47,10 +47,10 @@
 					var oldPwd = document.getElementById("oldPwd").value;
 					var newPwd = document.getElementById("newPwd").value;
 					var sureNewPwd = document.getElementById("sureNewPwd").value;
-					if(newPwd === sureNewPwd) {
+					if(newPwd === sureNewPwd&&newPwd.length>=6) {
 						mui.ajax(req_url + '/api/v1/profile/password?access_token=' + access_token + '&openid=' + openid, {
 							dataType: 'json', //服务器返回json格式数据
-							type: 'post', //HTTP请求类型
+							type: 'POST', //HTTP请求类型
 							timeout: 10000, //超时时间设置为10秒；
 							data: {
 								'oldpwd': oldPwd,
@@ -66,7 +66,7 @@
 									}, "提示", "确定");
 								}else{
 									$.alert("修改失败", function() {
-										oldPwd.focus();
+//										oldPwd.focus();
 									}, "提示", "确定");
 								}
 							},
@@ -75,11 +75,11 @@
 								console.log(type);
 							}
 						});
-					} else {
-						$.alert("两次输入的密码不一致", function() {
+					}else {
+						$.alert("两次输入的密码不一致或者密码未达到要求", function() {
 							newPwd.value = "";
 							sureNewPwd.value="";
-							newPwd.focus();
+//							newPwd.focus();
 						}, "提示", "确定");
 					}
 				})

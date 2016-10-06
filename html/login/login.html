@@ -73,11 +73,17 @@
 						document.querySelector(".pui-account").placeholder = "请输入代理商账户";
 						document.querySelector(".mui-icon").setAttribute("data-status", "agent");
 						userType = 0;
+						mui.alert("切换到代理商管理员",function(){
+							
+						},"提示","确定")
 					}
 					if(status == "agent") {
 						document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
 						document.querySelector(".mui-icon").setAttribute("data-status", "admin");
 						userType = 1;
+						mui.alert("切换到平台商管理员",function(){
+							
+						},"提示","确定")
 					}
 					console.log("userType:"+userType);
 				});
@@ -101,6 +107,7 @@
 							'Content-Type': 'application/x-www-form-urlencoded'
 						},
 						success: function(data) {
+							console.log(data)
 							if(data.code == 20001) {
 								localStorage.setItem("access_token", data.data.access_token);
 								localStorage.setItem("refresh_token", data.data.refresh_token);

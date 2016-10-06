@@ -1,3 +1,6 @@
+body {
+	overflow: hidden;
+}
 .mui-content ul li input {
 	margin-bottom: 0;
 	font-size: 14px;
@@ -13,4 +16,8 @@ input {
 .pui-icon-add {
 	font-weight: bold;
 	color: #a9b7b7;
+}
+
+.mui-radio input[type=radio] {
+	top: 9px;
 }
