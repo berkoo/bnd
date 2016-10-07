@@ -86,7 +86,11 @@
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
-								document.getElementById("username").value = e.value;
+								if(e.value == "") {
+									mui.alert("修改信息不能为空")
+								}else {
+									document.getElementById("username").value = e.value;
+								}
 								mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
 									dataType: 'json',
 									type: 'post',
@@ -117,13 +121,18 @@
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
-								document.getElementById("phoneNumber").value = e.value;
+								if(e.value == "") {
+									mui.alert("修改信息不能为空")
+								}else {
+									document.getElementById("phoneNumber").value = e.value;
+								}
+								
 								mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
 									dataType: 'json',
 									type: 'post',
 									timeout: 10000,
 									data: {
-										'mobile': 18931880683
+										'mobile': e.value
 									},
 									headers: {
 										'Content-Type': 'application/x-www-form-urlencoded'
@@ -151,7 +160,12 @@
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
-								document.getElementById("email").value = e.value;
+								if(e.value == "") {
+									mui.alert("修改信息不能为空")
+								}else {
+									document.getElementById("email").value = e.value;
+								}
+								
 								mui.ajax(req_url + '/api/v1/profile/email?access_token=' + access_token + '&openid=' + openid, {
 									dataType: 'json',
 									type: 'post',
@@ -185,7 +199,12 @@
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
-								document.getElementById("address").value = e.value;
+								if(e.value == "") {
+									mui.alert("修改信息不能为空")
+								}else {
+									document.getElementById("address").value = e.value;
+								}
+								
 								mui.ajax(req_url + '/api/v1/profile/address?access_token=' + access_token + '&openid=' + openid, {
 									dataType: 'json',
 									type: 'post',
@@ -215,6 +234,7 @@
 						})
 						break;
 				}
+			
 			})
 		
 		</script>

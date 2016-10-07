@@ -77,7 +77,6 @@
 				$.init({});
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
-				
 				var nickName = document.getElementById("nickname");
 				var corg_name = document.getElementById("corg_name");
 				mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
@@ -88,8 +87,8 @@
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					success: function(data) {
+						console.log(data)
 						if(data.code == 20001) {
-//							localStorage.setItem("uniteAdminName",data.data.nickname);
 							localStorage.setItem("uniteCorgName",data.data.orginfo.corg_name);
 							nickName.innerHTML = data.data.nickname;
 							corg_name.innerHTML = data.data.orginfo.corg_name;

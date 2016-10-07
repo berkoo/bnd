@@ -47,7 +47,15 @@
 					var oldPwd = document.getElementById("oldPwd").value;
 					var newPwd = document.getElementById("newPwd").value;
 					var sureNewPwd = document.getElementById("sureNewPwd").value;
-					if(newPwd === sureNewPwd&&newPwd.length>=6) {
+					if(newPwd !== sureNewPwd) {
+						mui.alert("请确认新密码与确认密码是否一致",function(){
+							
+						},"提示","确定");
+					}else if(newPwd.length<6) {
+						mui.alert("请确认密码的长度是否大于或等于六位",function(){
+							
+						},"提示","确定");
+					}else {
 						mui.ajax(req_url + '/api/v1/profile/password?access_token=' + access_token + '&openid=' + openid, {
 							dataType: 'json', //服务器返回json格式数据
 							type: 'POST', //HTTP请求类型
@@ -75,13 +83,9 @@
 								console.log(type);
 							}
 						});
-					}else {
-						$.alert("两次输入的密码不一致或者密码未达到要求", function() {
-							newPwd.value = "";
-							sureNewPwd.value="";
-//							newPwd.focus();
-						}, "提示", "确定");
 					}
+					
+					
 				})
 			}(mui, document));
 		</script>

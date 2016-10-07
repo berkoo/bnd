@@ -27,7 +27,33 @@
 					</a>
 				</li>
 			</ul>
-			<ul class="mui-table-view mt20 pui-initial">
+			<ul class="mui-table-view pui-agent mt20">
+				<li class="mui-table-view-cell">
+					<span>账户余额</span>
+					<span id="balance" class="mui-pull-right pui-span-right"></span>
+				</li>
+			</ul>
+			<ul class="mui-table-view pui-agent mt10">
+				<li class="mui-table-view-cell">
+					<span>防串货</span>
+					<span id="grabbed" class="mui-pull-right pui-span-right"></span>
+				</li>
+			</ul>
+			<ul class="mui-table-view pui-platform mt10">
+				<li class="mui-table-view-cell">
+					<span>GPS上报</span>
+					<span id="gpsStatus" class="mui-pull-right pui-span-right"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>群组录音</span>
+					<span id="recordStatus" class="mui-pull-right pui-span-right"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					<span>文字广播</span>
+					<span id="broadcastStatus" class="mui-pull-right pui-span-right"></span>
+				</li>
+			</ul>
+			<ul class="mui-table-view mt10 pui-initial">
 				<li class="mui-table-view-cell mui-item pui-list" data-href = "changePwd.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe61b;</i>
@@ -58,6 +84,10 @@
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			})
+			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
 		</script>
 		
 		<script>
@@ -68,8 +98,18 @@
 				var user_type = localStorage.getItem("userType");
 				var nickName = document.getElementById("nickname");
 				var corg_name = document.getElementById("corg_name");
+				var grabbed = document.getElementById("grabbed");
+				var balance = document.getElementById("balance");
+				var gpsStatus = document.getElementById("gpsStatus");
+				var recordStatus = document.getElementById("recordStatus");
+				var broadcastStatus = document.getElementById("broadcastStatus");
 				console.log("userType:"+user_type);
 				if(user_type == 1) {
+					//删除用户余额和防串货UI样式
+					var puiagent = document.querySelectorAll(".pui-agent");
+					for(var k = 0;k<puiagent.length;k++) {
+						puiagent[k].style.display = "none";
+					}
 					mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
 						dataType: 'json', //服务器返回json格式数据
 						type: 'get', //HTTP请求类型
@@ -79,8 +119,24 @@
 						},
 						success: function(data) {
 							if(data.code == 20001) {
+								console.log(data)
 								nickName.innerHTML = data.data.nickname;
 								corg_name.innerHTML = data.data.orginfo.corg_name;
+								if(data.data.orginfo.allow_located == false) {
+									gpsStatus.innerHTML = "未开启";
+								}else if(data.data.orginfo.allow_located == true) {
+									gpsStatus.innerHTML = "开启";
+								}
+								if(data.data.orginfo.allow_recorded == false) {
+									recordStatus.innerHTML = "未开启";
+								}else if(data.data.orginfo.allow_recorded == true) {
+									recordStatus.innerHTML = "开启";
+								}
+								if(data.data.orginfo.allow_broadcasted == false) {
+									broadcastStatus.innerHTML = "未开启";
+								}else if(data.data.orginfo.allow_broadcasted == true) {
+									broadcastStatus.innerHTML = "开启";
+								}
 							}
 							document.querySelector(".mui-media").addEventListener("tap",function(){
 								mui.openWindow("../unitManage/unitContactInfo.html");
@@ -93,12 +149,24 @@
 						}
 					});
 				}else{
+					//删除平台管理员中的GPS 群组录音和文字广播
+					document.querySelector(".pui-platform").style.display = "none"
 					var data = localStorage.getItem("agentInfo");
+					console.log(data)
 					if(data!=null){
 						data = JSON.parse(data);
 					}
 					nickName.innerHTML = data.data.agentinfo.contact;
 					corg_name.innerHTML = data.data.agentinfo.name;
+					balance.innerHTML = data.data.logincount;
+					if(data.data.agentinfo.allow_grabbed == true) {
+						grabbed.innerHTML = "开启"
+					}else if(data.data.agentinfo.allow_grabbed == false) {
+						grabbed.innerHTML = "未开启"
+					}
+					document.querySelector(".mui-media").addEventListener("tap",function(){
+						mui.openWindow("accountEdit.html");
+					})
 				}
 			}(mui, document));
 		</script>

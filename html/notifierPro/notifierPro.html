@@ -75,19 +75,25 @@
 			(function($, doc) {
 				$.init({});
 				$(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
+					var dot = this.firstChild.firstChild.firstChild.lastChild;
+					console.log(dot);
 					var href = this.getAttribute("data-href");
 					var msgId = this.getAttribute("data-id");
 					$.ajax(req_url + "/api/v1/notice/read?access_token=" + access_token + "&openid=" + openid, {
 						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
+						type: 'POST', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒；
 						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
+							'Content-Type': 'application/json'
 						},
 						data: {
 							"id": msgId
 						},
-						success: function(data) {},
+						success: function(data) {
+							if(data.code == 20001) {
+								dot.style.display = "none"
+							}
+						},
 						error: function() {}
 					});
 					$.openWindow({
@@ -104,30 +110,63 @@
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					success: function(data) {
+						console.log(data)
 						localStorage.setItem("msgData", JSON.stringify(data));
-						for(var i = 0; i < data.length; i++) {
+						console.log(msgData)
+						for(var i = 0; i < data.data.length; i++) {
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
-							li.innerHTML = '<a class="mui-navigate-right">'
-							li.innerHTML += ' <div>'
-							li.innerHTML += '<p>'
-							if(data.data.type == "1") {
-								li.innerHTML += '<span class="pui-span-left-top">到期提醒</span>';
-								li.setAttribute("data-href", "dureDetail.html");
-							} else if(data.data.type == "2") {
-								li.innerHTML += '<span class="pui-span-left-top">过期提醒</span>';
-								li.setAttribute("data-href", "pasteDueDetail.html");
-							} else if(data.data.type == "3") {
-								li.innerHTML += '<span class="pui-span-left-top">续费提醒</span>';
-								li.setAttribute("data-href", "renewDetail.html");
+							li.setAttribute("data-id",data.data[i].id)
+							if(data.data[i].type == 1) {
+								li.setAttribute("data-href","dueDetail.html")
+							}else if(data.data[i].type == 2) {
+								li.setAttribute("data-href","pasteDueDetail.html")
+							}else if (data.data[i].type == 3) {
+								li.setAttribute("data-href","renewDetail.html")
 							}
-							li.setAttribute("data-msgId", data.data[i].id);
-							li.innerHTML += '<span class="pui-span-dot"></span>';
-							li.innerHTML += '</p>';
-							li.innerHTML += '<p class="pui-p-down">您有' + data.data[i].context.beExpiredCount + '个账户即将到期</p>';
-							li.innerHTML += '</div>';
-							li.innerHTML + '<span class="mui-pull-right pui-span-right">' + data.data[i].context.create_at + '</span>';
-							li.innerHTML + '</a>';
+							var a = document.createElement("a");
+							a.className = "mui-navigate-right";
+							li.appendChild(a);
+							var div	= doc.createElement("div");
+							a.appendChild(div);
+							var pUp = doc.createElement("p");
+							var upspan = document.createElement("span");
+							upspan.className = "pui-span-left-top";
+							if(data.data[i].type == 1) {
+								var upSpanNode = doc.createTextNode("到期提醒");
+							}else if(data.data[i].type == 2) {
+								var upSpanNode = doc.createTextNode("过期提醒");
+							}else if (data.data[i].type == 3) {
+								var upSpanNode = doc.createTextNode("续费提醒");
+							}
+							
+							upspan.appendChild(upSpanNode)
+							var spanDot = doc.createElement("span");
+							spanDot.className = "pui-span-dot";
+							div.appendChild(pUp);
+							pUp.appendChild(upspan);
+							pUp.appendChild(spanDot);
+							var pDown = doc.createElement("p");
+							pDown.className = "pui-p-down";
+							if(data.data[i].type == 1) {
+								var num= JSON.parse(data.data[i].context).beExpiredCount;
+								pDownNode = doc.createTextNode('你有'+num+'个用户即将到期');
+							}else if (data.data[i].type == 2) {
+								var num= JSON.parse(data.data[i].context).expiredCount;
+								pDownNode = doc.createTextNode('你有'+num+'个用户即将过期');
+							}else if (data.data[i].type == 3) {
+								var num= JSON.parse(data.data[i].context).paymentCount;
+								pDownNode = doc.createTextNode('你有'+num+'三个用户需要续费');
+							}
+							
+							pDown.appendChild(pDownNode);
+							div.appendChild(pDown);
+							var spanTime = doc.createElement("span");
+							spanTime.className = "mui-pull-right pui-span-right";
+							
+							spanTimeNode = doc.createTextNode(format(data.data[i].create_at));
+							spanTime.appendChild(spanTimeNode);
+							div.appendChild(spanTime)
 							document.querySelector(".mui-table-view").appendChild(li);
 						}
 
