@@ -76,9 +76,9 @@
 				$.init({});
 				$(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 					var dot = this.firstChild.firstChild.firstChild.lastChild;
-					console.log(dot);
 					var href = this.getAttribute("data-href");
 					var msgId = this.getAttribute("data-id");
+					localStorage.setItem("itemId",msgId)
 					$.ajax(req_url + "/api/v1/notice/read?access_token=" + access_token + "&openid=" + openid, {
 						dataType: 'json', //服务器返回json格式数据
 						type: 'POST', //HTTP请求类型
@@ -110,9 +110,7 @@
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					success: function(data) {
-						console.log(data)
-						localStorage.setItem("msgData", JSON.stringify(data));
-						console.log(msgData)
+						localStorage.setItem("msgData",JSON.stringify(data));
 						for(var i = 0; i < data.data.length; i++) {
 							var li = document.createElement("li");
 							li.className = "mui-table-view-cell";
@@ -145,7 +143,9 @@
 							spanDot.className = "pui-span-dot";
 							div.appendChild(pUp);
 							pUp.appendChild(upspan);
-							pUp.appendChild(spanDot);
+							if(data.data[i].isread == false) {
+								pUp.appendChild(spanDot);
+							}
 							var pDown = doc.createElement("p");
 							pDown.className = "pui-p-down";
 							if(data.data[i].type == 1) {

@@ -26,26 +26,105 @@
 				<li class="mui-table-view-cell">
 					<a href="#">
 						<span>续费日期</span>
-						<span>2015-01-12</span>
+						<span id="time">2015-01-12</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="#">
+					<a class="mui-navigate-right" href="#modal">
 						<span>续费人数</span>
-						<span>3人</span>
+						<span id="count">3人</span>
 					</a>
 				</li>
 			</ul>
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
 					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal"></a>
-					<h1 class="mui-title">列表</h1>
+					<h1 class="mui-title">人数</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
-					<p class="mui-content-padded">显示用户列表同用户管理的列表</p>
+					<!--<form class="mui-input-group" >
+					</form>-->
+					<ul style="margin-top: 0px;" class="mui-table-view" id="modalList">
+						<!--<li class="mui-table-view-cell">
+							<span>年后</span>
+						</li>
+						<li class="mui-table-view-cell">
+							<span>年后</span>
+						</li>-->
+					</ul>
 				</div>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			 mui(".mui-bar").on("tap",".pui-a-right",function(){
+			 	var href = this.getAttribute("data-href");
+			 	mui.openWindow(href);
+			 	
+			})
+			var itemId = localStorage.getItem("itemId")
+			var msgData = JSON.parse(localStorage.getItem("msgData"));
+			var time = document.getElementById("time");
+			var count = document.getElementById("count");
+			for (var i = 0;i<msgData.data.length;i++) {
+				if(msgData.data[i].id == itemId) {
+					time.innerHTML = format(msgData.data[i].create_at);
+					var num= JSON.parse(msgData.data[i].context).paymentCount;
+					count.innerHTML = num+"人"
+				}
+			}
+			
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
+			var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
+			var getOrgId = function() {
+				mui.ajax(orgIdUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							if(data.data.orginfo != null) {
+								var orgId = data.data.orginfo.id;
+								console.log("orgId:" + orgId);
+								getUserList(orgId);
+							}
+						}
+					},
+					error: function() {}
+					});
+				};
+				getOrgId();
+				var getUserList = function(orgId) {
+					mui.ajax(userListUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						data: {
+							"org_id": orgId
+						},
+						success: function(data) {
+							console.log("data:" + JSON.stringify(data));
+								for(var i = 0; i < data.data.length; i++) {
+									var li = document.createElement("li");
+									li.className = "mui-table-view-cell"
+									li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
+									document.getElementById("modalList").appendChild(li)
+								}
+								
+						},
+						error: function() {}
+					});
+				};
+		</script>
+		
 	</body>
 </html>
