@@ -21,43 +21,43 @@
 		<div class="mui-content">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-input">
-					<input type="text" placeholder="输入单位名称" id="unitName" />
+					<input type="text" placeholder="输入长度不少于5位的单位名称" id="unitName" />
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input">
-					<input type="text" placeholder="输入管理员账户" id="unitAccount" />
+					<input type="text" placeholder="输入长度不少于5位的管理员账户" id="unitAccount" />
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input">
-					<input type="text" placeholder="输入管理员密码" id="unitPassword" />
+					<input type="text" placeholder="输入长度不大于6位的管理员密码" id="unitPassword" />
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input">
-					<input type="text" placeholder="输入管理员姓名" id="adminName" />
+					<input type="text" placeholder="输入管理员姓名，默认使用单位名称" id="adminName" />
 				</li>
 			</ul>
 			<ul class="mui-table-view mt30">
 				<li class="mui-table-view-cell">
 					<label for="">位置上报</label>
 					<span></span>
-					<div class="mui-switch mui-active" id="locationSwitch">
+					<div class="mui-switch" id="locationSwitch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">文字广播</label>
 					<span></span>
-					<div class="mui-switch mui-active" id="nofifySwitch">
+					<div class="mui-switch" id="nofifySwitch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">群组录音</label>
 					<span></span>
-					<div class="mui-switch mui-active" id="recordSwitch">
+					<div class="mui-switch" id="recordSwitch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
@@ -102,8 +102,26 @@
 						}, "提示", "确定");
 						return;
 					}
+					if(unitName.length<=5) {
+						$.alert("单位名称的长度不少于5位", function() {
+
+						}, "提示", "确定");
+						return;
+					}
 					if(unitAccount == undefined || unitAccount == null || unitAccount == "") {
 						$.alert("请填写管理员账号", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					if(!(/^[a-zA-Z0-9]+$/.test(unitAccount))) {
+						$.alert("账号只能使用英文数字", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					if(unitAccount.length<=5) {
+						$.alert("账号的长度不少于5位", function() {
 
 						}, "提示", "确定");
 						return;
@@ -114,22 +132,52 @@
 						}, "提示", "确定");
 						return;
 					}
+					if(!(/^[a-zA-Z0-9]+$/.test(unitPassword))) {
+						$.alert("密码只能使用英文数字", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					if(unitPassword.length<6) {
+						$.alert("密码长度不得大于6位", function() {
+
+						}, "提示", "确定");
+						return;
+					}
 					if(adminName == undefined || adminName == null || adminName == "") {
 						$.alert("请填写管理员姓名", function() {
 
 						}, "提示", "确定");
 						return;
 					}
+					if(adminName.length<=5) {
+						$.alert("单位名称的长度不少于5位", function() {
+
+						}, "提示", "确定");
+						return;
+					}
+					console.log(locationSwitch)
 					$.ajax(unitAddUrl, {
 						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
+						type: 'POST', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒;
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded'
 						},
+						data: {
+							'name':unitName,
+							'loginname':unitAccount,
+							'password':unitPassword,
+							'contact':adminName,
+							'allow_located':locationSwitch,
+							'allow_broadcasted':notifySwitch,
+							'allow_recorded':recordSwitch
+						},
 						success: function(data) {
 							if(data.code == 20001) {
-								$.alert("添加成功", function() {}, "提示", "确定");
+								$.alert("添加成功", function() {
+									$.back();
+								}, "提示", "确定");
 							} else {
 								$.alert(data.msg, function() {}, "提示", "确定");
 							}

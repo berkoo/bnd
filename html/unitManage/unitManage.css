@@ -45,3 +45,12 @@ header .pui-a-right {
 	border: 1px solid #ff6600;
 	background: #ff6600;
 }
+.mui-table-view-chevron .mui-table-view-cell {
+	padding-right: 15px !important;
+}
+.pui-p-up i {
+	margin-right: 5px;
+}
+.pui-p-up i:first-child {
+	margin-right: 0;
+}

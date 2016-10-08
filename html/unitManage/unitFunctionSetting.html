@@ -14,33 +14,90 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">功能设置</h1>
-			<a class="mui-pull-right pui-a-right" href="#">保存</a>
+			<a id="save" class="mui-pull-right pui-a-right">保存</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view mt30">
 				<li class="mui-table-view-cell">
 					<label for="">位置上报</label>
 					<span></span>
-					<div class="mui-switch mui-active">
+					<div id="gpsStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">文字广播</label>
 					<span></span>
-					<div class="mui-switch mui-active">
+					<div id="broadcastStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
 					<label for="">群组录音</label>
 					<span></span>
-					<div class="mui-switch">
+					<div id="recordStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var gpsStatus = document.getElementById("gpsStatus");
+			var broadcastStatus = document.getElementById("broadcastStatus");
+			var recordStatus = document.getElementById("recordStatus");
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var orgId = localStorage.getItem("orgId");
+			var uniteData =JSON.parse(localStorage.getItem("uniteData"));
+			//获取到初始状态
+			for(var i= 0;i<uniteData.data.length;i++) {
+				if(uniteData.data[i].id == orgId) {
+					console.log(uniteData.data[i])
+					if(uniteData.data[i].allow_located == 1) {
+						gpsStatus.className += " mui-active"
+					}
+					if(uniteData.data[i].allow_broadcasted == 1) {
+						broadcastStatus.className += " mui-active"
+					}
+					if(uniteData.data[i].allow_recorded == 1) {
+						recordStatus.className += " mui-active"
+					}
+				}
+			}
+			
+			//设置状态
+			document.getElementById("save").addEventListener("tap",function(){
+				var gpsStatus = document.getElementById("gpsStatus").classList.contains("mui-active");
+				var broadcastStatus = document.getElementById("broadcastStatus").classList.contains("mui-active");
+				var recordStatus = document.getElementById("recordStatus").classList.contains("mui-active");
+				mui.ajax(req_url + '/api/v1/org/setting?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data:{
+						'id':orgId,
+						'allow_located':gpsStatus,
+						'allow_broadcasted':broadcastStatus,
+						'allow_recorded':recordStatus
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded' 
+					},
+					success: function(data) {
+						console.log(data)
+						if(data.code == 20001) {
+							mui.alert("保存成功",function(){
+								mui.back();
+							},"提示","确定");
+						};
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+					}
+				});
+			})
+		</script>
 	</body>
 </html>

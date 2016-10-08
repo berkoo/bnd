@@ -16,61 +16,57 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">单位管理</h1>
-			<a class="icon icon-broad mui-pull-right pui-a-right" href="#">&#xe61f;</a>
+			<!--<a class="icon icon-broad mui-pull-right pui-a-right">&#xe61f;</a>-->
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view" id="table">
-				
+				<!--<li class="mui-table-view-cell" data-href="editUnit.html" data-orgId="'+data.data[i].id+'">
+					<p class="pui-p-up">
+						<span>asdasd</span>
+						<i class="icon icon-broad mui-pull-right">&#xe604;</i>
+						<i class="icon icon-broad mui-pull-right">&#xe622;</i>
+						<i class="icon icon-broad mui-pull-right">&#xe603;</i>
+					</p>
+					<p class="pui-p-down">
+						<i class="icon icon-broad">&#xe605;</i>
+						<span>asdas</span>
+						<i class="icon icon-broad ml10">&#xe60e;</i>
+						<span>asdasd</span>
+						<span class="mui-pull-right">asdsad</span>
+					</p>
+				</li>-->
 			</ul>
 			<div class="pui-btn">
 				<button></button><button class="mui-btn mui-btn-yellow" data-href="addUnit.html">新建单位</button>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
-			(function($, undefined) {
-				mui(".pui-btn").on("tap", ".mui-btn", function() {
-					var href = this.getAttribute("data-href");
-					mui.openWindow(href);
-				});
-				mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
-					var href = this.getAttribute("data-href");
-					mui.openWindow(href);
-				});
-				var getOrgList = function() {
-					var openid = localStorage.getItem("ptt_openid");
-					var access_token = localStorage.getItem("access_token");
-					var orgListUrl = req_url + "/api/v1/agent/orgs?access_token=" + access_token + "&openid=" + openid;
-					$.ajax(orgListUrl, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒;
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								console.log("data:"+JSON.stringify(data));
-								var table = document.getElementById("table");
-								table.innerHTML = "";
-								var html = "";
-								for(var i = 0; i < data.data.length; i++) {
-									html += '<li class="mui-table-view-cell" data-href="editUnit.html" data-orgId="'+data.data[i].id+'"><p class="pui-p-up">';
-									html += '<span>'+data.data[i].corg_name+'</span>';
-									html += '<i class="icon icon-broad mui-pull-right">&#xe604;</i></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i>';
-									html += '<span>'+data.data[i].corg_tempgroupprior+'</span><i class="icon icon-broad ml10">&#xe60e;</i><span>'+data.data[i].corg_tempgrouplimitsecond+'</span><span class="mui-pull-right">2015-12-25</span></p></li>';
-								}
-								table.innerHTML = html;
-							} else {
-								$.alert(data.msg, function() {}, "提示", "确定");
-							}
-						},
-						error: function() {}
-					});
+		//启用双击监听
+		mui.init({
+			gestureConfig:{
+				doubletap:true
+			},
+			subpages:[{
+				url:'uniteManage_sub.html',
+				id:'uniteManage_sub.html',
+				styles:{
+					top: '0px',
+					bottom: '42px',
 				}
-				getOrgList();
-			})(mui)
+			}]
+		});
+		mui(".pui-btn").on("tap", ".mui-btn", function() {
+			var href = this.getAttribute("data-href");				
+			mui.openWindow(href);
+		});
+		var contentWebview = null;
+		document.querySelector('header').addEventListener('doubletap',function () {
+			if(contentWebview==null){
+				contentWebview = plus.webview.currentWebview().children()[0];
+			}
+			contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+		});
 		</script>
 	</body>
 

@@ -33,7 +33,7 @@
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<label for="">登录账户</label>
-						<input style="padding-right: 15px;" type="text" readonly="readonly" id="agentLoginName" value="zhangsanfeng" />
+						<input style="padding-right: 15px;" type="text" readonly="readonly" id="agentLoginName" value="" />
 					</a>
 				</li>
 			</ul>
@@ -56,9 +56,39 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
+			
 			(function($, doc, win, undefined) {
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
+				var agentData =JSON.parse(localStorage.getItem("agentData"));
+				var agentName = document.getElementById("agentName");
+				var agentLoginName = document.getElementById("agentLoginName");
+				var agentId = localStorage.getItem("agentId")
+				//获取到代理商
+				for(var i = 0;i<agentData.data.length;i++) {
+					if(agentData.data[i].id == agentId) {
+						agentName.value = agentData.data[i].name;
+					}
+				}
+				//登录账户
+				$.ajax(req_url + "/api/v1/agent/detail?access_token=" + access_token + "&openid=" + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data: {
+						"id": agentId
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							console.log(data.data.account.loginname)
+							agentLoginName.value == data.data.account.loginname;
+						}
+					},
+					error: function() {}
+				});
 				$.ajax(req_url + "/v1/agent/list?access_token=" + access_token + "&openid=" + openid, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'get', //HTTP请求类型
