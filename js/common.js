@@ -130,7 +130,6 @@ function getUser(url, type) {
 					}
 				});
 			}
-
 		},
 		error: function(xhr, type, errorThrown) {
 			console.log(type);
