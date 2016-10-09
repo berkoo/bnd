@@ -1,10 +1,10 @@
 
 @font-face {font-family: "icon-broad";
-  src: url('iconfont.eot?t=1475910533'); /* IE9*/
-  src: url('iconfont.eot?t=1475910533#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('iconfont.woff?t=1475910533') format('woff'), /* chrome, firefox */
-  url('iconfont.ttf?t=1475910533') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('iconfont.svg?t=1475910533#icon-broad') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1475938644'); /* IE9*/
+  src: url('iconfont.eot?t=1475938644#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1475938644') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1475938644') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1475938644#icon-broad') format('svg'); /* iOS 4.1- */
 }
 
 .icon-broad {
@@ -48,6 +48,7 @@
 .icon-broad-menu_delete:before { content: "\e609"; }
 .icon-broad-mima:before { content: "\e61b"; }
 .icon-broad-changyonggongneng:before { content: "\e61e"; }
+.icon-broad-coin:before { content: "\e624"; }
 .icon-broad-account_change:before { content: "\e613"; }
 .icon-broad-dailiren:before { content: "\e621"; }
 .icon-broad-gongju:before { content: "\e616"; }

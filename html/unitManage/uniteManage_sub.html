@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="unitManage.css"/>
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../../css/mui.min.css">
+	</head>
+
+	<body>
+		<!--下拉刷新容器-->
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--数据列表-->
+				<ul class="mui-table-view mui-table-view-chevron" id="table">
+					
+				</ul>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js"></script>
+		<script type="text/javascript">
+			var getOrgList = function() {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var orgListUrl = req_url + "/api/v1/agent/orgs?access_token=" + access_token + "&openid=" + openid;
+				mui.ajax(orgListUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒;
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							console.log("data:"+JSON.stringify(data));
+							localStorage.setItem("uniteData",JSON.stringify(data))
+							var table = document.getElementById("table");
+							table.innerHTML = "";
+							var html = "";
+							for(var i = 0; i < data.data.length; i++) {
+								html += '<li class="mui-table-view-cell" data-href="editUnit.html" data-orgId="'+data.data[i].id+'"><p class="pui-p-up">';
+								html += '<span>'+data.data[i].corg_name+'</span>';
+								if(data.data[i].allow_located == 1) {
+									html += '<i class="icon icon-broad mui-pull-right">&#xe604;</i>';
+								}
+								if(data.data[i].allow_broadcasted == 1) { 
+									html += '<i class="icon icon-broad mui-pull-right">&#xe622;</i>';
+								}
+								if(data.data[i].allow_recorded == 1) {
+									html += '<i class="icon icon-broad mui-pull-right">&#xe603;</i>';
+								}
+								html += '</p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i>';
+								html += '<span>'+data.data[i].corg_tempgroupprior+'</span><i class="icon icon-broad ml10">&#xe60e;</i><span>'+data.data[i].corg_tempgrouplimitsecond+'</span><span class="mui-pull-right">'+format(data.data[i].add_at)+'</span></p></li>';
+							}
+							table.innerHTML = html;
+						} else {
+							$.alert(data.msg, function() {}, "提示", "确定");
+						}
+					},
+					error: function() {}
+				});
+			}
+			getOrgList();
+			(function($) {
+				mui(".pui-btn").on("tap", ".mui-btn", function() {
+					var href = this.getAttribute("data-href");
+					mui.openWindow(href);
+				});
+				mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
+					var href = this.getAttribute("data-href");
+					mui.openWindow(href);
+					var orgId = this.getAttribute("data-orgId");
+					localStorage.setItem("orgId",orgId);
+				});
+				
+			})(mui)
+		</script>
+		<script>
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				setTimeout(function() {
+					getOrgList();
+					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+				}, 1500);
+			}
+			var count = 0;
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				setTimeout(function() {
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+					getOrgList();
+				}, 1500);
+			}
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().pullupLoading();
+					}, 1000);
+
+				});
+			} else {
+				mui.ready(function() {
+					mui('#pullrefresh').pullRefresh().pullupLoading();
+				});
+			}
+
+		</script>
+
+	</body>
+
+</html>

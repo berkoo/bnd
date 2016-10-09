@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
+		<title>功能设置</title>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">功能设置</h1>
+			<a id="save" class="mui-pull-right pui-a-right">保存</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view mt30">
+				<li class="mui-table-view-cell">
+					<label for="">防止串货</label>
+					<span></span>
+					<div id="preventStatus" class="mui-switch">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var preventStatus = document.getElementById("preventStatus");
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var agentData =JSON.parse(localStorage.getItem("agentData"));
+			var agentId = localStorage.getItem("agentId");
+			var preventStatus = document.getElementById("preventStatus");
+			//获取状态
+			mui.ajax(req_url + "/api/v1/agent/detail?access_token=" + access_token + "&openid=" + openid, {
+				dataType: 'json', //服务器返回json格式数据
+				type: 'GET', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				data: {
+					"id": agentId
+				},
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				success: function(data) {
+					if(data.code == 20001) {
+						if(data.data.allow_grabbed == true) {
+							preventStatus.className += " mui-active"
+						}
+					}
+				},
+				error: function() {}
+			});
+			
+			//设置状态
+			document.getElementById("save").addEventListener("tap",function(){
+				var preventStatus = document.getElementById("preventStatus").classList.contains("mui-active");
+				mui.ajax(req_url + '/api/v1/agent/setting?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data:{
+						'id':agentId,
+						'allow_grabbed':preventStatus,
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded' 
+					},
+					success: function(data) {
+						console.log(data)
+						if(data.code == 20001) {
+							mui.alert("保存成功",function(){
+								mui.back();
+							},"提示","确定");
+						};
+					},
+					error: function(xhr, type, errorThrown) {
+						console.log(type);
+					}
+				});
+			})
+		</script>
+	</body>
+</html>

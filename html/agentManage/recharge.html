@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<title>账户充值</title>
+		<style type="text/css">
+			input {
+				border: 0 !important;
+				height: 40px !important;
+				line-height: 40px !important;
+				margin-bottom: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<h1 class="mui-title">账户充值</h1>
+			<a class="mui-pull-right pui-a-right" id="recharge">充值</a>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-input mui-input-row">
+					<input id="account" type="text" class="mui-input-clear pui-account pui-input" placeholder="请输入充值数量">
+				</li>
+			</ul>
+		</div>
+		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var agentId = localStorage.getItem("agentId");
+			document.getElementById("recharge").addEventListener("tap",function(){
+				var account = document.getElementById("account").value;
+				mui.ajax(req_url + "/api/v1/agent/blance/add?access_token=" + access_token + "&openid=" + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					data: {
+						"id": agentId,
+						'count':account
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						console.log(data)
+						if(data.code == 20001) {
+							mui.alert("充值成功",function(){
+								mui.back();
+							},"提示","确定")
+						} else {
+							mui.alert(data.msg, function() {
+								$.back();
+							}, "提示", "确定")
+						}
+					}
+				});
+			})
+			
+		</script>
+	</body>
+</html>

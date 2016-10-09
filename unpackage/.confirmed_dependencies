@@ -1,0 +1,37 @@
+{
+	"html/login/login.html": {
+		"resources": [
+			"html/login/login.css",
+			"js/common.js",
+			"js/jquery-1.11.3.min.js",
+			"js/mui.min.js",
+			"css/common.css",
+			"ux_1473630887_6370625/iconfont.css",
+			"html/login/login.js",
+			"css/mui.min.css",
+			"ux_1473630887_6370625/iconfont.woff",
+			"fonts/mui.ttf"
+		],
+		"refer": [
+			"html/index/adminIndex.html"
+		]
+	},
+	"html/index/adminIndex.html": {
+		"resources": [
+			"html/index/index.css",
+			"imgs/icon_index.png"
+		],
+		"refer": [
+			"html/userManage/userManage.html"
+		]
+	},
+	"html/userManage/userManage.html": {
+		"resources": [
+			"html/userManage/userManage.css",
+			"html/userManage/userManage_sub.html"
+		],
+		"refer": [
+			"html/userManage/userManage_sub.html"
+		]
+	}
+}
