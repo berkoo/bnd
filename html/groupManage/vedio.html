@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,7 +29,7 @@
 			<ul class="mui-table-view mt10" id="groupSend">
 				<li class="mui-table-view-cell">
 					<span>选择群组</span>
-					<a class="mui-pull-right" href="#modal">
+					<a class="mui-pull-right pui-add" href="#modal">
 						<i class=" mui-icon mui-icon-plusempty pui-icon-add"></i>
 					</a>
 				</li>
@@ -38,7 +37,7 @@
 			</ul>
 			<ul class="mui-table-view mt15" id="userSend">
 				<li class="mui-table-view-cell"><span>选择用户</span>
-					<a class="mui-pull-right" href="#modal1"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
+					<a class="mui-pull-right pui-add1" href="#modal1"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
 				</li>
 			</ul>
 			<div id="modal" class="mui-modal">
@@ -72,9 +71,11 @@
 				var groupListUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
 				var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
 				var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
-				var sendMsgUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+				var sendMsgUrl = req_url + "/api/v1/broadcast/send?access_token=" + access_token + "&openid=" + openid;
 				var groupList = new Array();
 				var userList = new Array();
+				var userIds = new Array();
+				var groupIds = new Array();
 				var getOrgId = function() {
 					$.ajax(orgIdUrl, {
 						dataType: 'json', //服务器返回json格式数据
@@ -109,15 +110,16 @@
 						},
 						success: function(data) {
 							console.log("data:" + JSON.stringify(data));
-							if(data.code == 20001) {
-								var html = "";
-								for(var i = 0; i < data.data.length; i++) {
-									html += '<div class="mui-input-row mui-checkbox mui-left">';
-									html += '<label>' + data.data[i].name + '</label>';
-									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
-								}
-								document.getElementById("modalList").innerHTML = html;
-							}
+							localStorage.setItem("groupListData",JSON.stringify(data))
+//							if(data.code == 20001) {
+//								var html = "";
+//								for(var i = 0; i < data.data.length; i++) {
+//									html += '<div class="mui-input-row mui-checkbox mui-left">';
+//									html += '<label>' + data.data[i].name + '</label>';
+//									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
+//								}
+//								document.getElementById("modalList").innerHTML = html;
+//							}
 						},
 						error: function() {}
 					});
@@ -134,44 +136,53 @@
 							"org_id": orgId
 						},
 						success: function(data) {
-							if(data.code == 20001) {
-								var html = "";
-								for(var i = 0; i < data.data.length; i++) {
-									html += '<div class="mui-input-row mui-checkbox mui-left">';
-									html += '<label>' + data.data[i].user_account + '</label>';
-									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].name + '" data-receiverType="0" data-account="' + data.data[i].id + '"></div>';
-								}
-								document.getElementById("modalList").innerHTML = html;
-							}
+							console.log("data:" + JSON.stringify(data));
+							localStorage.setItem("userListData",JSON.stringify(data));
+//								var html = "";
+//								for(var i = 0; i < data.data.length; i++) {
+//									html += '<div class="mui-input-row mui-checkbox mui-left">';
+//									html += '<label>' + data.data[i].user_name + '</label>';
+//									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].user_name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
+//								}
+//								document.getElementById("modal1List").innerHTML = html;
 						},
 						error: function() {}
 					});
 				};
 				getOrgId();
 				doc.getElementById("listSave").addEventListener('tap', function() {
-					var tags = doc.getElementsByTagName("input");
-					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组</span><a class="mui-pull-right" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
+					var tags = doc.querySelectorAll("#modal input")
+					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组</span><a class="mui-pull-right pui-add" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
 					var html = "";
+					groupIds = [];
 					for(var i = 0; i < tags.length; i++) {
 						if(tags[i].getAttribute("data-receiverType") == "4" && tags[i].checked) {
 							groupList.push("text", tags[i].value);
 							html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
 							html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+							var bb = tags[i].getAttribute("data-account");
+							groupIds.push(bb);
 						}
 					}
+					console.log(groupIds);
 					document.getElementById("groupSend").innerHTML += html;
 				}, false);
+				//将获取到的群组成员
 				doc.getElementById("list1Save").addEventListener('tap', function() {
-					var tags = doc.getElementsByTagName("input");
-					document.getElementById("userSend").innerHTML = '<li class="mui-table-view-cell"><span>选择用户</span><a class="mui-pull-right" href="#modal1"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
+					var tags = doc.querySelectorAll("#modal1 input")
+					document.getElementById("userSend").innerHTML = '<li class="mui-table-view-cell"><span>选择用户</span><a class="mui-pull-right pui-add1" href="#modal1"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
 					var html = "";
+					userIds = [];//清空之前的数据
 					for(var i = 0; i < tags.length; i++) {
-						if(tags[i].getAttribute("data-receiverType") == "0" && tags[i].checked) {
-							userList.push(tags[i].value);
+						if(tags[i].checked) {
+							groupList.push("text", tags[i].value);
+							html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
+							html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+							var cc = tags[i].getAttribute("data-account");
+							userIds.push(cc);
 						}
-						html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a></div>';
-						html += '<div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
 					}
+					console.log(userIds);
 					document.getElementById("userSend").innerHTML += html;
 				}, false);
 				document.getElementById("btnSend").addEventListener('tap', function() {
@@ -181,24 +192,26 @@
 						return;
 					}
 					var sendMsg = new Array();
-					for(var group in groupList) {
+					for(var group in groupIds) {
 						sendMsg.push({
-							"receiver": group,
+							"receiver": groupIds[group],
 							"receiver_type": "1"
 						});
 					}
-					for(var user in userList) {
+					for(var user in userIds) {
 						sendMsg.push({
-							"receiver": user,
+							"receiver": userIds[user],
 							"receiver_type": "0"
 						});
 					}
+					console.log(JSON.stringify(sendMsg))
+					
 					$.ajax(sendMsgUrl, {
 						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
+						type: 'POST', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒；
 						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
+							'Content-Type': 'application/json'
 						},
 						data: {
 							"context": content,
@@ -215,17 +228,81 @@
 						},
 						error: function() {}
 					});
-				}, false);
+				}, false);				
+
+				Array.prototype.remove=function(dx) 
+					{ 
+					  if(isNaN(dx)||dx>this.length){return false;} 
+					  for(var i=0,n=0;i<this.length;i++) 
+					  { 
+					    if(this[i]!=this[dx]) 
+					    { 
+					      this[n++]=this[i] 
+					    } 
+					  } 
+					  this.length-=1 
+					} 
+			
 				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
 					var id = this.getAttribute("data-id");
 					this.parentNode.parentNode.remove(this.parentNode);
-					for(var i = 0; i < groupList.length; i++) {
-						groupList.remove(id);
+					for(var i = 0; i < groupIds.length; i++) {
+						if(groupIds[i]==id){
+							groupIds.remove(i);
+						}
 					}
-					for(var i = 0; i < userList.length; i++) {
-						groupList.remove(id);
+					for(var i = 0; i < userIds.length; i++) {
+						if(userIds[i]==id){
+							userIds.remove(i);
+						}
 					}
+					
 				});
+				
+				//遍历
+				mui(".mui-table-view").on("tap",".pui-add",function(){
+					var groupListData = JSON.parse(localStorage.getItem("groupListData"));
+					var html = "";
+					for(var i = 0; i < groupListData.data.length; i++) {
+						html += '<div class="mui-input-row mui-checkbox mui-left">';
+						html += '<label>' + groupListData.data[i].name + '</label>';
+						if(groupIds.length ==0) {
+							html += '<input name="checkbox" type="checkbox" value="' + groupListData.data[i].name + '" data-receiverType="4" data-account="' + groupListData.data[i].id + '"></div>';
+						}
+						if(groupIds.length >0) {
+							for (var k = 0;k<groupIds.length;k++) {
+								if(groupIds[k] == groupListData.data[i].id) {
+									html += '<input checked name="checkbox" type="checkbox" value="' + groupListData.data[i].name + '" data-receiverType="4" data-account="' + groupListData.data[i].id + '"></div>';
+								}else {
+									html += '<input name="checkbox" type="checkbox" value="' + groupListData.data[i].name + '" data-receiverType="4" data-account="' + groupListData.data[i].id + '"></div>';
+								}
+							}
+						}
+					}
+					document.getElementById("modalList").innerHTML = html;
+				})
+				
+				mui(".mui-table-view").on("tap",".pui-add1",function(){
+					var userListData = JSON.parse(localStorage.getItem("userListData"));
+					var html = "";
+					for(var i = 0; i < userListData.data.length; i++) {
+						html += '<div class="mui-input-row mui-checkbox mui-left">';
+						html += '<label>' + userListData.data[i].user_name + '</label>';
+						if(userIds.length == 0) {
+							html += '<input name="checkbox" type="checkbox" value="' + userListData.data[i].user_name + '" data-receiverType="4" data-account="' + userListData.data[i].id + '"></div>';
+						}
+						if(userIds.length >0) {
+							for (var k = 0;k<userIds.length;k++) {
+								if(userIds[k] == userListData.data[i].id) {
+									html += '<input checked name="checkbox" type="checkbox" value="' + userListData.data[i].user_name + '" data-receiverType="4" data-account="' + userListData.data[i].id + '"></div>';
+								}else {
+									html += '<input name="checkbox" type="checkbox" value="' + userListData.data[i].user_name + '" data-receiverType="4" data-account="' + userListData.data[i].id + '"></div>';
+								}
+							}
+						}
+					}
+					document.getElementById("modal1List").innerHTML = html;
+				})
 			}(mui, document));
 		</script>
 	</body>
