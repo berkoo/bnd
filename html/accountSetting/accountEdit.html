@@ -170,6 +170,7 @@
         										
         									},"提示","确定")
 										}else {
+											document.getElementById("phoneNum").value = e.value;
     										mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
 												dataType: 'json',
 												type: 'post',
@@ -281,7 +282,35 @@
 							province.innerText = (items[0] || {}).text;
 							city.innerText = (items[1] || {}).text;
 							area.innerText = (items[2] || {}).text;
-							//return false;
+							mui.ajax(req_url + '/api/v1/profile/area?access_token=' + access_token + '&openid=' + openid, {
+								dataType: 'json',
+								type: 'POST',
+								timeout: 10000,
+								data: {
+									'countryid': 86,
+									'provinceid':(items[0] || {}).value,
+									'cityid':(items[1] || {}).value,
+									'districtid':(items[2] || {}).value
+								},
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded'
+								},
+								success: function(data) {
+									console.log(data)
+									if(data.code == 20001) {
+										console.log(data)
+										if(data.code == 20001) {
+											mui.alert(data.msg, function() {
+												
+											}, "提示", "确定")
+										}
+									}
+								},
+								error: function(xhr, type, errorThrown) {
+									//异常处理；
+									console.log(type);
+								}
+							});
 						});
 					}, false);
 				});

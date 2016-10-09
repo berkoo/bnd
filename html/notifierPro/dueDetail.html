@@ -75,8 +75,7 @@
 					count.innerHTML = num+"人"
 				}
 			}
-			
-			
+
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
 			var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
@@ -121,7 +120,6 @@
 									li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
 									document.getElementById("modalList").appendChild(li)
 								}
-								
 						},
 						error: function() {}
 					});

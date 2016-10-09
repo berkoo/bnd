@@ -171,7 +171,7 @@
 									type: 'post',
 									timeout: 10000,
 									data: {
-										'email': 'wanglanfeng@broad.com'
+										'email': e.value
 									},
 									headers: {
 										'Content-Type': 'application/x-www-form-urlencoded'
@@ -256,7 +256,8 @@
 						},
 						success: function(data) {
 							if(data.code == 20001) {
-								document.getElementById("username").value = data.data.nickname;
+								console.log(data)
+								document.getElementById("username").value = data.data.orginfo.contact;
 								document.getElementById("loginName").value = data.data.loginname;
 								document.getElementById("corg_name").value = data.data.orginfo.corg_name;
 								document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
@@ -274,7 +275,7 @@
 					if(data != null) {
 						data = JSON.parse(data);
 					}
-					document.getElementById("username").value = data.data.nickname;
+					document.getElementById("username").value = ddata.data.orginfo.contact;
 					document.getElementById("loginName").value = data.data.loginname;
 					document.getElementById("corg_name").value = data.data.orginfo.corg_name;
 					document.getElementById("phoneNumber").value = data.data.orginfo.mobile;

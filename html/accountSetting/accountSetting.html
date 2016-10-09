@@ -120,7 +120,7 @@
 						success: function(data) {
 							if(data.code == 20001) {
 								console.log(data)
-								nickName.innerHTML = data.data.nickname;
+								nickName.innerHTML = data.data.orginfo.contact;
 								corg_name.innerHTML = data.data.orginfo.corg_name;
 								if(data.data.orginfo.allow_located == false) {
 									gpsStatus.innerHTML = "未开启";

@@ -61,6 +61,8 @@
 							</li>
 						</ul>
 					</form>
+					<!--<button class="mui-btn mui-btn-block mui-btn-green mt15">搜索</button>-->
+					<button class="mui-btn mui-btn-block mui-btn-grey mt15">重置</button>
 				</div>
 			</div>
 		</div>
@@ -80,42 +82,56 @@
 						url: href
 					});
 				});
-//				var getAgentList = function(name, province_id, city_id, district_id, length, start) {
-//					var openid = localStorage.getItem("ptt_openid");
-//					var access_token = localStorage.getItem("access_token");
-//					var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
-//					$.ajax(agentListUrl, {
-//						dataType: 'json', //服务器返回json格式数据
-//						type: 'GET', //HTTP请求类型
-//						timeout: 10000, //超时时间设置为10秒;
-//						headers: {
-//							'Content-Type': 'application/x-www-form-urlencoded'
-//						},
-//						data: {
-//							"name": document.getElementById("searchName").value,
-//							"province_id": document.getElementById("province").getAttr ibute("data-id") || "110000",
-//							"city_id": document.getElementById("city").getAttribute("data-id") || "110101",
-//							"district_id": document.getElementById("area").getAttribute("data-id") || "110101",
-//						},
-//						success: function(data) {
-//							console.log("data:" + JSON.stringify(data));
-//							var tableView = document.getElementById("tableView");
-//							tableView.innerHTML = "";
-//							var html = "";
-//							for(var i = 0; i < data.data.length; i++) {
-//								html += '<li class="mui-table-view-cell" data-id="' + data.data[i].id + '" data-href="agentDetail.html"><p class="pui-p-up">' + data.data[i].name + '</p>';
-//								html += '<p class="pui-p-down">' + data.data[i].contact + '</p><span class="mui-pull-right pui-time-right">' + data.data[i].create_at + '</span></li>';
-//							}
-//							tableView.innerHTML = html;
-//						},
-//						error: function() {}
-//					});
-//				}
-//				document.getElementById("search").addEventListener('tap', function() {
-//					getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
-//				}, false);
-
-				
+				document.getElementById("search").addEventListener('tap', function() {
+					
+//					agentManage_sub.window.getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
+				}, false);
+			
+			//获取代理商列表
+			var getAgentList = function(name, province_id, city_id, district_id) {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
+				if(name == undefined || name == null) {
+					name = "";
+				}
+				if(province_id == undefined || province_id == null) {
+					province_id = "";
+				}
+				if(city_id == undefined || city_id == null) {
+					city_id = "";
+				}
+				if(district_id == undefined || district_id == null) {
+					district_id = "";
+				}
+				mui.ajax(agentListUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒;
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						"name":name,
+						"province_id":province_id,
+						"city_id":city_id,
+						"district_id":district_id
+					},
+					success: function(data) {
+						localStorage.setItem("agentData",JSON.stringify(data))
+						document.querySelector(".mui-table-view").innerHTML = "";
+						for(var i = 0;i<data.data.length;i++) {
+							var li = document.createElement("li");
+							li.setAttribute("data-id",data.data[i].id)
+							li.className = "mui-table-view-cell";
+							li.setAttribute("data-href","agentDetail.html")
+							li.innerHTML = '<p class="pui-p-up">'+data.data[i].name+'</p><p class="pui-p-down">'+data.data[i].contact+'</p><span class="mui-pull-right pui-time-right">'+format(data.data[i].create_at)+'</span>';
+							document.querySelector(".mui-table-view").appendChild(li)
+						}
+					},
+					error: function() {}
+				});
+			}
 			})(mui);
 		</script>
 		<script type="text/javascript">
@@ -126,7 +142,7 @@
 				},
 				subpages:[{
 					url:'agentManage_sub.html',
-					id:'agentManage_sub.html',
+					id:'agentManage_sub',
 					styles:{
 						top: '44px',
 						bottom: '42px',
@@ -145,6 +161,29 @@
 				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
 			});
 		</script>
+		<script type="text/javascript">
+			mui.ready(function() {
+					var cityPicker3 = new mui.PopPicker({
+						layer: 3
+					})
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = document.getElementById('showCityPicker3');
+					var cityResult3 = document.getElementById('cityResult3');
+					
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							//返回 false 可以阻止选择框的关闭
+							province.innerText = (items[0] || {}).text;
+							city.innerText = (items[1] || {}).text;
+							area.innerText = (items[2] || {}).text;
+							province.setAttribute("data-id",(items[0] || {}).value);
+							city.setAttribute("data-id",(items[1] || {}).value);
+							area.setAttribute("data-id",(items[2] || {}).value);
+						});
+					}, false);
+				});
+		</script>
+		
 	</body>
 
 </html>
