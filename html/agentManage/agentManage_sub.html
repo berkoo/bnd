@@ -39,12 +39,17 @@
 					}
 				}
 			}); 
+			
+			var name = localStorage.getItem("name");
+			var province = localStorage.getItem("province");
+			var city = localStorage.getItem("city");
+			var area = localStorage.getItem("area");
 			/**
 			 * 下拉刷新具体业务实现
 			 */
 			function pulldownRefresh() {
 				setTimeout(function() {
-					getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
+					getAgentList();
 					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
 				});
 			}
@@ -55,7 +60,7 @@
 			function pullupRefresh() {
 				setTimeout(function() {
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
-					getAgentList("nihaoya");
+					getAgentList();
 				});
 			}
 			if (mui.os.plus) {

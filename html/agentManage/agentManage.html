@@ -83,55 +83,9 @@
 					});
 				});
 				document.getElementById("search").addEventListener('tap', function() {
-					
-//					agentManage_sub.window.getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
+//					getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"))
+					agentManage_sub.window.getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
 				}, false);
-			
-			//获取代理商列表
-			var getAgentList = function(name, province_id, city_id, district_id) {
-				var openid = localStorage.getItem("ptt_openid");
-				var access_token = localStorage.getItem("access_token");
-				var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
-				if(name == undefined || name == null) {
-					name = "";
-				}
-				if(province_id == undefined || province_id == null) {
-					province_id = "";
-				}
-				if(city_id == undefined || city_id == null) {
-					city_id = "";
-				}
-				if(district_id == undefined || district_id == null) {
-					district_id = "";
-				}
-				mui.ajax(agentListUrl, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'GET', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒;
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					data: {
-						"name":name,
-						"province_id":province_id,
-						"city_id":city_id,
-						"district_id":district_id
-					},
-					success: function(data) {
-						localStorage.setItem("agentData",JSON.stringify(data))
-						document.querySelector(".mui-table-view").innerHTML = "";
-						for(var i = 0;i<data.data.length;i++) {
-							var li = document.createElement("li");
-							li.setAttribute("data-id",data.data[i].id)
-							li.className = "mui-table-view-cell";
-							li.setAttribute("data-href","agentDetail.html")
-							li.innerHTML = '<p class="pui-p-up">'+data.data[i].name+'</p><p class="pui-p-down">'+data.data[i].contact+'</p><span class="mui-pull-right pui-time-right">'+format(data.data[i].create_at)+'</span>';
-							document.querySelector(".mui-table-view").appendChild(li)
-						}
-					},
-					error: function() {}
-				});
-			}
 			})(mui);
 		</script>
 		<script type="text/javascript">
@@ -160,6 +114,52 @@
 				}
 				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
 			});
+			
+			//获取代理商列表
+			var getAgentList = function(name, province_id, city_id, district_id) {
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
+				var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
+				if(name == undefined || name == null) {
+					name = "";
+				}
+				if(province_id == undefined || province_id == null) {
+					province_id = "";
+				}
+				if(city_id == undefined || city_id == null) {
+					city_id = "";
+				}
+				if(district_id == undefined || district_id == null) {
+					district_id = "";
+				}
+					mui.ajax(agentListUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒;
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						"name":name,
+						"province_id":province_id,
+						"city_id":city_id,
+						"district_id":district_id
+					},
+					success: function(data) {
+						localStorage.setItem("agentData",JSON.stringify(data))
+						console.log(data)
+						for(var i = 0;i<data.data.length;i++) {
+							var li = document.createElement("li");
+							li.setAttribute("data-id",data.data[i].id)
+							li.className = "mui-table-view-cell";
+							li.setAttribute("data-href","agentDetail.html")
+							li.innerHTML = '<p class="pui-p-up">'+data.data[i].name+'</p><p class="pui-p-down">'+data.data[i].contact+'</p><span class="mui-pull-right pui-time-right">'+format(data.data[i].create_at)+'</span>';
+							document.querySelector(".mui-table-view").appendChild(li)
+						}
+					},
+					error: function() {}
+				});
+			}
 		</script>
 		<script type="text/javascript">
 			mui.ready(function() {
