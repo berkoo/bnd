@@ -92,12 +92,12 @@
 					},
 					success: function(data) {
 						console.log(data)
-//						for(var i = 0; i < data.data.length; i++) {
-//							var li = document.createElement("li");
-//							li.className = "mui-table-view-cell"
-//							li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
-//							document.getElementById("modalList").appendChild(li)
-//						}
+						for(var i = 0; i < data.data.length; i++) {
+							var li = document.createElement("li");
+							li.className = "mui-table-view-cell"
+							li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
+							document.getElementById("modalList").appendChild(li)
+						}
 						
 					},
 					error: function() {}
