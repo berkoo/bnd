@@ -37,8 +37,9 @@
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				var agentId = localStorage.getItem("agentId");
+				
 				doc.getElementById("save").addEventListener("tap", function() {
-					
+					console.log(agentId)
 					var newPwd = document.getElementById("newPwd").value;
 					var sureNewPwd = document.getElementById("sureNewPwd").value;
 					console.log(agentId);

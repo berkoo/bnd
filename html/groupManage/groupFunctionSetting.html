@@ -24,7 +24,7 @@
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>-->
-				<li  class="mui-table-view-cell">
+				<li class="mui-table-view-cell">
 					<label for="">群组录音</label>
 					<span></span>
 					<div id="recordStatus" class="mui-switch">
@@ -39,11 +39,17 @@
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
 			var groupList =localStorage.getItem("groupListData");
+			
+			//开启了群组录音功能 最后才能设置
+			var logonRecordedStatus = localStorage.getItem("logonRecordedStatus")
+			if(logonRecordedStatus == "false") {
+				document.getElementById("recordStatus").className += " mui-disabled"
+			}
 			if(groupList!=null){
 				groupList = JSON.parse(groupList).data;
 				for (var i=0;i<groupList.length;i++) {
 					if(groupList[i].id==localStorage.getItem("groupId")){
-						if(groupList[i].disabled == false) {
+						if(groupList[i].disabled == 'false') {
 							document.getElementById("enableStatus").className += " mui-active";
 						}
 						//保存功能设置

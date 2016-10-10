@@ -32,7 +32,7 @@
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" href="#modal">
 						<span>续费人数</span>
-						<span id="count">3人</span>
+						<span id="count">人</span>
 					</a>
 				</li>
 			</ul>
@@ -77,53 +77,35 @@
 			
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
-			var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
+			var userListUrl = req_url + "/api/v1/notice/users?access_token=" + access_token + "&openid=" + openid;
 			var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
-			var getOrgId = function() {
-				mui.ajax(orgIdUrl, {
+			console.log(itemId)
+			var getUserList = function() {
+				mui.ajax(userListUrl, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'GET', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
+					data: {
+						"id": itemId
+					},
 					success: function(data) {
-						if(data.code == 20001) {
-							if(data.data.orginfo != null) {
-								var orgId = data.data.orginfo.id;
-								console.log("orgId:" + orgId);
-								getUserList(orgId);
+						console.log(data)
+						console.log("data:" + JSON.stringify(data));
+							for(var i = 0; i < data.data.length; i++) {
+								var li = document.createElement("li");
+								li.className = "mui-table-view-cell"
+								li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
+								document.getElementById("modalList").appendChild(li)
 							}
-						}
+							
 					},
 					error: function() {}
-					});
-				};
-				getOrgId();
-				var getUserList = function(orgId) {
-					mui.ajax(userListUrl, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						data: {
-							"org_id": orgId
-						},
-						success: function(data) {
-							console.log("data:" + JSON.stringify(data));
-								for(var i = 0; i < data.data.length; i++) {
-									var li = document.createElement("li");
-									li.className = "mui-table-view-cell"
-									li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
-									document.getElementById("modalList").appendChild(li)
-								}
-								
-						},
-						error: function() {}
-					});
-				};
+				});
+			};
+			getUserList();
 		</script>
 		
 	</body>

@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header class="mui-bar">
-			<a class=" mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">创建群组</h1>
 			<a id="btnSend" class="mui-pull-right pui-a-right">保存</a>
 		</header>
@@ -41,7 +41,7 @@
 			<ul class="mui-table-view mt10" id="groupSend">
 				<li class="mui-table-view-cell">
 					<span>选择群组成员</span>
-					<a class="mui-pull-right pui-add" href="#modal">
+					<a class="mui-pull-right" href="#modal">
 						<i class=" mui-icon mui-icon-plusempty pui-icon-add"></i>
 					</a>
 				</li>
@@ -83,9 +83,6 @@
 			mui(".mui-bar").on("tap",".pui-a-right",function(){
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href)
-			})
-			document.querySelector(".pui-a-left").addEventListener("tap",function(){
-				mui.openWindow('../index/adminIndex.html');
 			})
 		</script>
 		<script>
@@ -137,14 +134,13 @@
 						},
 						success: function(data) {
 							console.log("data:" + JSON.stringify(data));
-							localStorage.setItem("userListData",JSON.stringify(data));
-//								var html = "";
-//								for(var i = 0; i < data.data.length; i++) {
-//									html += '<div class="mui-input-row mui-checkbox mui-left">';
-//									html += '<label>' + data.data[i].user_name + '</label>';
-//									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].user_name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
-//								}
-//								document.getElementById("modalList").innerHTML = html;
+								var html = "";
+								for(var i = 0; i < data.data.length; i++) {
+									html += '<div class="mui-input-row mui-checkbox mui-left">';
+									html += '<label>' + data.data[i].user_name + '</label>';
+									html += '<input name="checkbox" type="checkbox" value="' + data.data[i].user_name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
+								}
+								document.getElementById("modalList").innerHTML = html;
 						},
 						error: function() {}
 					});
@@ -153,7 +149,7 @@
 				doc.getElementById("listSave").addEventListener('tap', function() {
 //					var tags = doc.getElementsByTagName("input");
 					var tags = doc.querySelectorAll("#modal input")
-					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组成员</span><a class="mui-pull-right pui-add" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
+					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组</span><a class="mui-pull-right" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
 					var html = "";
 					userIds = [];//清空之前的数据
 					for(var i = 0; i < tags.length; i++) {
@@ -177,13 +173,20 @@
 							priority = chec[k].value;
 						}
 					}
-					alert(priority)
 				});
+				
+				//移除
+				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+					var id = this.getAttribute("data-id");
+					this.parentNode.parentNode.remove(this.parentNode);
+				});
+				
 				
 				//点击发送
 				var send = function(orgId){
 					doc.getElementById("btnSend").addEventListener("tap",function(){
 						var groupName = document.getElementById("groupName").value;
+//						var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
 						var groups = new Array();
 							for(var idd in userIds) {
 								groups.push({
@@ -191,7 +194,7 @@
 									'priorities':priority
 								})
 							}
-							console.log("groups"+groups)
+							console.log(groups)
 						if(groupName == "") {
 							mui.alert("请输入群组名称",function(){
 								
@@ -203,6 +206,7 @@
 								timeout: 10000, //超时时间设置为10秒；
 								data:{
 									'name':groupName,
+//									'disabled':enableStatus,
 									'org_id':orgId,
 									'members':groups
 								},
@@ -211,7 +215,7 @@
 								},
 								success: function(data) {
 									$.alert("创建成功",function(){
-//										$.openWindow("groupManage.html")
+										$.openWindow("groupManage.html")
 									},"提示","确定")
 								},
 								error: function() {}
@@ -219,71 +223,6 @@
 						}
 					})
 				}
-				
-				Array.prototype.remove=function(dx) { 
-					  if(isNaN(dx)||dx>this.length){return false;} 
-					  for(var i=0,n=0;i<this.length;i++) 
-					  { 
-					    if(this[i]!=this[dx]) 
-					    { 
-					      this[n++]=this[i] 
-					    } 
-					  } 
-					  this.length-=1 
-				} 
-				
-//				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
-//					var id = this.getAttribute("data-id");
-//					this.parentNode.parentNode.remove(this.parentNode);
-//					for(var i = 0; i < userIds.length; i++) {
-//						if(userIds[i]==id){
-//							userIds.remove(i);
-//						}
-//					}
-//				});
-				
-				$(".mui-table-view").on('tap', 'a.mui-btn-red', function(e) {
-					var id = this.getAttribute("data-id");
-					var elem = this;
-					var li = elem.parentNode.parentNode;
-					mui.confirm('确认移除该条记录？', '', btnArray, function(e) {
-						if (e.index == 0) {
-							for(var i = 0; i < userIds.length; i++) {
-								if(userIds[i]==id){
-									userIds.remove(i);
-								}
-							}
-							li.parentNode.removeChild(li);
-						} else {
-							setTimeout(function() {
-								$.swipeoutClose(li);
-							}, 0);
-						}
-					});
-				});
-				var btnArray = ['确认', '取消'];
-				//遍历用户
-				mui(".mui-table-view").on("tap",".pui-add",function(){
-					var userListData = JSON.parse(localStorage.getItem("userListData"));
-					var html = "";
-					for(var i = 0; i < userListData.data.length; i++) {
-						html += '<div class="mui-input-row mui-checkbox mui-left">';
-						html += '<label>' + userListData.data[i].user_name + '</label>';
-						if(userIds.length == 0) {
-							html += '<input name="checkbox" type="checkbox" value="' + userListData.data[i].user_name + '" data-receiverType="4" data-account="' + userListData.data[i].id + '"></div>';
-						}
-						if(userIds.length>0) {
-							for(var k = 0;k<userIds.length;k++) {
-								if(userIds[k] == userListData.data[i].id) {
-									html += '<input checked name="checkbox" type="checkbox" value="' + userListData.data[i].user_name + '" data-receiverType="4" data-account="' + userListData.data[i].id + '"></div>';
-								}else {
-									html += '<input name="checkbox" type="checkbox" value="' + userListData.data[i].user_name + '" data-receiverType="4" data-account="' + userListData.data[i].id + '"></div>';
-								}
-							}
-						}
-					}
-					document.getElementById("modalList").innerHTML = html;
-				})
 				
 			}(mui, document));
 		</script>

@@ -116,7 +116,8 @@
 						"district_id":district_id
 					},
 					success: function(data) {
-						localStorage.setItem("agentData",JSON.stringify(data))
+						localStorage.setItem("agentData",JSON.stringify(data));
+						document.querySelector(".mui-table-view").innerHTML = "";
 						console.log(data)
 						for(var i = 0;i<data.data.length;i++) {
 							var li = document.createElement("li");
