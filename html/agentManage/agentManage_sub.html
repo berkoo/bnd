@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
+		<title>代理商列表</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
@@ -116,6 +116,7 @@
 						"district_id":district==null?'':district
 					},
 					success: function(data) {
+						console.log(data)
 						localStorage.setItem("agentData",JSON.stringify(data));
 						document.querySelector(".mui-table-view").innerHTML = "";
 						for(var i = 0;i<data.data.length;i++) {

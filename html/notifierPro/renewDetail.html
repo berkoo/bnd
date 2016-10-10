@@ -89,7 +89,8 @@
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					data: {
-						"id": itemId
+						"id": itemId,
+						"type":3
 					},
 					success: function(data) {
 						console.log(data)
@@ -100,7 +101,6 @@
 								li.innerHTML = '<span>'+data.data[i].nickname+'</span>';
 								document.getElementById("modalList").appendChild(li)
 							}
-							
 					},
 					error: function() {}
 				});
