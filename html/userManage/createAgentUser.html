@@ -22,7 +22,7 @@
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" href="#modal1">
-						<span id="org">消防宝安消防支队</span>
+						<span id="org">选择单位</span>
 					</a>
 				</li>
 			</ul>
@@ -55,10 +55,10 @@
 					<span>加入群组</span>
 					<a id="add" href="#modal" class="mui-pull-right" style="display:inline-block;" href=""><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
 				</li>
-				<li class="mui-table-view-cell" v-for="item in items">
+				<li class="mui-table-view-cell data" v-for="item in items" data-groupId="{{item.id}}">
 					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-green">默认</a>
-						<a class="mui-btn mui-btn-red" data-groupId="{{item.id}}">移除</a>
+						<a class="mui-btn mui-btn-green" data-opera="default">默认</a>
+						<a class="mui-btn mui-btn-red" data-opera="del" data-groupId="{{item.id}}">移除</a>
 					</div>
 					<div class="mui-slider-handle">
 						{{item.name}}
@@ -169,11 +169,63 @@
 				var items = [];
 				for(var i = 0; i < list.length; i++) {
 					items.push({
-						id:list.getAttribute("data-account"),
-						name:list.value
+						id: list[i].getAttribute("data-account"),
+						name: list[i].value
 					})
 				}
 				listdata.items = items;
+			});
+			document.getElementById('save').addEventListener('tap', function() {
+				var addUrl = req_url + "/api/v1/terminal/add?access_token=" + access_token + "&openid=" + openid;
+				var orgId = document.getElementById("org").getAttribute("data-orgid");
+				var iccid = document.getElementById("iccid").value;
+				var name = document.getElementById("username").value;
+				if(orgId == undefined || orgId == null || orgId == "") {
+					mui.alert("请选择单位", "提示", "确定", function() {});
+					return;
+				}
+				if(iccid == undefined || iccid == null || iccid == "") {
+					mui.alert("请输入ICCID", "提示", "确定", function() {});
+					return;
+				}
+				if(name == undefined || name == null || name == "") {
+					mui.alert("请输入姓名", "提示", "确定", function() {});
+					return;
+				}
+				var sendData = {
+					org_id: orgId,
+					user_account: iccid,
+					nickname: name,
+					groups: []
+				}
+				var listgroup = document.querySelectorAll("#OA_task_2 li.data");
+				for(var i = 0; i < listgroup.length; i++) {
+					sendData.groups.push({
+						id: listgroup[i].getAttribute("data-groupid")
+					})
+				}
+				console.log("sendData:"+JSON.stringify(sendData));
+				mui.ajax(addUrl, {
+					data: sendData,
+					dataType: 'json', //服务器返回json格式数据
+					type: 'POST', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						if(data.code==20001){
+							mui.alert("添加成功","提示","确定",function(){});
+							mui.back();
+						}else{
+							mui.alert(data.msg,"提示","确定",function(){});
+						}
+					}
+				});
+			});
+			mui("#OA_task_2").on("tap","li.data a",function(){
+				var opera = this.getAttribute("data-opera");
+				document.getElementById("OA_task_2").removeChild(this.parentNode.parentNode);
 			});
 		</script>
 	</body>
