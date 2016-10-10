@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -10,6 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="createUser.css" />
 		<title>创建用户</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -20,7 +22,7 @@
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
 					<a class="mui-navigate-right" href="#modal1">
-						<span>消防宝安消防支队</span>
+						<span id="org">消防宝安消防支队</span>
 					</a>
 				</li>
 			</ul>
@@ -53,27 +55,7 @@
 					<span>加入群组</span>
 					<a id="add" href="#modal" class="mui-pull-right" style="display:inline-block;" href=""><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
 				</li>
-				<!--<li class="mui-table-view-cell">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-green">默认</a>
-						<a class="mui-btn mui-btn-red">移除</a>
-					</div>
-					<div class="mui-slider-handle">
-						<div id="groupName" class="mui-table-cell">
-						</div>
-					</div>
-				</li>-->
-				<!--<li class="mui-table-view-cell">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-green">默认</a>
-						<a class="mui-btn mui-btn-red">移除</a>
-					</div>
-					<div class="mui-slider-handle">
-						<div class="mui-table-cell">
-							测试群组100
-						</div>
-					</div>
-				</li>-->
+				
 			</ul>
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
@@ -81,11 +63,11 @@
 					<h1 class="mui-title">选择加入的群组</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
-					<form class="mui-input-group">
-						<!--<div class="mui-input-row mui-checkbox mui-left">
-							<label>checked：false</label>
-							<input name="checkbox" type="checkbox" >
-						</div>-->
+					<form class="mui-input-group" id="modalList1">
+						<div class="mui-input-row mui-checkbox mui-left" v-for="data in datas">
+							<label>{{data.name}}</label>
+							<input name="checkbox" type="checkbox" data-account="{{data.id}}" value="{{data.name}}">
+						</div>
 					</form>
 				</div>
 			</div>
@@ -96,15 +78,12 @@
 				</header>
 				<div class="mui-content" style="height: 100%;">
 					<form class="mui-input-group" id="modalList">
-						<!--<div class="mui-input-row mui-radio mui-left">
-							<label>radio</label>
-							<input name="radio1" type="radio">
-						</div>-->
 					</form>
 				</div>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/vue.js"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			var openid = localStorage.getItem("ptt_openid");
@@ -138,11 +117,44 @@
 				}
 			});
 			//点击保存单位
-			document.getElementById("listSave1").addListener("tap",function(){
+			document.getElementById('listSave1').addEventListener('tap', function() {
+				document.getElementById("org").innerHTML = document.querySelector("#modalList input:checked").value;
+				document.getElementById("org").setAttribute("data-orgId", document.querySelector("#modalList input:checked").getAttribute("data-account"))
+				loadGroupList(document.getElementById("org").getAttribute("data-orgId"));
+			});
+			var groupdata = {
+				datas: []
+			};
+			var groupVue = new Vue({
+				el: "#modalList1",
+				data: groupdata
+			});
+			var loadGroupList = function(orgId) {
+				var groupLIstUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+				mui.ajax(groupLIstUrl, {
+					data: {
+						org_id: orgId
+					},
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					success: function(data) {
+						console.log("data:" + JSON.stringify(data));
+						if(data.code == 20001) {
+							groupdata.datas = data.data;
+						}
+					}
+				});
+			};
+			document.getElementById('listSave').addEventListener('tap', function() {
+				var list = document.querySelectorAll("#modalList1 input:checked");
 				
-			})
-
+			});
 		</script>
 	</body>
 
 </html>
+			
