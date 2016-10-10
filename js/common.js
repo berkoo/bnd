@@ -45,6 +45,7 @@ function refresh(url, type) {
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					success: function(data) {
+						document.querySelector(".mui-table-view").innerHTML = "";
 						//TODO 将获取的数据列表放入本地存储中。。。。
 						//localStorage.setItem("userListData",JSON.stringify(data));
 						if(type == "user") {
@@ -61,7 +62,7 @@ function refresh(url, type) {
 								li.setAttribute("data-href", "editGroup.html");
 								li.setAttribute('data-id',data.data[n].id);
 								li.innerHTML = '<div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red">删除</a></div>';
-								li.innerHTML += '<div class="mui-slider-handle mui-table"><div class="mui-table-cell"><p><span>' + data.data[n].name + '</span></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].members_count+'</span></p><span class="mui-pull-right pui-slider-right">'+format(data.data[n].cg_createtime)+'</span></div></div>';
+								li.innerHTML += '<div class="mui-slider-handle mui-table"><div class="mui-table-cell"><p><span>' + data.data[n].name + '</span></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].members_count+'</span></p><span class="mui-pull-right pui-slider-right">'+format(data.data[n].cg_createtime*1000)+'</span></div></div>';
 								document.body.querySelector('.mui-table-view').appendChild(li);
 							}
 							if(type == 'user') {
@@ -71,7 +72,7 @@ function refresh(url, type) {
 								li.innerHTML = '<div class="mui-slider-handle mui-table"><div class="mui-table-cell">';
 								li.innerHTML += '<p><span>'+data.data[n].user_name+'</span></p>';
 								li.innerHTML += '<p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].group_count+'</span></p>';
-								li.innerHTML += '<span class="mui-pull-right pui-slider-right">'+format(data.data[n].createat)+'</span>';
+								li.innerHTML += '<span class="mui-pull-right pui-slider-right">'+format(data.data[n].createat*1000)+'</span>';
 								if(data.data[n].status == 2) {
 									li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe626;</i>';
 								}else if(data.data[n].status == 1) {
