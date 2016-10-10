@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="renew.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="renew.css" />
 		<title>用户续费</title>
 		<style type="text/css">
 			li {
 				position: relative;
 			}
+			
 			.pui-p {
 				width: 100%;
 				text-align: right;
 				padding-right: 20px;
 			}
+			
 			.pui-li {
 				padding: 10px 0 1px 0;
 			}
+			
 			.pui-red {
 				color: #f00 !important;
 			}
+			
 			.pui-green {
 				color: darkgreen !important;
 			}
+			
 			.pui-change-num {
 				position: absolute;
 				right: 15px;
@@ -36,17 +42,20 @@
 				line-height: 35px;
 				border: 1px #CCCCCC solid;
 			}
-			.pui-change-num  span {
+			
+			.pui-change-num span {
 				display: inline-block;
 				padding: 0 15px;
 				text-align: center;
 			}
+			
 			.pui-change-num .pui-span-num {
 				border-left: 1px #CCCCCC solid;
 				border-right: 1px #CCCCCC solid;
 			}
 		</style>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -63,11 +72,13 @@
 			<ul class="mui-table-view mt15">
 				<li class="mui-table-view-input mui-input-row">
 					<label>服务期限</label>
-					<p class="mui-pull-right pui-change-num">
-						<span>-</span>
-						<span class="pui-span-num">1</span>
-						<span>+</span>
-					</p>
+					<div class="mui-numbox">
+						<!-- "-"按钮，点击可减小当前数值 -->
+						<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
+						<input class="mui-numbox-input" type="number" />
+						<!-- "+"按钮，点击可增大当前数值 -->
+						<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
+					</div>
 				</li>
 				<li class="pui-li">
 					<p class="pui-p">
@@ -83,4 +94,5 @@
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 	</body>
+
 </html>
