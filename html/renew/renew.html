@@ -60,22 +60,22 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">用户续费</h1>
-			<a class=" mui-pull-right pui-a-right">保存</a>
+			<a class=" mui-pull-right pui-a-right" id="save">保存</a>
 		</header>
-		<div class="mui-content">
+		<div class="mui-content" id="main">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-input mui-input-row">
 					<label>ICCID</label>
-					<input type="text" class="mui-input-clear pui-account" placeholder="请输入用户ICCID">
+					<input type="text" class="mui-input-clear pui-account" value="{{iccid}}" placeholder="请输入用户ICCID" id="iccid">
 				</li>
 			</ul>
 			<ul class="mui-table-view mt15">
-				<li class="mui-table-view-input mui-input-row">
+				<li class="mui-table-view-input mui-input-row" id="numBox">
 					<label>服务期限</label>
-					<div class="mui-numbox" style="margin-top: 5px;">
+					<div class="mui-numbox" data-numbox-step='1' data-numbox-min='0' style="margin-top: 5px;">
 						<!-- "-"按钮，点击可减小当前数值 -->
 						<button class="mui-btn mui-numbox-btn-minus" type="button">-</button>
-						<input class="mui-numbox-input" type="number" />
+						<input class="mui-numbox-input" type="number" id="num" />
 						<!-- "+"按钮，点击可增大当前数值 -->
 						<button class="mui-btn mui-numbox-btn-plus" type="button">+</button>
 					</div>
@@ -83,16 +83,64 @@
 				<li class="pui-li">
 					<p class="pui-p">
 						<span>本次消费:</span>
-						<span class="pui-red">100</span>
+						<span class="pui-red">{{cost}}</span>
 					</p>
 					<p class="pui-p">
 						<span>余额:</span>
-						<span class="pui-green">100</span>
+						<span class="pui-green">{{nouse}}</span>
 					</p>
 				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/vue.js"></script>
+		<script>
+			mui.init();
+			var localdata = localStorage.getItem("agentInfo");
+			var vmdata = {
+				iccid: '',
+				cost: '0',
+				nouse: '0'
+			};
+			var vm = new Vue({
+				el: '#main',
+				data: vmdata
+			});
+			if(localdata != null) {
+				localdata = JSON.parse(localdata);
+				vmdata.nouse = localdata.data.agentinfo.blance;
+			}
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var paymentUrl = req_url + "/api/v1/payment/iccids?access_token=" + access_token + "&openid=" + openid;
+			document.getElementById('save').addEventListener('tap', function() {
+				mui.ajax(req_url + '/api/v1/profile/faststats?access_token=' + access_token + '&openid=' + openid, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒;
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						"cycle": vmdata.cost,
+						users: [{
+							"user_account": document.getElementById("iccid").value
+						}]
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							mui.alert("续费成功", "提示", "确定", function() {});
+							mui.back();
+						}
+					}
+				});
+			});
+			var numBox = document.getElementById("num");
+			numBox.addEventListener('change', function() {
+				vmdata.cost = this.value;
+			});
+		</script>
 	</body>
 
 </html>
