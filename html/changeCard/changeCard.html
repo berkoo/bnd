@@ -1,33 +1,66 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="changeCard.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="changeCard.css" />
 		<title>换卡</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">用户补换卡</h1>
-			<a class="mui-pull-right pui-a-right">更换</a>
+			<a class="mui-pull-right pui-a-right" id="change">更换</a>
 		</header>
 		<div class="mui-content">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-input mui-input-row">
 					<label>旧ICCID：</label>
-					<input type="text" class="mui-input-clear pui-account" placeholder="请输入用户ICCID">
+					<input type="text" class="mui-input-clear pui-account" placeholder="请输入用户ICCID" id="oldiccid">
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<label>新ICCID：</label>
-					<input type="text" class="mui-input-clear pui-account" placeholder="请输入用户ICCID">
+					<input type="text" class="mui-input-clear pui-account" placeholder="请输入用户ICCID" id="newiccid">
 				</li>
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript" src="../../js/vue.js"></script>
+		<script>
+			mui.init();
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var changeCardUrl = req_url + "/api/v1/terminal/changecard?access_token=" + access_token + "&openid=" + openid;
+			document.getElementById('change').addEventListener('tap', function() {
+				mui.ajax(changeCardUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒;
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						oldiccid: document.getElementById("oldiccid").value,
+						newiccid: document.getElementById("newiccid").value
+					},
+					success: function(data) {
+						if(data.code == 20001) {
+							mui.alert("换卡成功", "提示", "确定", function() {});
+							mui.back();
+						}else{
+							mui.alert(data.msg, "提示", "确定", function() {});
+						}
+					}
+				});
+			});
+		</script>
 	</body>
+
 </html>

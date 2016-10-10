@@ -115,9 +115,9 @@
 			var access_token = localStorage.getItem("access_token");
 			var paymentUrl = req_url + "/api/v1/payment/iccids?access_token=" + access_token + "&openid=" + openid;
 			document.getElementById('save').addEventListener('tap', function() {
-				mui.ajax(req_url + '/api/v1/profile/faststats?access_token=' + access_token + '&openid=' + openid, {
+				mui.ajax(paymentUrl, {
 					dataType: 'json', //服务器返回json格式数据
-					type: 'GET', //HTTP请求类型
+					type: 'post', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒;
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded'
@@ -132,6 +132,8 @@
 						if(data.code == 20001) {
 							mui.alert("续费成功", "提示", "确定", function() {});
 							mui.back();
+						}else{
+							mui.alert(data.msg, "提示", "确定", function() {});
 						}
 					}
 				});
