@@ -50,11 +50,11 @@
 				for (var i=0;i<groupList.length;i++) {
 					if(groupList[i].id==localStorage.getItem("groupId")){
 						if(groupList[i].disabled == 'false') {
-							document.getElementById("enableStatus").className += " mui-active";
+							document.getElementById("recordStatus").className += " mui-active";
 						}
 						//保存功能设置
 						document.getElementById("save").addEventListener("tap",function(){
-							var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
+							var enableStatus = document.getElementById("recordStatus").classList.contains("mui-active");
 							mui.ajax(req_url + '/api/v1/group/disabled?access_token=' + access_token + '&openid=' + openid, {
 								dataType: 'json', //服务器返回json格式数据
 								type: 'POST', //HTTP请求类型
