@@ -8,13 +8,14 @@
 		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
 		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
 		<link rel="stylesheet" type="text/css" href="userManage.css"/>
+		<link rel="stylesheet" type="text/css" href="userFilter.css"/>
 		<title>用户管理</title>
 	</head>
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">用户管理</h1>
-			<a class="mui-pull-right pui-a-right icon icon-broad pui-a-right" data-href="userFilter.html">&#xe61f;</a>
+			<a class="mui-pull-right pui-a-right icon icon-broad pui-a-right" href="#modal">&#xe61f;</a>
 		</header>
 		<div class="mui-content">
 			<ul id="OA_task_2" class="mui-table-view">
@@ -70,9 +71,71 @@
 			<!--<div class="pui-btn">
 				<button class="pui-btn-one" class="mui-btn"></button><button class="mui-btn mui-btn-primary pui-btn-two" data-href="createUser.html">新建用户</button>
 			</div>-->
+			
+			<div id="modal" class="mui-modal">
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal"></a>
+					<h1 class="mui-title">筛选用户</h1>
+				</header>
+				<div class="mui-content" style="height: 100%;">
+					<ul style="margin-top: 20px;" class="mui-table-view">
+						<li class="mui-table-view-input">
+							<input id="iccid" type="text" placeholder="请输入ICCID/姓名"/>
+						</li>
+					</ul>
+					<form class="mui-input-group mt20">
+						<div class="mui-input-row mui-radio mui-left">
+							<label>正常</label>
+							<!--<input id="normal" data-status = "0" name="radio1" value="Item 1" type="radio1" >-->
+							<input id="normal" data-status = "0" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>已过期</label>
+							<!--<input id="pasteDue" data-status = "2" name="checkbox" value="Item 2" type="checkbox" >-->
+							<input id="pasteDue" data-status = "2" name="radio1" type="radio">
+						</div>
+						<div class="mui-input-row mui-radio mui-left">
+							<label>即将过期</label>
+							<!--<input id="due" data-status = "1" name="checkbox" value="Item 2" type="checkbox">-->
+							<input id="due" data-status = "1" name="radio1" type="radio">
+						</div>
+					</form>
+					<div style="position: relative;" class="pui-btn">
+						<button id="reset" class="mui-btn mui-btn-grey mui-btn-block pui-btn-reset">重置</button>
+						<button id="search" class="mui-btn mui-btn-block mui-btn-green">确定</button>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			//点击搜索
+			document.getElementById("search").addEventListener("tap",function(){
+				var iccid = document.getElementById("iccid").value;
+				var status = 0
+				var normal = document.getElementById("normal");
+				var pasteDue = document.getElementById("pasteDue");
+				var due = document.getElementById("due");
+				if(normal.checked) {
+					status = normal.getAttribute("data-status");
+				}
+				if(pasteDue.checked) {
+					status = pasteDue.getAttribute("data-status");
+				}
+				if(due.checked) {
+					status = due.getAttribute("data-status");
+				}
+				window.frames[0].window.iccid = iccid;
+				window.frames[0].window.status = status;
+				document.querySelector(".mui-modal").setAttribute("class","mui-modal");
+				window.frames[0].window.getUserList(iccid,status);
+			})
+			//点击重置
+			document.getElementById("reset").addEventListener("tap",function(){
+				document.getElementById("iccid").value = null;
+			})
+		</script>
 		<script type="text/javascript">
 		//启用双击监听
 		mui.init({
@@ -81,7 +144,7 @@
 			},
 			subpages:[{
 				url:'userManage_sub.html',
-				id:'userManage_sub.html',
+				id:'userManage_sub',
 				styles:{
 					top: '45px',
 					bottom: '0',

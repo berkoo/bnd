@@ -39,6 +39,15 @@
 					}
 				}
 			});
+			
+			var iccid = '';
+			var status = '';
+			if(iccid == undefined || iccid == null) {
+				iccid = '';
+			}
+			if(status == undefined || status == null) {
+				status = '';
+			}
 			/**
 			 * 下拉刷新具体业务实现
 			 */
@@ -46,9 +55,9 @@
 				setTimeout(function() {
 					var table = document.body.querySelector('.mui-table-view');
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					refresh('/api/v1/terminal/list','user');
+					getUserList(iccid,status);
 					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
-				}, 1500);
+				});
 			}
 			var count = 0;
 			/**
@@ -59,8 +68,8 @@
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
 					var table = document.body.querySelector('.mui-table-view');
 					var cells = document.body.querySelectorAll('.mui-table-view-cell');
-					refresh('/api/v1/terminal/list','user');
-				}, 1500);
+					getUserList(iccid,status);
+				});
 			}
 			if (mui.os.plus) {
 				mui.plusReady(function() {
@@ -74,6 +83,70 @@
 					mui('#pullrefresh').pullRefresh().pullupLoading();
 				});
 			}
+		</script>
+		<script type="text/javascript">
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			var userListUrl = req_url + "/api/v1/terminal/list?access_token=" + access_token + "&openid=" + openid;
+			var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
+			var getUserList = function(iccid,status){
+				mui.ajax(orgIdUrl, {
+				dataType: 'json', //服务器返回json格式数据
+				type: 'GET', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒；
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				success: function(data) {
+					if(data.code == 20001) {
+						if(data.data.orginfo != null) {
+							var orgId = data.data.orginfo.id;
+							mui.ajax(userListUrl, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'GET', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded'
+								},
+								data: {
+									"org_id": orgId,
+									"name":iccid,
+									'status':status
+								},
+								success: function(data) {
+									localStorage.setItem("userListData",JSON.stringify(data));
+									document.body.querySelector(".mui-table-view").innerHTML = "";
+									for(var n = 0; n < data.data.length; n++) {
+										var li = document.createElement("li");
+										li.className = "mui-table-view-cell";
+										console.log(data);
+										li.setAttribute("data-href","editUser.html");
+										li.setAttribute('data-id',data.data[n].id);
+										li.innerHTML = '<div class="mui-slider-handle mui-table"><div class="mui-table-cell">';
+										li.innerHTML += '<p><span>'+data.data[n].user_name+'</span></p>';
+										li.innerHTML += '<p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].group_count+'</span></p>';
+										li.innerHTML += '<span class="mui-pull-right pui-slider-right">'+format(data.data[n].createat*1000)+'</span>';
+										if(data.data[n].status == 2) {
+											li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe626;</i>';
+										}else if(data.data[n].status == 1) {
+											li.innerHTML += '<i class="icon icon-broad pui-icon-pastDue">&#xe625;</i>';
+										}
+										
+										if(data.data[n].allow_gps == 1) {
+											li.innerHTML += '<i class="icon icon-broad pui-icon-gps">&#xe604;</i></div></div>';
+										}
+										document.body.querySelector(".mui-table-view").appendChild(li);
+									}
+								},
+								error: function() {}
+							});
+						}
+					}
+				},
+				error: function() {}
+			});
+			}
+			
 		</script>
 		<script type="text/javascript">
 			mui.init();

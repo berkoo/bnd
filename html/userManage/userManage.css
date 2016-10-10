@@ -36,7 +36,8 @@ header .pui-a-right {
 	height: 42px !important;
 }
 .pui-btn button {
-	width: 50%;
+	margin-left: 2.5%;
+	width:95%;
 }
 
 .pui-icon-pastDue {
@@ -48,4 +49,7 @@ header .pui-a-right {
 }
 .mui-table-view-chevron .mui-table-view-cell {
 	padding-right: 15px !important;
+}
+.mui-radio input[type=radio] {
+	top: 10px;
 }
