@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8">
-		<title>Hello MUI</title>
+		<title>群组管理</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
@@ -53,7 +53,7 @@
 			 */
 			function pullupRefresh() {
 				setTimeout(function() {
-					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 0)); //参数为true代表没有更多数据了。
 					refresh('/api/v1/group/list','group');
 				}, 1500);
 			}
@@ -80,31 +80,67 @@
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
 			//删除群组
+//			mui(".mui-table-view").on('tap', 'a.mui-btn', function() {
+//				var groupId = this.parentNode.parentNode.getAttribute("data-id");
+//				this.parentNode.parentNode.remove(this.parentNode);
+//				mui.ajax(req_url + '/api/v1/group/delete?access_token=' + access_token + '&openid=' + openid, {
+//					dataType: 'json', //服务器返回json格式数据
+//					type: 'POST', //HTTP请求类型
+//					timeout: 10000, //超时时间设置为10秒；
+//					data:{
+//						'id':groupId,
+//					},
+//					headers: {
+//						'Content-Type': 'application/json' 
+//					},
+//					success: function(data) {
+//						if(data.code == 20001) {
+//							mui.alert("删除成功",function(){
+//								
+//							},"提示","确定");
+//						}
+//					},
+//					error: function(xhr, type, errorThrown) {
+//						console.log(type);
+//					}
+//				});
+//			});
+			
 			mui(".mui-table-view").on('tap', 'a.mui-btn', function() {
 				var groupId = this.parentNode.parentNode.getAttribute("data-id");
-				this.parentNode.parentNode.remove(this.parentNode);
-				mui.ajax(req_url + '/api/v1/group/delete?access_token=' + access_token + '&openid=' + openid, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'POST', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					data:{
-						'id':groupId,
-					},
-					headers: {
-						'Content-Type': 'application/json' 
-					},
-					success: function(data) {
-						if(data.code == 20001) {
-							mui.alert("删除成功",function(){
-								
-							},"提示","确定");
-						}
-					},
-					error: function(xhr, type, errorThrown) {
-						console.log(type);
+				var elem = this;
+				var li = elem.parentNode.parentNode;
+				mui.confirm('确认删除该条记录？', '', btnArray, function(e) {
+					if (e.index == 0) {
+						mui.ajax(req_url + '/api/v1/group/delete?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'POST', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							data:{
+								'id':groupId,
+							},
+							headers: {
+								'Content-Type': 'application/json' 
+							},
+							success: function(data) {
+								if(data.code == 20001) {
+									mui.alert("删除成功",function(){
+										li.parentNode.removeChild(li);
+									},"提示","确定");
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log(type);
+							}
+						});
+					} else {
+						setTimeout(function() {
+							$.swipeoutClose(li);
+						}, 0);
 					}
 				});
 			});
+			var btnArray = ['确认', '取消'];
 		</script>
 	</body>
 

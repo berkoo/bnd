@@ -252,7 +252,6 @@
 					var provinceId = data.data.agentinfo.province_id;
 					var cityId = data.data.agentinfo.city_id;
 					var areaId = data.data.agentinfo.district_id;
-					console.log(cityData3)
 					//筛选出省
 					for(var h = 0;h<cityData3.length;h++) {
 						if(cityData3[h].value == provinceId) {
@@ -275,8 +274,8 @@
 					cityPicker3.setData(cityData3);
 					var showCityPickerButton = doc.getElementById('showCityPicker3');
 					var cityResult3 = doc.getElementById('cityResult3');
-					
-					showCityPickerButton.addEventListener('tap', function(event) {
+					if(path.length!==4) {
+						showCityPickerButton.addEventListener('tap', function(event) {
 						cityPicker3.show(function(items) {
 							//返回 false 可以阻止选择框的关闭
 							province.innerText = (items[0] || {}).text;
@@ -312,7 +311,9 @@
 								}
 							});
 						});
-					}, false);
+						}, false);
+					}
+					
 				});
 				
 			})(mui, document);

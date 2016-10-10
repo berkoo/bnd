@@ -242,22 +242,48 @@
 					  } 
 					  this.length-=1 
 					} 
-			
+//			
+//				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
+//					var id = this.getAttribute("data-id");
+//					this.parentNode.parentNode.remove(this.parentNode);
+//					for(var i = 0; i < groupIds.length; i++) {
+//						if(groupIds[i]==id){
+//							groupIds.remove(i);
+//						}
+//					}
+//					for(var i = 0; i < userIds.length; i++) {
+//						if(userIds[i]==id){
+//							userIds.remove(i);
+//						}
+//					}
+//					
+//				});
+				
 				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
 					var id = this.getAttribute("data-id");
-					this.parentNode.parentNode.remove(this.parentNode);
-					for(var i = 0; i < groupIds.length; i++) {
-						if(groupIds[i]==id){
-							groupIds.remove(i);
+					var elem = this;
+					var li = elem.parentNode.parentNode;
+					mui.confirm('确认删除该条记录？', 'Hello MUI', btnArray, function(e) {
+						if (e.index == 0) {
+							for(var i = 0; i < groupIds.length; i++) {
+								if(groupIds[i]==id){
+									groupIds.remove(i);
+								}
+							}
+							for(var i = 0; i < userIds.length; i++) {
+								if(userIds[i]==id){
+									userIds.remove(i);
+								}
+							}
+							li.parentNode.removeChild(li);
+						} else {
+							setTimeout(function() {
+								$.swipeoutClose(li);
+							}, 0);
 						}
-					}
-					for(var i = 0; i < userIds.length; i++) {
-						if(userIds[i]==id){
-							userIds.remove(i);
-						}
-					}
-					
+					});
 				});
+				var btnArray = ['确认', '取消'];
 				
 				//遍历
 				mui(".mui-table-view").on("tap",".pui-add",function(){

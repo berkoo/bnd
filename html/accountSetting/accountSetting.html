@@ -158,7 +158,10 @@
 					}
 					nickName.innerHTML = data.data.agentinfo.contact;
 					corg_name.innerHTML = data.data.agentinfo.name;
-					balance.innerHTML = data.data.logincount;
+					balance.innerHTML = data.data.agentinfo.blance;
+					localStorage.setItem("loginGrabbedStatus",data.data.agentinfo.allow_grabbed);
+					var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
+					console.log(loginGrabbedStatus);
 					if(data.data.agentinfo.allow_grabbed == true) {
 						grabbed.innerHTML = "开启"
 					}else if(data.data.agentinfo.allow_grabbed == false) {

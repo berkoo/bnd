@@ -12,7 +12,7 @@
 	</head>
 	<body>
 		<header class="mui-bar">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<a class=" mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">创建群组</h1>
 			<a id="btnSend" class="mui-pull-right pui-a-right">保存</a>
 		</header>
@@ -83,6 +83,9 @@
 			mui(".mui-bar").on("tap",".pui-a-right",function(){
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href)
+			})
+			document.querySelector(".pui-a-left").addEventListener("tap",function(){
+				mui.openWindow('../index/adminIndex.html');
 			})
 		</script>
 		<script>
@@ -188,7 +191,7 @@
 									'priorities':priority
 								})
 							}
-							console.log(groups)
+							console.log("groups"+groups)
 						if(groupName == "") {
 							mui.alert("请输入群组名称",function(){
 								
@@ -208,7 +211,7 @@
 								},
 								success: function(data) {
 									$.alert("创建成功",function(){
-										$.openWindow("groupManage.html")
+//										$.openWindow("groupManage.html")
 									},"提示","确定")
 								},
 								error: function() {}
@@ -229,15 +232,36 @@
 					  this.length-=1 
 				} 
 				
-				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+//				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+//					var id = this.getAttribute("data-id");
+//					this.parentNode.parentNode.remove(this.parentNode);
+//					for(var i = 0; i < userIds.length; i++) {
+//						if(userIds[i]==id){
+//							userIds.remove(i);
+//						}
+//					}
+//				});
+				
+				$(".mui-table-view").on('tap', 'a.mui-btn-red', function(e) {
 					var id = this.getAttribute("data-id");
-					this.parentNode.parentNode.remove(this.parentNode);
-					for(var i = 0; i < userIds.length; i++) {
-						if(userIds[i]==id){
-							userIds.remove(i);
+					var elem = this;
+					var li = elem.parentNode.parentNode;
+					mui.confirm('确认移除该条记录？', '', btnArray, function(e) {
+						if (e.index == 0) {
+							for(var i = 0; i < userIds.length; i++) {
+								if(userIds[i]==id){
+									userIds.remove(i);
+								}
+							}
+							li.parentNode.removeChild(li);
+						} else {
+							setTimeout(function() {
+								$.swipeoutClose(li);
+							}, 0);
 						}
-					}
+					});
 				});
+				var btnArray = ['确认', '取消'];
 				//遍历用户
 				mui(".mui-table-view").on("tap",".pui-add",function(){
 					var userListData = JSON.parse(localStorage.getItem("userListData"));

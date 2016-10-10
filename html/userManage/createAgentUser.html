@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +10,6 @@
 		<link rel="stylesheet" type="text/css" href="createUser.css" />
 		<title>创建用户</title>
 	</head>
-
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -46,20 +44,6 @@
 					<label for="">位置上报</label>
 					<span></span>
 					<div id="gps" class="mui-switch">
-						<div class="mui-switch-handle"></div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<label for="">语音状态</label>
-					<span></span>
-					<div id="audio" class="mui-switch mui-active">
-						<div class="mui-switch-handle"></div>
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<label for="">是否开启</label>
-					<span></span>
-					<div id="enable" class="mui-switch mui-active">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
@@ -107,12 +91,15 @@
 			</div>
 			<div id="modal1" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
-					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal1">保存</a>
+					<a id="listSave1" class="mui-pull-right pui-a-right" href="#modal1">保存</a>
 					<h1 class="mui-title">选择单位</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
-					<form class="mui-input-group">
-						
+					<form class="mui-input-group" id="modalList">
+						<!--<div class="mui-input-row mui-radio mui-left">
+							<label>radio</label>
+							<input name="radio1" type="radio">
+						</div>-->
 					</form>
 				</div>
 			</div>
@@ -120,7 +107,41 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script>
-			
+			var openid = localStorage.getItem("ptt_openid");
+			var access_token = localStorage.getItem("access_token");
+			//获取单位
+			mui.ajax(req_url + '/api/v1/agent/orgs?access_token=' + access_token + '&openid=' + openid, {
+				dataType: 'json', //服务器返回json格式数据
+				type: 'GET', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒;
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				success: function(data) {
+					if(data.code == 20001) {
+						console.log(data)
+						var html = "";
+						for(var i = 0; i < data.data.length; i++) {
+							html += '<div class="mui-input-row mui-radio mui-left">';
+							html += '<label>' + data.data[i].corg_name + '</label>';
+							html += '<input name="radio1" type="radio" value="' + data.data[i].corg_name + '" data-receiverType="4" data-account="' + data.data[i].id + '"></div>';
+						}
+						document.getElementById("modalList").innerHTML = html;
+					} else {
+						mui.alert(data.msg, function() {
+
+						}, "提示", "确定");
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					console.log(type);
+				}
+			});
+			//点击保存单位
+			document.getElementById("listSave1").addListener("tap",function(){
+				
+			})
+
 		</script>
 	</body>
 

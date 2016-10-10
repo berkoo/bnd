@@ -44,6 +44,7 @@
 			var province = localStorage.getItem("province");
 			var city = localStorage.getItem("city");
 			var area = localStorage.getItem("area");
+			console.log(name)
 			/**
 			 * 下拉刷新具体业务实现
 			 */
@@ -68,7 +69,6 @@
 					setTimeout(function() {
 						mui('#pullrefresh').pullRefresh().pullupLoading();
 					}, 1000);
-
 				});
 			} else {
 				mui.ready(function() {
@@ -102,7 +102,7 @@
 				if(district_id == undefined || district_id == null) {
 					district_id = "";
 				}
-					mui.ajax(agentListUrl, {
+				mui.ajax(agentListUrl, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'GET', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒;
@@ -123,7 +123,7 @@
 							li.setAttribute("data-id",data.data[i].id)
 							li.className = "mui-table-view-cell";
 							li.setAttribute("data-href","agentDetail.html")
-							li.innerHTML = '<p class="pui-p-up">'+data.data[i].name+'</p><p class="pui-p-down">'+data.data[i].contact+'</p><span class="mui-pull-right pui-time-right">'+format(data.data[i].create_at)+'</span>';
+							li.innerHTML = '<p class="pui-p-up">'+data.data[i].name+'</p><p class="pui-p-down">'+data.data[i].contact+'</p><span class="mui-pull-right pui-time-right">'+format(data.data[i].create_at*1000)+'</span>';
 							document.querySelector(".mui-table-view").appendChild(li)
 						}
 					},

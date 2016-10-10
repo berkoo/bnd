@@ -16,3 +16,6 @@ input {
 	font-weight: bold;
 	color: #a9b7b7;
 }
+.mui-radio input[type=radio] {
+	top: 10px;
+}

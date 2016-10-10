@@ -165,7 +165,7 @@
 							var spanTime = doc.createElement("span");
 							spanTime.className = "mui-pull-right pui-span-right";
 							
-							spanTimeNode = doc.createTextNode(format(data.data[i].create_at));
+							spanTimeNode = doc.createTextNode(format(data.data[i].create_at*1000));
 							spanTime.appendChild(spanTimeNode);
 							div.appendChild(spanTime)
 							document.querySelector(".mui-table-view").appendChild(li);

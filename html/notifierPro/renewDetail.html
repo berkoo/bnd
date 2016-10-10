@@ -69,7 +69,7 @@
 			var count = document.getElementById("count");
 			for (var i = 0;i<msgData.data.length;i++) {
 				if(msgData.data[i].id == itemId) {
-					time.innerHTML = format(msgData.data[i].create_at);
+					time.innerHTML = format(msgData.data[i].create_at*1000);
 					var num= JSON.parse(msgData.data[i].context).paymentCount;
 					count.innerHTML = num+"人"
 				}

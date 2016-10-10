@@ -135,8 +135,10 @@
 											document.body.querySelector('#lis').appendChild(li);
 											var bb = data.data[n].id;
 											groupMemberListId.push(bb);
+											
 										}
-									}									
+									}
+									
 								},
 								error: function() {}
 							});
@@ -171,54 +173,36 @@
 				});
 			};
 			getGroupList();
-			
 			//筛选
 			document.querySelector(".pui-add").addEventListener("tap",function(){
 				var userListData1 = JSON.parse(localStorage.getItem("userListData1"));
-				console.log(groupMemberListId.length)
 				var html = ""
 				for(var i = 0;i<userListData1.data.length;i++) {
 					html += '<div class="mui-input-row mui-checkbox mui-left">';
 					html += '<label>' + userListData1.data[i].nickname + '</label>';
-//					html += '<input checkd name="checkbox" type="checkbox" value="' + userListData1.data[i].nickname + '" data-receiverType="0" data-account="' + userListData1.data[i].id + '"></div>';
-					if(groupMemberListId.length > 0) {
-						for(var k = 0;k<groupMemberListId.length;k++) {
-							if(groupMemberListId[k] == userListData1.data[i].id) {
-								html += '<input checked name="checkbox" type="checkbox" value="' + userListData1.data[i].nickname + '" data-receiverType="0" data-account="' + userListData1.data[i].id + '"></div>';
-							}
-						}
-					}
-					if(groupMemberListId.length == 0) {
-						html += '<input checkd name="checkbox" type="checkbox" value="' + userListData1.data[i].nickname + '" data-receiverType="0" data-account="' + userListData1.data[i].id + '"></div>';
-					}
-					
+					html += '<input name="checkbox" type="checkbox" value="' + userListData1.data[i].nickname + '" data-receiverType="0" data-account="' + userListData1.data[i].id + '"></div>';
 				}
 				document.getElementById("modalList").innerHTML = html;
 			})
 			
 			//点击保存
 			document.getElementById("listSave").addEventListener('tap', function() {
-				var userListData1 = JSON.parse(localStorage.getItem("userListData1"));
+//				var tags = document.getElementsByTagName("input");
 				var tags = document.querySelectorAll("#modal input")
 				var html = "";
 				for(var i = 0; i < tags.length; i++) {
 					if(tags[i].checked) {
 						groupList.push("text", tags[i].value);
+						html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a href="#modal1" class="mui-btn mui-btn-green" data-id="' + tags[i].getAttribute("data-account") + '">优先级</a><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
+						html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
 						var userId = tags[i].getAttribute("data-account");
-						for(var k = 0;k<groupMemberListId.length;k++) {
-							if(groupMemberListId[k] !== userId) {
-								html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a href="#modal1" class="mui-btn mui-btn-green" data-id="' + tags[i].getAttribute("data-account") + '">优先级</a><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
-								html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
-								groupMemberListId.push(userId)
-								ids.push(userId);
-							}
-						}
-//						html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a href="#modal1" class="mui-btn mui-btn-green" data-id="' + tags[i].getAttribute("data-account") + '">优先级</a><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
-//						html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
+						groupMemberListId.push(userId)
+						ids.push(userId);
 						console.log(groupMemberListId)
 						localStorage.setItem("groupMemberListId",groupMemberListId);
 					}
 				}
+				
 				console.log(localStorage.getItem('groupMemberListId'))
 				var groups = new Array();
 				for(var idd in ids) {
@@ -228,65 +212,99 @@
 					})
 				}
 				document.getElementById("lis").innerHTML += html;
-				for(var j = 0;j<groupMemberListId[j];j++) {
-					if(groupMemberListId[j] !== userId) {
-						mui.ajax(req_url + '/api/v1/group/members/add?access_token=' + access_token + '&openid=' +openid, {
-						 	dataType: 'json',
-						 	type: 'POST',
-						 	timeout: 10000,
-						 	data: {
-						 		'id': localStorage.getItem("groupId"),
-						 		'members': groups
-						 	},
-						 	headers: {
-						 		'Content-Type': 'application/json'
-						 	},
-						 	success: function(data) {
-						 		if(data.code == 20001) {
-						 			mui.alert("成员添加成功", function() {
-		//								mui.back();
-						 			}, "提示", "确定")
-						 		}
-						 		
-						 	},
-						 	error: function(xhr, type, errorThrown) {
-						 		//异常处理；
-						 		console.log(type);
-						 	}
-						});
-					}
-				}
-				
+				mui.ajax(req_url + '/api/v1/group/members/add?access_token=' + access_token + '&openid=' +openid, {
+				 	dataType: 'json',
+				 	type: 'POST',
+				 	timeout: 10000,
+				 	data: {
+				 		'id': localStorage.getItem("groupId"),
+				 		'members': groups
+				 	},
+				 	headers: {
+				 		'Content-Type': 'application/json'
+				 	},
+				 	success: function(data) {
+				 		if(data.code == 20001) {
+				 			mui.alert("成员添加成功", function() {
+//								mui.back();
+				 			}, "提示", "确定")
+				 		}
+				 		
+				 	},
+				 	error: function(xhr, type, errorThrown) {
+				 		//异常处理；
+				 		console.log(type);
+				 	}
+				});
  			}, false);
    			//删除用户
-			mui(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+//			mui(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
+//				var userId = this.getAttribute("data-id");
+//				this.parentNode.parentNode.remove(this.parentNode);
+//				var userIds = [{'id':userId}];
+//				mui.ajax(req_url + '/api/v1/group/members/remove?access_token=' + access_token + '&openid=' + openid, {
+//					dataType: 'json', //服务器返回json格式数据
+//					type: 'POST', //HTTP请求类型
+//					timeout: 10000, //超时时间设置为10秒；
+//					data:{
+//						'id':localStorage.getItem("groupId"),
+//						'members':userIds
+//					},
+//					headers: {
+//						'Content-Type': 'application/json' 
+//					},
+//					success: function(data) {
+//						if(data.code == 20001) {
+//							mui.alert("删除成功",function(){
+//											
+//						},"提示","确定");
+//						}
+//					},
+//					error: function(xhr, type, errorThrown) {
+//						console.log(type);
+//					}
+//				});
+//			});
+//			
+			mui(".mui-table-view").on('tap', 'a.mui-btn', function() {
 				var userId = this.getAttribute("data-id");
-				
 				var userIds = [{'id':userId}];
-				mui.ajax(req_url + '/api/v1/group/members/remove?access_token=' + access_token + '&openid=' + openid, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'POST', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					data:{
-						'id':localStorage.getItem("groupId"),
-						'members':userIds
-					},
-					headers: {
-						'Content-Type': 'application/json' 
-					},
-					success: function(data) {
-						if(data.code == 20001) {
-							mui.alert("删除成功",function(){
-											
-						},"提示","确定");
-						}
-					},
-					error: function(xhr, type, errorThrown) {
-						console.log(type);
+				var elem = this;
+				var li = elem.parentNode.parentNode;
+				mui.confirm('确认删除该条记录？', '', btnArray, function(e) {
+					if (e.index == 0) {
+						mui.ajax(req_url + '/api/v1/group/members/remove?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'POST', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							data:{
+								'id':localStorage.getItem("groupId"),
+								'members':userIds
+							},
+							headers: {
+								'Content-Type': 'application/json' 
+							},
+							success: function(data) {
+								if(data.code == 20001) {
+									mui.alert("删除成功",function(){
+										li.parentNode.removeChild(li);	
+								},"提示","确定");
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								console.log(type);
+							}
+						});
+					} else {
+						setTimeout(function() {
+							$.swipeoutClose(li);
+						}, 0);
 					}
 				});
-				this.parentNode.parentNode.remove(this.parentNode);
 			});
+			var btnArray = ['确认', '取消'];
+			
+			
 			//保存设置的优先级
 			var getUserId = function() {
 				mui(".mui-table-view").on('tap', 'a.mui-btn-green', function() {

@@ -33,9 +33,9 @@
 					<a href="#">
 						<span class="pui-span-left fz14">数据统计</span>
 						<span class="icon icon-broad mui-icon icon-one">&#xe60e;</span>
-						<span class="fz14"><span id="satis-agent"></span>家</span>
+						<span class="fz14"><span id="satis-agent"></span>个</span>
 						<span class="icon icon-broad mui-icon icon-two">&#xe601;</span>	
-						<span class="fz14"><span id="satis-company"></span>家</span>
+						<span class="fz14"><span id="satis-company"></span>人</span>
 					</a>
 				</li>
 				<!--<li class="mui-table-view-cell pui-list" data-href = "../userManage/createUser.html">
@@ -90,7 +90,7 @@
 						console.log(data)
 						if(data.code == 20001) {
 							localStorage.setItem("uniteCorgName",data.data.orginfo.corg_name);
-							nickName.innerHTML = data.data.nickname;
+							nickName.innerHTML = data.data.orginfo.contact;
 							corg_name.innerHTML = data.data.orginfo.corg_name;
 						}
 					},

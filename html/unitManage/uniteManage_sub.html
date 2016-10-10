@@ -57,7 +57,7 @@
 									html += '<i class="icon icon-broad mui-pull-right">&#xe603;</i>';
 								}
 								html += '</p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i>';
-								html += '<span>'+data.data[i].corg_tempgroupprior+'</span><i class="icon icon-broad ml10">&#xe60e;</i><span>'+data.data[i].corg_tempgrouplimitsecond+'</span><span class="mui-pull-right">'+format(data.data[i].add_at)+'</span></p></li>';
+								html += '<span>'+data.data[i].corg_tempgroupprior+'</span><i class="icon icon-broad ml10">&#xe60e;</i><span>'+data.data[i].corg_tempgrouplimitsecond+'</span><span class="mui-pull-right">'+format(data.data[i].add_at*1000)+'</span></p></li>';
 							}
 							table.innerHTML = html;
 						} else {

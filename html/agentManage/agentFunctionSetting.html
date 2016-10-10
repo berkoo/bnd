@@ -35,6 +35,8 @@
 			var agentData =JSON.parse(localStorage.getItem("agentData"));
 			var agentId = localStorage.getItem("agentId");
 			var preventStatus = document.getElementById("preventStatus");
+			var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
+			
 			//获取状态
 			mui.ajax(req_url + "/api/v1/agent/detail?access_token=" + access_token + "&openid=" + openid, {
 				dataType: 'json', //服务器返回json格式数据
@@ -49,14 +51,16 @@
 				success: function(data) {
 					if(data.code == 20001) {
 						if(data.data.allow_grabbed == true) {
-							preventStatus.className += " mui-active"
+//							preventStatus.className += " mui-active"
 						}
 					}
 				},
 				error: function() {}
 			});
-			
 			//设置状态
+			if(loginGrabbedStatus == 'false') {
+				document.getElementById("preventStatus").className += " mui-disabled"
+			}
 			document.getElementById("save").addEventListener("tap",function(){
 				var preventStatus = document.getElementById("preventStatus").classList.contains("mui-active");
 				mui.ajax(req_url + '/api/v1/agent/setting?access_token=' + access_token + '&openid=' + openid, {

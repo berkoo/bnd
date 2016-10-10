@@ -36,7 +36,7 @@
 			</div>
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
-					<a class="mui-icon mui-icon-search mui-pull-right" href="#modal" id="search"></a>
+					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal" ></a>
 					<h1 class="mui-title">筛选代理商</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
@@ -61,7 +61,7 @@
 							</li>
 						</ul>
 					</form>
-					<!--<button class="mui-btn mui-btn-block mui-btn-green mt15">搜索</button>-->
+					<button id="search" class="mui-btn mui-btn-block mui-btn-green mt15">搜索</button>
 					<button class="mui-btn mui-btn-block mui-btn-grey mt15">重置</button>
 				</div>
 			</div>
@@ -82,40 +82,7 @@
 						url: href
 					});
 				});
-				document.getElementById("search").addEventListener('tap', function() {
-//					getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"))
-					agentManage_sub.window.getAgentList(document.getElementById("searchName").value, document.getElementById("province").getAttribute("data-id"), document.getElementById("city").getAttribute("data-id"), document.getElementById("area").getAttribute("data-id"));
-				}, false);
-			})(mui);
-		</script>
-		<script type="text/javascript">
-			//启用双击监听
-			mui.init({
-				gestureConfig:{
-					doubletap:true
-				},
-				subpages:[{
-					url:'agentManage_sub.html',
-					id:'agentManage_sub',
-					styles:{
-						top: '44px',
-						bottom: '42px',
-					}
-				}]
-			});
-			mui(".pui-btn").on("tap", ".mui-btn", function() {
-				var href = this.getAttribute("data-href");				
-				mui.openWindow(href);
-			});
-			var contentWebview = null;
-			document.querySelector('header').addEventListener('doubletap',function () {
-				if(contentWebview==null){
-					contentWebview = plus.webview.currentWebview().children()[0];
-				}
-				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
-			});
-			
-			//获取代理商列表
+				//获取代理商列表
 			var getAgentList = function(name, province_id, city_id, district_id) {
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
@@ -160,6 +127,46 @@
 					error: function() {}
 				});
 			}
+			document.getElementById("search").addEventListener('tap', function() {
+				var name = document.getElementById("searchName").value;
+				var province = document.getElementById("province").getAttribute("data-id");
+				var city = document.getElementById("city").getAttribute("data-id");
+				var area = document.getElementById("area").getAttribute("data-id");
+				localStorage.setItem("name",name);
+				localStorage.setItem("province",province);
+				localStorage.setItem("city",city);
+				localStorage.setItem("area",area);
+//					agentManage_sub.window.getAgentList(name,province,city,area);
+				getAgentList(name,province,city,area)
+				}, false);
+			})(mui);
+		</script>
+		<script type="text/javascript">
+			//启用双击监听
+			mui.init({
+				gestureConfig:{
+					doubletap:true
+				},
+				subpages:[{
+					url:'agentManage_sub.html',
+					id:'agentManage_sub',
+					styles:{
+						top: '44px',
+						bottom: '42px',
+					}
+				}]
+			});
+			mui(".pui-btn").on("tap", ".mui-btn", function() {
+				var href = this.getAttribute("data-href");				
+				mui.openWindow(href);
+			});
+			var contentWebview = null;
+			document.querySelector('header').addEventListener('doubletap',function () {
+				if(contentWebview==null){
+					contentWebview = plus.webview.currentWebview().children()[0];
+				}
+				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
+			});
 		</script>
 		<script type="text/javascript">
 			mui.ready(function() {
