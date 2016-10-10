@@ -55,13 +55,13 @@
 					<span>加入群组</span>
 					<a id="add" href="#modal" class="mui-pull-right" style="display:inline-block;" href=""><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
 				</li>
-				<li class="mui-table-view-cell">
+				<li class="mui-table-view-cell" v-for="item in items">
 					<div class="mui-slider-right mui-disabled">
 						<a class="mui-btn mui-btn-green">默认</a>
-						<a class="mui-btn mui-btn-red">移除</a>
+						<a class="mui-btn mui-btn-red" data-groupId="{{item.id}}">移除</a>
 					</div>
 					<div class="mui-slider-handle">
-						左滑显示删除按钮
+						{{item.name}}
 					</div>
 				</li>
 			</ul>
@@ -137,6 +137,13 @@
 				el: "#modalList1",
 				data: groupdata
 			});
+			var listdata = {
+				items: []
+			};
+			var listVue = new Vue({
+				el: "#OA_task_2",
+				data: listdata
+			});
 			var loadGroupList = function(orgId) {
 				var groupLIstUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
 				mui.ajax(groupLIstUrl, {
@@ -159,10 +166,16 @@
 			};
 			document.getElementById('listSave').addEventListener('tap', function() {
 				var list = document.querySelectorAll("#modalList1 input:checked");
-				
+				var items = [];
+				for(var i = 0; i < list.length; i++) {
+					items.push({
+						id:list.getAttribute("data-account"),
+						name:list.value
+					})
+				}
+				listdata.items = items;
 			});
 		</script>
 	</body>
 
 </html>
-			
