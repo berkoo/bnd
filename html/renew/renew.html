@@ -9,9 +9,47 @@
 		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
 		<link rel="stylesheet" type="text/css" href="renew.css"/>
 		<title>用户续费</title>
+		<style type="text/css">
+			li {
+				position: relative;
+			}
+			.pui-p {
+				width: 100%;
+				text-align: right;
+				padding-right: 20px;
+			}
+			.pui-li {
+				padding: 10px 0 1px 0;
+			}
+			.pui-red {
+				color: #f00 !important;
+			}
+			.pui-green {
+				color: darkgreen !important;
+			}
+			.pui-change-num {
+				position: absolute;
+				right: 15px;
+				top: 6px;
+				/*margin-top: 5px;*/
+				height: 35px;
+				line-height: 35px;
+				border: 1px #CCCCCC solid;
+			}
+			.pui-change-num  span {
+				display: inline-block;
+				padding: 0 15px;
+				text-align: center;
+			}
+			.pui-change-num .pui-span-num {
+				border-left: 1px #CCCCCC solid;
+				border-right: 1px #CCCCCC solid;
+			}
+		</style>
 	</head>
 	<body>
 		<header class="mui-bar">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">用户续费</h1>
 			<a class=" mui-pull-right pui-a-right">保存</a>
 		</header>
@@ -24,12 +62,22 @@
 			</ul>
 			<ul class="mui-table-view mt15">
 				<li class="mui-table-view-input mui-input-row">
-					<label>存值卡号</label>
-					<input type="password" class="mui-input-clear" placeholder="请输入充值卡卡号">
+					<label>服务期限</label>
+					<p class="mui-pull-right pui-change-num">
+						<span>-</span>
+						<span class="pui-span-num">1</span>
+						<span>+</span>
+					</p>
 				</li>
-				<li class="mui-table-view-input mui-input-row">
-					<label>存值卡密码</label>
-					<input type="password" class="mui-input-clear" placeholder="请输入充值卡密码">
+				<li class="pui-li">
+					<p class="pui-p">
+						<span>本次消费:</span>
+						<span class="pui-red">100</span>
+					</p>
+					<p class="pui-p">
+						<span>余额:</span>
+						<span class="pui-green">100</span>
+					</p>
 				</li>
 			</ul>
 		</div>
