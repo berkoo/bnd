@@ -39,19 +39,30 @@
 					}
 				}
 			}); 
-			
-			var name = localStorage.getItem("name");
-			var province = localStorage.getItem("province");
-			var city = localStorage.getItem("city");
-			var area = localStorage.getItem("area");
-			console.log(name)
+			var name = '';
+			var province = '';
+			var city = '';
+			var district = '';
+			if(name == undefined || name == null) {
+				name = '';
+			}
+			if(province == undefined || province == null) {
+				province = '';
+			}
+			if(city == undefined || city == null) {
+				city = '';
+			}
+			if(district == undefined || district == null) {
+				district = '';
+			}
 			/**
 			 * 下拉刷新具体业务实现
 			 */
 			function pulldownRefresh() {
 				setTimeout(function() {
-					getAgentList();
+					getAgentList(name,province,city,district);
 					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
+//					localStorage.removeItem(name,province,city,area);
 				});
 			}
 			var count = 0;
@@ -61,7 +72,8 @@
 			function pullupRefresh() {
 				setTimeout(function() {
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 2)); //参数为true代表没有更多数据了。
-					getAgentList();
+					getAgentList(name,province,city,district);
+//					localStorage.removeItem(name,province,city,area);
 				});
 			}
 			if (mui.os.plus) {
@@ -76,8 +88,6 @@
 				});
 			}
 			
-		</script>
-		<script type="text/javascript">
 			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
@@ -85,23 +95,13 @@
 				localStorage.setItem("agentId",agentId)
 				console.log(agentId)
 			})
+			
 			//获取代理商列表
-			var getAgentList = function(name, province_id, city_id, district_id) {
+			var getAgentList = function(name, province, city, district) {
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
-				if(name == undefined || name == null) {
-					name = "";
-				}
-				if(province_id == undefined || province_id == null) {
-					province_id = "";
-				}
-				if(city_id == undefined || city_id == null) {
-					city_id = "";
-				}
-				if(district_id == undefined || district_id == null) {
-					district_id = "";
-				}
+				console.log(name)
 				mui.ajax(agentListUrl, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'GET', //HTTP请求类型
@@ -110,15 +110,14 @@
 						'Content-Type': 'application/x-www-form-urlencoded'
 					},
 					data: {
-						"name":name,
-						"province_id":province_id,
-						"city_id":city_id,
-						"district_id":district_id
+						"name":name+"",
+						"province_id":province==null?'':province,
+						"city_id":city==null?'':city,
+						"district_id":district==null?'':district
 					},
 					success: function(data) {
 						localStorage.setItem("agentData",JSON.stringify(data));
 						document.querySelector(".mui-table-view").innerHTML = "";
-						console.log(data)
 						for(var i = 0;i<data.data.length;i++) {
 							var li = document.createElement("li");
 							li.setAttribute("data-id",data.data[i].id)

@@ -36,7 +36,7 @@
 			</div>
 			<div id="modal" class="mui-modal">
 				<header class="mui-bar mui-bar-nav">
-					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal" ></a>
+					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal"></a>
 					<h1 class="mui-title">筛选代理商</h1>
 				</header>
 				<div class="mui-content" style="height: 100%;">
@@ -55,14 +55,14 @@
 									<span>></span>
 									<span id="city">市</span>
 									<span>></span>
-									<span id="area">区</span>
+									<span id="district">区</span>
 									</span>
 								</a>
 							</li>
 						</ul>
 					</form>
 					<button id="search" class="mui-btn mui-btn-block mui-btn-green mt15">搜索</button>
-					<button class="mui-btn mui-btn-block mui-btn-grey mt15">重置</button>
+					<button id="reset" class="mui-btn mui-btn-block mui-btn-grey mt15">重置</button>
 				</div>
 			</div>
 		</div>
@@ -82,87 +82,49 @@
 						url: href
 					});
 				});
-				//获取代理商列表
-			var getAgentList = function(name, province_id, city_id, district_id) {
-				var openid = localStorage.getItem("ptt_openid");
-				var access_token = localStorage.getItem("access_token");
-				var agentListUrl = req_url + "/api/v1/agent/list?access_token=" + access_token + "&openid=" + openid;
-				if(name == undefined || name == null) {
-					name = "";
-				}
-				if(province_id == undefined || province_id == null) {
-					province_id = "";
-				}
-				if(city_id == undefined || city_id == null) {
-					city_id = "";
-				}
-				if(district_id == undefined || district_id == null) {
-					district_id = "";
-				}
-					mui.ajax(agentListUrl, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'GET', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒;
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					data: {
-						"name":name,
-						"province_id":province_id,
-						"city_id":city_id,
-						"district_id":district_id
-					},
-					success: function(data) {
-						localStorage.setItem("agentData",JSON.stringify(data))
-						console.log(data)
-						for(var i = 0;i<data.data.length;i++) {
-							var li = document.createElement("li");
-							li.setAttribute("data-id",data.data[i].id)
-							li.className = "mui-table-view-cell";
-							li.setAttribute("data-href","agentDetail.html")
-							li.innerHTML = '<p class="pui-p-up">'+data.data[i].name+'</p><p class="pui-p-down">'+data.data[i].contact+'</p><span class="mui-pull-right pui-time-right">'+format(data.data[i].create_at)+'</span>';
-							document.querySelector(".mui-table-view").appendChild(li)
-						}
-					},
-					error: function() {}
-				});
-			}
-			document.getElementById("search").addEventListener('tap', function() {
-				var name = document.getElementById("searchName").value;
-				var province = document.getElementById("province").getAttribute("data-id");
-				var city = document.getElementById("city").getAttribute("data-id");
-				var area = document.getElementById("area").getAttribute("data-id");
-				localStorage.setItem("name",name);
-				localStorage.setItem("province",province);
-				localStorage.setItem("city",city);
-				localStorage.setItem("area",area);
-//					agentManage_sub.window.getAgentList(name,province,city,area);
-				getAgentList(name,province,city,area)
+				document.getElementById("search").addEventListener('tap', function() {
+					var name = document.getElementById("searchName").value;
+					var province = document.getElementById("province").getAttribute("data-id");
+					var city = document.getElementById("city").getAttribute("data-id");
+					var district = document.getElementById("district").getAttribute("data-id");
+					window.frames[0].window.name = name;
+					window.frames[0].window.district = district;
+					window.frames[0].window.province = province;
+					window.frames[0].window.city = city;
+					window.frames[0].window.district = district;
+					window.frames[0].window.getAgentList(name, province, city, district);
+					document.querySelector(".mui-modal").setAttribute("class", "mui-modal")
 				}, false);
+				document.getElementById("reset").addEventListener("tap",function(){
+					document.getElementById("searchName").value = null;
+					document.getElementById("province").innerHTML = "省";
+					document.getElementById("city").innerHTML = "市";
+					document.getElementById("district").innerHTML = "区";
+				})
 			})(mui);
 		</script>
 		<script type="text/javascript">
 			//启用双击监听
 			mui.init({
-				gestureConfig:{
-					doubletap:true
+				gestureConfig: {
+					doubletap: true
 				},
-				subpages:[{
-					url:'agentManage_sub.html',
-					id:'agentManage_sub',
-					styles:{
+				subpages: [{
+					url: 'agentManage_sub.html',
+					id: 'agentManage_sub',
+					styles: {
 						top: '44px',
 						bottom: '42px',
 					}
 				}]
 			});
 			mui(".pui-btn").on("tap", ".mui-btn", function() {
-				var href = this.getAttribute("data-href");				
+				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			});
 			var contentWebview = null;
-			document.querySelector('header').addEventListener('doubletap',function () {
-				if(contentWebview==null){
+			document.querySelector('header').addEventListener('doubletap', function() {
+				if(contentWebview == null) {
 					contentWebview = plus.webview.currentWebview().children()[0];
 				}
 				contentWebview.evalJS("mui('#pullrefresh').pullRefresh().scrollTo(0,0,100)");
@@ -170,27 +132,27 @@
 		</script>
 		<script type="text/javascript">
 			mui.ready(function() {
-					var cityPicker3 = new mui.PopPicker({
-						layer: 3
-					})
-					cityPicker3.setData(cityData3);
-					var showCityPickerButton = document.getElementById('showCityPicker3');
-					var cityResult3 = document.getElementById('cityResult3');
-					
-					showCityPickerButton.addEventListener('tap', function(event) {
-						cityPicker3.show(function(items) {
-							//返回 false 可以阻止选择框的关闭
-							province.innerText = (items[0] || {}).text;
-							city.innerText = (items[1] || {}).text;
-							area.innerText = (items[2] || {}).text;
-							province.setAttribute("data-id",(items[0] || {}).value);
-							city.setAttribute("data-id",(items[1] || {}).value);
-							area.setAttribute("data-id",(items[2] || {}).value);
-						});
-					}, false);
-				});
+				var cityPicker3 = new mui.PopPicker({
+					layer: 3
+				})
+				cityPicker3.setData(cityData3);
+				var showCityPickerButton = document.getElementById('showCityPicker3');
+				var cityResult3 = document.getElementById('cityResult3');
+
+				showCityPickerButton.addEventListener('tap', function(event) {
+					cityPicker3.show(function(items) {
+						//返回 false 可以阻止选择框的关闭
+						province.innerText = (items[0] || {}).text;
+						city.innerText = (items[1] || {}).text;
+						district.innerText = (items[2] || {}).text;
+						province.setAttribute("data-id", (items[0] || {}).value);
+						city.setAttribute("data-id", (items[1] || {}).value);
+						district.setAttribute("data-id", (items[2] || {}).value);
+					});
+				}, false);
+			});
 		</script>
-		
+
 	</body>
 
 </html>
