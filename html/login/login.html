@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
@@ -10,6 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="login.css" />
 		<title>集群对讲管理平台</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<h1 class="mui-title">集群对讲管理平台</h1>
@@ -33,7 +35,7 @@
 					</div>
 				</li>-->
 			</ul>
-			
+
 			<div class="pui-btn">
 				<button disabled="disabled" class="mui-btn mui-btn-primary mui-block" id="btnLogin" data-href="../index/index.html">登录</button>
 			</div>
@@ -45,8 +47,8 @@
 				</header>
 				<div class="mui-content" style="height: 100%;">
 					<p class="mui-content-padded">
-						<button data-status = "admin" class="mui-btn mui-btn-block">平台管理员</button>
-						<button data-status = "agent" class="mui-btn mui-btn-block">代理商管理员</button>
+						<button data-status="admin" class="mui-btn mui-btn-block">平台管理员</button>
+						<button data-status="agent" class="mui-btn mui-btn-block">代理商管理员</button>
 					</p>
 				</div>
 			</div>
@@ -62,27 +64,8 @@
 				$.init({});
 				var userType = 1;
 				var loginButton = document.getElementById('btnLogin');
-//				var switchAutoLogin = document.getElementById("switchAutoLogin");
-//				switchAutoLogin.addEventListener("toggle", function() {
-//					if(event.detail.isActive) {
-//						localStorage.setItem("autoLogin", true);
-//						var username = document.getElementById("textAccount").value;
-//						var pwd = document.getElementById("textPassword").value;
-//						localStorage.setItem("userAccount", username);
-//						localStorage.setItem("pwd", pwd);
-//					} else {
-//						localStorage.setItem("autoLogin", false);
-//						localStorage.setItem("userAccount", null);
-//						localStorage.setItem("pwd", null);
-//					}
-//				});
-//				var isActive = switchAutoLogin.classList.contains("mui-active");
-//				if(isActive) {
-//					mui.trigger(loginButton, 'tap');
-//				}
-				
-				mui("#modal").on("tap","button",function(){
-					document.querySelector(".mui-modal").setAttribute("class","mui-modal");
+				mui("#modal").on("tap", "button", function() {
+					document.querySelector(".mui-modal").setAttribute("class", "mui-modal");
 					document.querySelector(".pui-sf").innerHTML = this.innerHTML;
 					var status = this.getAttribute("data-status");
 					if(status == "admin") {
@@ -94,26 +77,6 @@
 						userType = 0;
 					}
 				})
-//				mui(".mui-bar").on("tap", ".mui-icon", function() {
-//					var status = document.querySelector(".mui-icon").getAttribute("data-status");
-//					if(status == "admin") {
-//						document.querySelector(".pui-account").placeholder = "请输入代理商账户";
-//						document.querySelector(".mui-icon").setAttribute("data-status", "agent");
-//						userType = 0;
-//						mui.alert("切换到代理商管理员",function(){
-//							
-//						},"提示","确定")
-//					}
-//					if(status == "agent") {
-//						document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
-//						document.querySelector(".mui-icon").setAttribute("data-status", "admin");
-//						userType = 1;
-//						mui.alert("切换到平台商管理员",function(){
-//							
-//						},"提示","确定")
-//					}
-//					console.log("userType:"+userType);
-//				});
 				loginButton.addEventListener('tap', function(event) {
 					var username = document.getElementById("textAccount").value;
 					var pwd = document.getElementById("textPassword").value;
@@ -125,7 +88,7 @@
 							'username': username,
 							'password': pwd,
 							'user_type': userType,
-							'wx_openid':'xxx'
+							'wx_openid': 'xxx'
 						},
 						dataType: 'json', //服务器返回json格式数据
 						type: 'GET', //HTTP请求类型
