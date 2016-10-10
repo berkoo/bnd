@@ -78,6 +78,8 @@
 						document.getElementById("phoneNumber").value = userList[i].user_mobile;
 						document.getElementById('iccid').value = userList[i].user_account;
 						document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName")
+					}
+									
 				}
 			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
 				var id = this.getAttribute("data-id")
@@ -151,8 +153,7 @@
 							break;
 						}
 					})
-				
-				}
+
 			}
 			
 			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
