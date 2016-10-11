@@ -100,29 +100,36 @@
 									var btnArray = ['取消', '确定'];
 									mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 										if(e.index == 1) {
-											document.getElementById("username").value = e.value;
-											mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
-												dataType: 'json',
-												type: 'post',
-												timeout: 10000,
-												data: {
-													'contact': e.value
-												},
-												headers: {
-													'Content-Type': 'application/x-www-form-urlencoded'
-												},
-												success: function(data) {
-													if(data.code == 20001) {
-														mui.alert(data.msg, function() {
-															
-														}, "提示", "确定")
+											if(e.value == ""|| e.value == undefined) {
+												mui.alert("修改内容不能为空",function(){
+													
+												},"提示","确定")
+											}else {
+												document.getElementById("username").value = e.value;
+												mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+													dataType: 'json',
+													type: 'post',
+													timeout: 10000,
+													data: {
+														'contact': e.value
+													},
+													headers: {
+														'Content-Type': 'application/x-www-form-urlencoded'
+													},
+													success: function(data) {
+														if(data.code == 20001) {
+															mui.alert(data.msg, function() {
+																
+															}, "提示", "确定")
+														}
+													},
+													error: function(xhr, type, errorThrown) {
+														//异常处理；
+														console.log(type);
 													}
-												},
-												error: function(xhr, type, errorThrown) {
-													//异常处理；
-													console.log(type);
-												}
-											});
+												});
+											}
+											
 										}
 									})
 								break;
