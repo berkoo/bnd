@@ -121,8 +121,8 @@
 						success: function(data) {
 							if(data.code == 20001) {
 								doc.getElementById("agent_count").innerHTML = data.data.agent_count+"家";
-								doc.getElementById("org_count").innerHTML = data.data.org_count+"家";
-								doc.getElementById("user_count").innerHTML = data.data.user_count+"家";
+								doc.getElementById("org_count").innerHTML = data.data.org_count+"个";
+								doc.getElementById("user_count").innerHTML = data.data.user_count+"个";
 							}else{
 								$.alert(data.msg,function(){
 									
