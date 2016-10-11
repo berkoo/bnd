@@ -107,37 +107,43 @@
 						$.alert("请输入联系人姓名",function(){
 							
 						},"提示","确定")
+					}else if(!(/^1[34578]\d{9}$/.test(mobile))) {
+						$.alert("请重新输入手机号",function(){
+							document.getElementById("userTel").value = null;
+						},"提示","确定")
+					}else {
+						$.ajax(req_url + '/api/v1/agent/add?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'POST', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded'
+							},
+							data: {
+								"name": name,
+								"loginname": loginname,
+								"password": pwd,
+								"contact": contact,
+								"mobile": mobile,
+								"address": address,
+								"countryid": countryid,
+								"provinceid": provinceid,
+								"cityid": cityid,
+								"districtid": cityid
+							},
+							success: function(data) {
+								if(data.code == 20001) {
+									$.alert("添加成功", function() {
+										$.back();
+									}, "提示", "确定");
+								} else {
+									$.alert(data.msg, function() {}, "提示", "确定");
+								}
+							},
+							error: function() {}
+						});
 					}
-					$.ajax(req_url + '/api/v1/agent/add?access_token=' + access_token + '&openid=' + openid, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'POST', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						data: {
-							"name": name,
-							"loginname": loginname,
-							"password": pwd,
-							"contact": contact,
-							"mobile": mobile,
-							"address": address,
-							"countryid": countryid,
-							"provinceid": provinceid,
-							"cityid": cityid,
-							"districtid": cityid
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								$.alert("添加成功", function() {
-									$.back();
-								}, "提示", "确定");
-							} else {
-								$.alert(data.msg, function() {}, "提示", "确定");
-							}
-						},
-						error: function() {}
-					});
+					
 				}, false);
 				document.getElementById("showCityPicker3").addEventListener('tap', function() {
 					var cityPicker3 = new $.PopPicker({
