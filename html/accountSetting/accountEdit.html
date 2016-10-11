@@ -14,7 +14,7 @@
 	</head>
 	<body>
 		<header class="mui-bar">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
+			<a href="javascript:opener.location.reload()" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">账户信息</h1>
 		</header>
 		<div class="mui-content">
@@ -128,30 +128,34 @@
 											},"提示","确定")
 										}else {
 											document.getElementById("contact").value = e.value;
+											
+											mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+												dataType: 'json',
+												type: 'post',
+												timeout: 10000,
+												data: {
+													'contact': e.value
+												},
+												headers: {
+													'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+												},
+												success: function(data) {
+													
+													if(data.code == 20001) {
+														mui.alert(data.msg, function() {
+															localStorage.removeItem("agentInfoContact");
+															localStorage.setItem("agentInfoContact",e.value)
+														}, "提示", "确定")
+													}
+												},
+												error: function(xhr, type, errorThrown) {
+													//异常处理；
+													console.log(type);
+												}
+											});
 										}
 										
-										mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
-											dataType: 'json',
-											type: 'post',
-											timeout: 10000,
-											data: {
-												'contact': e.value
-											},
-											headers: {
-												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-											},
-											success: function(data) {
-												if(data.code == 20001) {
-													mui.alert(data.msg, function() {
-														
-													}, "提示", "确定")
-												}
-											},
-											error: function(xhr, type, errorThrown) {
-												//异常处理；
-												console.log(type);
-											}
-										});
+										
 									}
 								})
 							break;

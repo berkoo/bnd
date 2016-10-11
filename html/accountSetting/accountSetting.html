@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8">
+		<meta  charset="UTF-8">
+		<meta http-equiv="refresh" content="10">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
@@ -76,6 +77,9 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
+//			window.onload = function(){
+//				location.reload();
+//			}
 			mui(".pui-btn").on("tap",".mui-btn",function(){
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
@@ -92,7 +96,7 @@
 		
 		<script>
 			(function($, doc) {
-				$.init({});
+				$.init();
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				var user_type = localStorage.getItem("userType");
@@ -157,7 +161,8 @@
 					if(data!=null){
 						data = JSON.parse(data);
 					}
-					nickName.innerHTML = data.data.agentinfo.contact;
+					localStorage.setItem("agentInfoContact",data.data.agentinfo.contact);
+					nickName.innerHTML = localStorage.getItem("agentInfoContact")
 					corg_name.innerHTML = data.data.agentinfo.name;
 					balance.innerHTML = data.data.agentinfo.blance;
 					localStorage.setItem("loginGrabbedStatus",data.data.agentinfo.allow_grabbed);
