@@ -135,15 +135,16 @@
 							province.innerText = (items[0] || {}).text;
 							city.innerText = (items[1] || {}).text;
 							area.innerText = (items[2] || {}).text;
-							mui.ajax(req_url + '/api/v1/profile/area?access_token=' + access_token + '&openid=' + openid, {
+							mui.ajax(req_url + '/api/v1/agent/contact?access_token=' + access_token + '&openid=' + openid, {
 								dataType: 'json',
 								type: 'POST',
 								timeout: 10000,
 								data: {
-									'countryid': 86,
+//									'countryid': 86,
 									'provinceid':(items[0] || {}).value,
 									'cityid':(items[1] || {}).value,
-									'districtid':(items[2] || {}).value
+									'districtid':(items[2] || {}).value,
+									'type':'area'
 								},
 								headers: {
 									'Content-Type': 'application/x-www-form-urlencoded'
@@ -190,7 +191,8 @@
 											timeout: 10000,
 											data: {
 												'id':agentId,
-												'contact': e.value
+												'contact': e.value,
+												'type':'contact'
 											},
 											headers: {
 												'Content-Type': 'application/x-www-form-urlencoded'
@@ -232,7 +234,8 @@
 												timeout: 10000,
 												data: {
 													'id':agentId,
-													'mobile': e.value
+													'mobile': e.value,
+													'type':'mobile'
 												},
 												headers: {
 													'Content-Type': 'application/x-www-form-urlencoded'
@@ -276,7 +279,8 @@
 											timeout: 10000,
 											data: {
 												'id':agentId,
-												'address': e.value
+												'address': e.value,
+												'type':'address'
 											},
 											headers: {
 												'Content-Type': 'application/x-www-form-urlencoded'
