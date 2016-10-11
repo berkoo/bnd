@@ -28,7 +28,7 @@
 			</ul>
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input mui-input-row">
-					<input id="iccid" class="mui-input-clear" type="text" placeholder="输入ICCID" />
+					<input id="iccid" class="mui-input-clear" type="text" placeholder="输入19位ICCID号" />
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10">
@@ -183,12 +183,14 @@
 				if(orgId == undefined || orgId == null || orgId == "") {
 					mui.alert("请选择单位", "提示", "确定", function() {});
 					return;
-				}
-				if(iccid == undefined || iccid == null || iccid == "") {
+				}else if(iccid == undefined || iccid == null || iccid == "") {
 					mui.alert("请输入ICCID", "提示", "确定", function() {});
 					return;
-				}
-				if(name == undefined || name == null || name == "") {
+				}else if(iccid.length!==19) {
+					mui.alert("请输入19位iccid号",function(){
+						
+					},"提示","确定")
+				}else if(name == undefined || name == null || name == "") {
 					mui.alert("请输入姓名", "提示", "确定", function() {});
 					return;
 				}
