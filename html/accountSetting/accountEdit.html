@@ -132,13 +132,13 @@
 										
 										mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
 											dataType: 'json',
-											type: 'post',
+											type: 'POST',
 											timeout: 10000,
 											data: {
 												'contact': e.value
 											},
 											headers: {
-												'Content-Type': 'application/x-www-form-urlencoded'
+												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 											},
 											success: function(data) {
 												if(data.code == 20001) {
@@ -222,7 +222,7 @@
 												'address': e.value
 											},
 											headers: {
-												'Content-Type': 'application/x-www-form-urlencoded'
+												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 											},
 											success: function(data) {
 												if(data.code == 20001) {
