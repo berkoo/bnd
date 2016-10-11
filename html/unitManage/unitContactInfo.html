@@ -90,29 +90,30 @@
 									mui.alert("修改信息不能为空")
 								}else {
 									document.getElementById("username").value = e.value;
-								}
-								mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
-									dataType: 'json',
-									type: 'post',
-									timeout: 10000,
-									data: {
-										'contact': e.value
-									},
-									headers: {
-										'Content-Type': 'application/x-www-form-urlencoded'
-									},
-									success: function(data) {
-										if(data.code == 20001) {
-											mui.alert(data.msg, function() {
-												
-											}, "提示", "确定")
+									mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'contact': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded'
+										},
+										success: function(data) {
+											if(data.code == 20001) {
+												mui.alert(data.msg, function() {
+													
+												}, "提示", "确定")
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
 										}
-									},
-									error: function(xhr, type, errorThrown) {
-										//异常处理；
-										console.log(type);
-									}
-								});
+									});
+								}
+								
 							}
 						})
 						break;
@@ -123,35 +124,40 @@
 							if(e.index == 1) {
 								if(e.value == "") {
 									mui.alert("修改信息不能为空")
+								}else if(!(/^1[34578]\d{9}$/.test(e.value))){
+									mui.alert("请重新输入您的手机号",function(){
+        										
+        							},"提示","确定")
 								}else {
 									document.getElementById("phoneNumber").value = e.value;
+									mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'mobile': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded'
+										},
+										success: function(data) {
+											console.log(data)
+											if(data.code == 20001) {
+												if(data.code == 20001) {
+													mui.alert(data.msg, function() {
+														
+													}, "提示", "确定")
+												}
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
 								}
 								
-								mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
-									dataType: 'json',
-									type: 'post',
-									timeout: 10000,
-									data: {
-										'mobile': e.value
-									},
-									headers: {
-										'Content-Type': 'application/x-www-form-urlencoded'
-									},
-									success: function(data) {
-										console.log(data)
-										if(data.code == 20001) {
-											if(data.code == 20001) {
-												mui.alert(data.msg, function() {
-													
-												}, "提示", "确定")
-											}
-										}
-									},
-									error: function(xhr, type, errorThrown) {
-										//异常处理；
-										console.log(type);
-									}
-								});
+								
 							}
 						})
 						break;
@@ -164,33 +170,34 @@
 									mui.alert("修改信息不能为空")
 								}else {
 									document.getElementById("email").value = e.value;
+									mui.ajax(req_url + '/api/v1/profile/email?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'email': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded'
+										},
+										success: function(data) {
+											console.log(data)
+											if(data.code == 20001) {
+												if(data.code == 20001) {
+													mui.alert(data.msg, function() {
+														
+													}, "提示", "确定")
+												}
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
 								}
 								
-								mui.ajax(req_url + '/api/v1/profile/email?access_token=' + access_token + '&openid=' + openid, {
-									dataType: 'json',
-									type: 'post',
-									timeout: 10000,
-									data: {
-										'email': e.value
-									},
-									headers: {
-										'Content-Type': 'application/x-www-form-urlencoded'
-									},
-									success: function(data) {
-										console.log(data)
-										if(data.code == 20001) {
-											if(data.code == 20001) {
-												mui.alert(data.msg, function() {
-													
-												}, "提示", "确定")
-											}
-										}
-									},
-									error: function(xhr, type, errorThrown) {
-										//异常处理；
-										console.log(type);
-									}
-								});
+								
 							}
 						})
 						break;
