@@ -91,29 +91,37 @@
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
-								document.getElementById("username").value = e.value;
-								mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
-									dataType: 'json',
-									type: 'post',
-									timeout: 10000,
-									data: {
-										'contact': e.value
-									},
-									headers: {
-										'Content-Type': 'application/x-www-form-urlencoded'
-									},
-									success: function(data) {
-										if(data.code == 20001) {
-											mui.alert(data.msg, function() {
-												
-											}, "提示", "确定")
+								
+								if(e.value == null||e.value == "") {
+									mui.alert("输入内容不能为空",function(){
+										
+									},"提示","确定")
+								}else {
+									document.getElementById("username").value = e.value;
+									mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'contact': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded'
+										},
+										success: function(data) {
+											if(data.code == 20001) {
+												mui.alert(data.msg, function() {
+													
+												}, "提示", "确定")
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
 										}
-									},
-									error: function(xhr, type, errorThrown) {
-										//异常处理；
-										console.log(type);
-									}
-								});
+									});
+								}
+								
 							}
 						})
 					break;
@@ -122,32 +130,44 @@
 							var btnArray = ['取消', '确定'];
 							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 								if(e.index == 1) {
-									document.getElementById("phoneNumber").value = e.value;
-									mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
-										dataType: 'json',
-										type: 'post',
-										timeout: 10000,
-										data: {
-											'mobile': e.value
-										},
-										headers: {
-											'Content-Type': 'application/x-www-form-urlencoded'
-										},
-										success: function(data) {
-											console.log(data)
-											if(data.code == 20001) {
+									
+									if(e.value == null||e.value == "") {
+										mui.alert("输入内容不能为空",function(){
+											
+										},"提示","确定")
+									}else if(!(/^1[34578]\d{9}$/.test(e.value))) {
+										mui.alert("请重新输入手机号",function(){
+											
+										},"提示","确定")
+									}else {
+										document.getElementById("phoneNumber").value = e.value;
+										mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+											dataType: 'json',
+											type: 'post',
+											timeout: 10000,
+											data: {
+												'mobile': e.value
+											},
+											headers: {
+												'Content-Type': 'application/x-www-form-urlencoded'
+											},
+											success: function(data) {
+												console.log(data)
 												if(data.code == 20001) {
-													mui.alert(data.msg, function() {
-														
-													}, "提示", "确定")
+													if(data.code == 20001) {
+														mui.alert(data.msg, function() {
+															
+														}, "提示", "确定")
+													}
 												}
+											},
+											error: function(xhr, type, errorThrown) {
+												//异常处理；
+												console.log(type);
 											}
-										},
-										error: function(xhr, type, errorThrown) {
-											//异常处理；
-											console.log(type);
-										}
-									});
+										});
+									}
+									
 								}
 							})
 							break;
