@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 		<link href="../../css/mui.picker.css" rel="stylesheet" />
 		<link href="../../css/mui.poppicker.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="accountEdit.css"/>
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="accountEdit.css" />
 		<title>账户信息</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a href="javascript:opener.location.reload()" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -35,14 +37,14 @@
 			<ul class="mui-table-view mt10">
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i data-id = "contact" class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id="contact" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">联系人姓名</label>
 						<input id="contact" type="text" name="" id="" value="深圳消防支队" disabled="disabled" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i data-id = "phoneNum" class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id="phoneNum" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">手机号</label>
 						<input type="text" name="" id="phoneNum" value="1900000000" disabled="disabled" />
 					</a>
@@ -52,17 +54,17 @@
 						<label for="">选择地址</label>
 						<span class="mui-pull-right pui-address">
 							<span id="province">省</span>
-							<span>></span>
-							<span id="city">市</span>
-							<span>></span>
-							<span id="area">区</span>
+						<span>></span>
+						<span id="city">市</span>
+						<span>></span>
+						<span id="area">区</span>
 						</span>
-						
+
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i data-id = "address" class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id="address" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">详细地址</label>
 						<input type="text" name="" id="address" value="深圳宝安区西乡" disabled="disabled" />
 					</a>
@@ -70,7 +72,7 @@
 			</ul>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-    	<script src="../../js/mui.picker.js"></script>
+		<script src="../../js/mui.picker.js"></script>
 		<script src="../../js/mui.poppicker.js"></script>
 		<script src="../../js/city.data.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
@@ -79,13 +81,10 @@
 			(function($, doc) {
 				$.init();
 				//获取账户信息
-				var data = localStorage.getItem("agentInfo");
+
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
-				console.log(data)
-				if(data!=null){
-					data = JSON.parse(data);
-				}
+
 				var name = document.getElementById("name");
 				var loginName = document.getElementById("loginName");
 				var contact = document.getElementById("contact");
@@ -94,114 +93,81 @@
 				var province = doc.getElementById("province");
 				var city = doc.getElementById("city");
 				var area = doc.getElementById("area");
-				name.value = data.data.agentinfo.name;
-				loginName.value = data.data.loginname;
-				contact.value = data.data.agentinfo.contact;
-				address.value = data.data.agentinfo.address;
-				phoneNum.value = data.data.agentinfo.mobile;
-				
-				var path = data.data.agentinfo.path;
-				if(path.length==4) {
-					//一级代理商管理员 不能进行修改信息
-					var iconEdits = document.querySelectorAll(".pui-icon-edit");
-					var inputs = document.querySelectorAll("input");
-					for(var i = 0;i<iconEdits.length;i++) {
-						iconEdits[i].style.display = "none";
-					}
-					for(var i = 0;i<inputs.length;i++) {
-						inputs[i].style.paddingRight = 15+"px";
-					}
-				}else {
-					//二级及其他可以进行修改信息
-					mui(".mui-table-view").on("tap",".pui-icon-edit",function(e){
-						var id = this.getAttribute("data-id");
-						switch(id) {
-							//联系人姓名
-							case 'contact':
-								e.detail.gesture.preventDefault();
-								var btnArray = ['取消', '确定'];
-								mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
-									if(e.index == 1) {
-										if(e.value == "") {
-											mui.alert("修改内容不能为空",function(){
-												
-											},"提示","确定")
-										}else {
-											document.getElementById("contact").value = e.value;
-											
-											mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
-												dataType: 'json',
-												type: 'post',
-												timeout: 10000,
-												data: {
-													'contact': e.value
-												},
-												headers: {
-													'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-												},
-												success: function(data) {
-													
-													if(data.code == 20001) {
-														mui.alert(data.msg, function() {
-															localStorage.removeItem("agentInfoContact");
-															localStorage.setItem("agentInfoContact",e.value)
-														}, "提示", "确定")
-													}
-												},
-												error: function(xhr, type, errorThrown) {
-													//异常处理；
-													console.log(type);
-												}
-											});
-										}
-										mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
-											dataType: 'json',
-											type: 'POST',
-											timeout: 10000,
-											data: {
-												'contact': e.value
-											},
-											headers: {
-												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-											},
-											success: function(data) {
-												if(data.code == 20001) {
-													mui.alert(data.msg, function() {
-														
-													}, "提示", "确定")
-												}
-											},
-											error: function(xhr, type, errorThrown) {
-												//异常处理；
-												console.log(type);
-											}
-										});
 
+				var userType = localStorage.getItem("userType");
+				if(userType == 0) {
+					mui.ajax(req_url + '/api/v1/profile/agent?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒;
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								console.log(data)
+								name.value = data.data.agentinfo.name;
+								loginName.value = data.data.loginname;
+								contact.value = data.data.agentinfo.contact;
+								address.value = data.data.agentinfo.address;
+								phoneNum.value = data.data.agentinfo.mobile;
+								var path = data.data.agentinfo.path;
+								if(path.length == 4) {
+									//一级代理商管理员 不能进行修改信息
+									var iconEdits = document.querySelectorAll(".pui-icon-edit");
+									var inputs = document.querySelectorAll("input");
+									for(var i = 0; i < iconEdits.length; i++) {
+										iconEdits[i].style.display = "none";
 									}
-								})
-							break;
-							//手机号
-							case 'phoneNum':
-								e.detail.gesture.preventDefault();
-								var btnArray = ['取消', '确定'];
-								mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
-									if(e.index == 1) {
-										if(e.value == "") {
-											mui.alert("修改内容不能为空",function(){
-												
-											},"提示","确定")
-										}else if(!(/^1[34578]\d{9}$/.test(e.value))) {
-											mui.alert("请重新输入您的手机号",function(){
-        										
-        									},"提示","确定")
-										}else {
-											document.getElementById("phoneNum").value = e.value;
-    										mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+									for(var i = 0; i < inputs.length; i++) {
+										inputs[i].style.paddingRight = 15 + "px";
+									}
+								}
+								var cityPicker3 = new $.PopPicker({
+									layer: 3
+								});
+								var provinceId = data.data.agentinfo.province_id;
+								var cityId = data.data.agentinfo.city_id;
+								var areaId = data.data.agentinfo.district_id;
+								//筛选出省
+								for(var h = 0; h < cityData3.length; h++) {
+									if(cityData3[h].value == provinceId) {
+										province.innerHTML = cityData3[h].text;
+										console.log(cityData3[h].children.length)
+											//筛选出市
+										for(var hh = 0; hh < cityData3[h].children.length; hh++) {
+											if(cityData3[h].children[hh].value == cityId) {
+												city.innerHTML = cityData3[h].children[hh].text;
+												//筛选出区
+												for(var hhh = 0; hhh < cityData3[h].children[hh].children.length; hhh++) {
+													if(cityData3[h].children[hh].children[hhh].value == areaId) {
+														area.innerHTML = cityData3[h].children[hh].children[hhh].text;
+													}
+												}
+											}
+										}
+									}
+								}
+								cityPicker3.setData(cityData3);
+
+								var showCityPickerButton = doc.getElementById('showCityPicker3');
+								var cityResult3 = doc.getElementById('cityResult3');
+								if(path.length !== 4) {
+									showCityPickerButton.addEventListener('tap', function(event) {
+										cityPicker3.show(function(items) {
+											//返回 false 可以阻止选择框的关闭
+											province.innerText = (items[0] || {}).text;
+											city.innerText = (items[1] || {}).text;
+											area.innerText = (items[2] || {}).text;
+											mui.ajax(req_url + '/api/v1/profile/area?access_token=' + access_token + '&openid=' + openid, {
 												dataType: 'json',
-												type: 'post',
+												type: 'POST',
 												timeout: 10000,
 												data: {
-													'mobile': e.value
+													'countryid': 86,
+													'provinceid': (items[0] || {}).value,
+													'cityid': (items[1] || {}).value,
+													'districtid': (items[2] || {}).value
 												},
 												headers: {
 													'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -209,9 +175,10 @@
 												success: function(data) {
 													console.log(data)
 													if(data.code == 20001) {
+														console.log(data)
 														if(data.code == 20001) {
 															mui.alert(data.msg, function() {
-																
+
 															}, "提示", "确定")
 														}
 													}
@@ -221,39 +188,118 @@
 													console.log(type);
 												}
 											});
-    									}
-										
-									}
-								})
-							break;
-							//详细地址
-							case 'address':
-								e.detail.gesture.preventDefault();
-								var btnArray = ['取消', '确定'];
-								mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
-									if(e.index == 1) {
-										if(e.value == "") {
-											mui.alert("修改内容不能为空",function(){
-												
-											},"提示","确定")
-										}else {
-											document.getElementById("address").value = e.value;
-										}
-										mui.ajax(req_url + '/api/v1/profile/address?access_token=' + access_token + '&openid=' + openid, {
+										});
+									}, false);
+								}
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+						}
+					});
+				}
+
+				//二级及其他可以进行修改信息
+				mui(".mui-table-view").on("tap", ".pui-icon-edit", function(e) {
+					var id = this.getAttribute("data-id");
+					switch(id) {
+						//联系人姓名
+						case 'contact':
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+								if(e.index == 1) {
+									if(e.value == "") {
+										mui.alert("修改内容不能为空", function() {
+
+										}, "提示", "确定")
+									} else {
+										document.getElementById("contact").value = e.value;
+
+										mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
 											dataType: 'json',
 											type: 'post',
 											timeout: 10000,
 											data: {
-												'address': e.value
+												'contact': e.value
 											},
 											headers: {
 												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 											},
 											success: function(data) {
+
+												if(data.code == 20001) {
+													mui.alert(data.msg, function() {
+														localStorage.removeItem("agentInfoContact");
+														localStorage.setItem("agentInfoContact", e.value)
+													}, "提示", "确定")
+												}
+											},
+											error: function(xhr, type, errorThrown) {
+												//异常处理；
+												console.log(type);
+											}
+										});
+									}
+									mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'POST',
+										timeout: 10000,
+										data: {
+											'contact': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+										},
+										success: function(data) {
+											if(data.code == 20001) {
+												mui.alert(data.msg, function() {
+
+												}, "提示", "确定")
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
+
+								}
+							})
+							break;
+							//手机号
+						case 'phoneNum':
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+								if(e.index == 1) {
+									if(e.value == "") {
+										mui.alert("修改内容不能为空", function() {
+
+										}, "提示", "确定")
+									} else if(!(/^1[34578]\d{9}$/.test(e.value))) {
+										mui.alert("请重新输入您的手机号", function() {
+
+										}, "提示", "确定")
+									} else {
+										document.getElementById("phoneNum").value = e.value;
+										mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+											dataType: 'json',
+											type: 'post',
+											timeout: 10000,
+											data: {
+												'mobile': e.value
+											},
+											headers: {
+												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+											},
+											success: function(data) {
+												console.log(data)
 												if(data.code == 20001) {
 													if(data.code == 20001) {
 														mui.alert(data.msg, function() {
-															
+
 														}, "提示", "确定")
 													}
 												}
@@ -264,84 +310,57 @@
 											}
 										});
 									}
-								})
+
+								}
+							})
 							break;
-						}
-			
-					})
-				}
-				$.ready(function() {
-					var cityPicker3 = new $.PopPicker({
-						layer: 3
-					});
-					var provinceId = data.data.agentinfo.province_id;
-					var cityId = data.data.agentinfo.city_id;
-					var areaId = data.data.agentinfo.district_id;
-					//筛选出省
-					for(var h = 0;h<cityData3.length;h++) {
-						if(cityData3[h].value == provinceId) {
-							province.innerHTML = cityData3[h].text;
-							console.log(cityData3[h].children.length)
-							//筛选出市
-							for(var hh = 0;hh<cityData3[h].children.length;hh++) {
-								if(cityData3[h].children[hh].value == cityId) {
-									city.innerHTML = cityData3[h].children[hh].text;
-									//筛选出区
-									for(var hhh = 0;hhh<cityData3[h].children[hh].children.length;hhh++) {
-										if(cityData3[h].children[hh].children[hhh].value == areaId) {
-											area.innerHTML = cityData3[h].children[hh].children[hhh].text;
-										}
+							//详细地址
+						case 'address':
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+								if(e.index == 1) {
+									if(e.value == "") {
+										mui.alert("修改内容不能为空", function() {
+
+										}, "提示", "确定")
+									} else {
+										document.getElementById("address").value = e.value;
 									}
-								}
-							}
-						}
-					}
-					cityPicker3.setData(cityData3);
-					var showCityPickerButton = doc.getElementById('showCityPicker3');
-					var cityResult3 = doc.getElementById('cityResult3');
-					if(path.length!==4) {
-						showCityPickerButton.addEventListener('tap', function(event) {
-						cityPicker3.show(function(items) {
-							//返回 false 可以阻止选择框的关闭
-							province.innerText = (items[0] || {}).text;
-							city.innerText = (items[1] || {}).text;
-							area.innerText = (items[2] || {}).text;
-							mui.ajax(req_url + '/api/v1/profile/area?access_token=' + access_token + '&openid=' + openid, {
-								dataType: 'json',
-								type: 'POST',
-								timeout: 10000,
-								data: {
-									'countryid': 86,
-									'provinceid':(items[0] || {}).value,
-									'cityid':(items[1] || {}).value,
-									'districtid':(items[2] || {}).value
-								},
-								headers: {
-									'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-								},
-								success: function(data) {
-									console.log(data)
-									if(data.code == 20001) {
-										console.log(data)
-										if(data.code == 20001) {
-											mui.alert(data.msg, function() {
-												
-											}, "提示", "确定")
+									mui.ajax(req_url + '/api/v1/profile/address?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'address': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+										},
+										success: function(data) {
+											if(data.code == 20001) {
+												if(data.code == 20001) {
+													mui.alert(data.msg, function() {
+
+													}, "提示", "确定")
+												}
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
 										}
-									}
-								},
-								error: function(xhr, type, errorThrown) {
-									//异常处理；
-									console.log(type);
+									});
 								}
-							});
-						});
-						}, false);
+							})
+							break;
 					}
-					
-				});
-				
+
+				})
+ 
+
 			})(mui, document);
 		</script>
 	</body>
+
 </html>

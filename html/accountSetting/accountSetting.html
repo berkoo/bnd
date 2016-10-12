@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
-		<meta  charset="UTF-8">
+		<meta charset="UTF-8">
 		<meta http-equiv="refresh" content="10">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="accountSetting.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="accountSetting.css" />
 		<title>账户设置</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -55,7 +57,7 @@
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10 pui-initial">
-				<li class="mui-table-view-cell mui-item pui-list" data-href = "changePwd.html">
+				<li class="mui-table-view-cell mui-item pui-list" data-href="changePwd.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe61b;</i>
 						<span class="fz14">修改密码</span>
@@ -63,7 +65,7 @@
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10 pui-initial">
-				<li class="mui-table-view-cell mui-item pui-list" data-href = "../about/about.html">
+				<li class="mui-table-view-cell mui-item pui-list" data-href="../about/about.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe61a;</i>
 						<span class="fz14">关于</span>
@@ -77,23 +79,23 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-//			window.onload = function(){
-//				location.reload();
-//			}
-			mui(".pui-btn").on("tap",".mui-btn",function(){
+			//			window.onload = function(){
+			//				location.reload();
+			//			}
+			mui(".pui-btn").on("tap", ".mui-btn", function() {
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			})
-			mui(".mui-table-view").on("tap",".mui-item",function(){
+			mui(".mui-table-view").on("tap", ".mui-item", function() {
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			})
-			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+			mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			})
 		</script>
-		
+
 		<script>
 			(function($, doc) {
 				$.init();
@@ -107,14 +109,14 @@
 				var gpsStatus = document.getElementById("gpsStatus");
 				var recordStatus = document.getElementById("recordStatus");
 				var broadcastStatus = document.getElementById("broadcastStatus");
-				console.log("userType:"+user_type);
+				console.log("userType:" + user_type);
 				if(user_type == 1) {
 					//删除用户余额和防串货UI样式
 					var puiagent = document.querySelectorAll(".pui-agent");
-					for(var k = 0;k<puiagent.length;k++) {
+					for(var k = 0; k < puiagent.length; k++) {
 						puiagent[k].style.display = "none";
 					}
-					mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
+					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
 						dataType: 'json', //服务器返回json格式数据
 						type: 'get', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒；
@@ -124,60 +126,79 @@
 						success: function(data) {
 							if(data.code == 20001) {
 								console.log(data)
-								localStorage.setItem("logonRecordedStatus",data.data.orginfo.allow_recorded);
+								localStorage.setItem("logonRecordedStatus", data.data.orginfo.allow_recorded);
 								nickName.innerHTML = data.data.orginfo.contact;
 								corg_name.innerHTML = data.data.orginfo.corg_name;
 								if(data.data.orginfo.allow_located == false) {
 									gpsStatus.innerHTML = "未开启";
-								}else if(data.data.orginfo.allow_located == true) {
+								} else if(data.data.orginfo.allow_located == true) {
 									gpsStatus.innerHTML = "开启";
 								}
 								if(data.data.orginfo.allow_recorded == false) {
 									recordStatus.innerHTML = "未开启";
-								}else if(data.data.orginfo.allow_recorded == true) {
+								} else if(data.data.orginfo.allow_recorded == true) {
 									recordStatus.innerHTML = "开启";
 								}
 								if(data.data.orginfo.allow_broadcasted == false) {
 									broadcastStatus.innerHTML = "未开启";
-								}else if(data.data.orginfo.allow_broadcasted == true) {
+								} else if(data.data.orginfo.allow_broadcasted == true) {
 									broadcastStatus.innerHTML = "开启";
 								}
 							}
-							document.querySelector(".mui-media").addEventListener("tap",function(){
+							document.querySelector(".mui-media").addEventListener("tap", function() {
 								mui.openWindow("../unitManage/unitContactInfo.html");
 							})
-							
+
 						},
 						error: function(xhr, type, errorThrown) {
 							//异常处理；
 							console.log(type);
 						}
 					});
-				}else{
+				} else {
 					//删除平台管理员中的GPS 群组录音和文字广播
 					document.querySelector(".pui-platform").style.display = "none"
-					var data = localStorage.getItem("agentInfo");
-					console.log(data)
-					if(data!=null){
-						data = JSON.parse(data);
-					}
-					localStorage.setItem("agentInfoContact",data.data.agentinfo.contact);
-					nickName.innerHTML = localStorage.getItem("agentInfoContact")
-					corg_name.innerHTML = data.data.agentinfo.name;
-					balance.innerHTML = data.data.agentinfo.blance;
-					localStorage.setItem("loginGrabbedStatus",data.data.agentinfo.allow_grabbed);
-					var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
-					console.log(loginGrabbedStatus);
-					if(data.data.agentinfo.allow_grabbed == true) {
-						grabbed.innerHTML = "开启"
-					}else if(data.data.agentinfo.allow_grabbed == false) {
-						grabbed.innerHTML = "未开启"
-					}
-					document.querySelector(".mui-media").addEventListener("tap",function(){
-						mui.openWindow("accountEdit.html");
-					})
+					 
+
+					mui.ajax(req_url + '/api/v1/profile/agent?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'get', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								console.log(data)
+								localStorage.setItem("agentInfoContact", data.data.agentinfo.contact);
+								nickName.innerHTML = localStorage.getItem("agentInfoContact")
+								corg_name.innerHTML = data.data.agentinfo.name;
+								balance.innerHTML = data.data.agentinfo.blance;
+
+								localStorage.setItem("loginGrabbedStatus", data.data.agentinfo.allow_grabbed);
+								var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
+								console.log(loginGrabbedStatus);
+								if(data.data.agentinfo.allow_grabbed == true) {
+									grabbed.innerHTML = "开启"
+								} else if(data.data.agentinfo.allow_grabbed == false) {
+									grabbed.innerHTML = "未开启"
+								}
+								document.querySelector(".mui-media").addEventListener("tap", function() {
+									mui.openWindow("accountEdit.html");
+								})
+
+							}
+
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
+						}
+					});
+
 				}
 			}(mui, document));
 		</script>
 	</body>
+
 </html>
