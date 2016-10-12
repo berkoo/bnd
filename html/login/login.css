@@ -2,8 +2,10 @@
  *主体部分 
  */
 .mui-table-view-cell {
-	padding: 9px 15px;
+	 padding: 11px 15px;
 }
 .mui-content>.mui-table-view:first-child {
 	margin-top: 75px;
 }
+
+
