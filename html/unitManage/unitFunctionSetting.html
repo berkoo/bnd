@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="unitFunctionSetting.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="unitFunctionSetting.css" />
 		<title>功能设置</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -50,25 +52,41 @@
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
 			var orgId = localStorage.getItem("orgId");
-			var uniteData =JSON.parse(localStorage.getItem("uniteData"));
-			//获取到初始状态
-			for(var i= 0;i<uniteData.data.length;i++) {
-				if(uniteData.data[i].id == orgId) {
-					console.log(uniteData.data[i])
-					if(uniteData.data[i].allow_located == 1) {
-						gpsStatus.className += " mui-active"
+
+			mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
+				data: {
+					'id': orgId
+				},
+				dataType: 'json', //服务器返回json格式数据
+				type: 'get', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒;
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				success: function(data) {
+					if(data.code == 20001) {
+						console.log(data);
+						if(data.data.allow_located == 1) {
+							gpsStatus.className += " mui-active"
+						}
+						if(data.data.allow_broadcasted == 1) {
+							broadcastStatus.className += " mui-active"
+						}
+						if(data.data.allow_recorded == 1) {
+							recordStatus.className += " mui-active"
+						}
+
 					}
-					if(uniteData.data[i].allow_broadcasted == 1) {
-						broadcastStatus.className += " mui-active"
-					}
-					if(uniteData.data[i].allow_recorded == 1) {
-						recordStatus.className += " mui-active"
-					}
+				},
+				error: function(xhr, type, errorThrown) {
+					//异常处理；
+					console.log(type);
 				}
-			}
+			});
+
 			
 			//设置状态
-			document.getElementById("save").addEventListener("tap",function(){
+			document.getElementById("save").addEventListener("tap", function() {
 				var gpsStatus = document.getElementById("gpsStatus").classList.contains("mui-active");
 				var broadcastStatus = document.getElementById("broadcastStatus").classList.contains("mui-active");
 				var recordStatus = document.getElementById("recordStatus").classList.contains("mui-active");
@@ -76,21 +94,21 @@
 					dataType: 'json', //服务器返回json格式数据
 					type: 'POST', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
-					data:{
-						'id':orgId,
-						'allow_located':gpsStatus,
-						'allow_broadcasted':broadcastStatus,
-						'allow_recorded':recordStatus
+					data: {
+						'id': orgId,
+						'allow_located': gpsStatus,
+						'allow_broadcasted': broadcastStatus,
+						'allow_recorded': recordStatus
 					},
 					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' 
+						'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 					},
 					success: function(data) {
 						console.log(data)
 						if(data.code == 20001) {
-							mui.alert("保存成功",function(){
+							mui.alert("保存成功", function() {
 								mui.back();
-							},"提示","确定");
+							}, "提示", "确定");
 						};
 					},
 					error: function(xhr, type, errorThrown) {
@@ -100,4 +118,5 @@
 			})
 		</script>
 	</body>
+
 </html>
