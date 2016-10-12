@@ -59,23 +59,38 @@
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
 			var orgId = localStorage.getItem("orgId");
-			var uniteData =JSON.parse(localStorage.getItem("uniteData"));
+			
 			var username = document.getElementById("username");
 			var phoneNum = document.getElementById(("phoneNumber"));
 			var address = document.getElementById("address");
 			var email = document.getElementById("email")
-			//获取信息
-			//获取到初始状态
-			for(var i= 0;i<uniteData.data.length;i++) {
-				if(uniteData.data[i].id == orgId) {
-					console.log(uniteData.data[i])
-					username.value = uniteData.data[i].contact;
-					phoneNum.value = uniteData.data[i].mobile;
-					address.value = uniteData.data[i].address;
-					email.value = uniteData.data[i].email;
+
+			mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
+				data: {
+					'id': orgId
+				},
+				dataType: 'json', //服务器返回json格式数据
+				type: 'get', //HTTP请求类型
+				timeout: 10000, //超时时间设置为10秒;
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				},
+				success: function(data) {
+					if(data.code == 20001) {
+						console.log(data);
+						username.value = data.data.contact;
+						phoneNum.value = data.data.mobile;
+						address.value = data.data.address;
+						email.value = data.data.email;
+
+					}
+				},
+				error: function(xhr, type, errorThrown) {
+					//异常处理；
+					console.log(type);
 				}
-			}
-			
+			});
+
 			//修改信息
 			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
 				var id = this.getAttribute("data-id")
@@ -89,7 +104,7 @@
 							if(e.index == 1) {
 								if(e.value == "") {
 									mui.alert("修改信息不能为空")
-								}else {
+								} else {
 									document.getElementById("username").value = e.value;
 									mui.ajax(req_url + '/api/v1/org/contact?access_token=' + access_token + '&openid=' + openid, {
 										dataType: 'json',
@@ -97,7 +112,7 @@
 										timeout: 10000,
 										data: {
 											'id': orgId,
-											'contact':e.value
+											'contact': e.value
 										},
 										headers: {
 											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -105,7 +120,7 @@
 										success: function(data) {
 											if(data.code == 20001) {
 												mui.alert(data.msg, function() {
-													
+
 												}, "提示", "确定")
 											}
 										},
@@ -115,24 +130,24 @@
 										}
 									});
 								}
-								
+
 							}
 						})
-					break;
+						break;
 					case 'phoneNumber':
 						e.detail.gesture.preventDefault();
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
 								if(e.value == "") {
-									mui.alert("修改信息不能为空",function(){
-										
-									},"提示","确定")
-								}else if(!(/^1[34578]\d{9}$/.test(e.value))){
-									mui.alert("请重新输入您的手机号",function(){
-        										
-        							},"提示","确定")
-								}else {
+									mui.alert("修改信息不能为空", function() {
+
+									}, "提示", "确定")
+								} else if(!(/^1[34578]\d{9}$/.test(e.value))) {
+									mui.alert("请重新输入您的手机号", function() {
+
+									}, "提示", "确定")
+								} else {
 									document.getElementById("phoneNumber").value = e.value;
 									mui.ajax(req_url + '/api/v1/org/contact?access_token=' + access_token + '&openid=' + openid, {
 										dataType: 'json',
@@ -140,7 +155,7 @@
 										timeout: 10000,
 										data: {
 											'id': orgId,
-											'mobile':e.value
+											'mobile': e.value
 										},
 										headers: {
 											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -150,7 +165,7 @@
 											if(data.code == 20001) {
 												if(data.code == 20001) {
 													mui.alert(data.msg, function() {
-														
+
 													}, "提示", "确定")
 												}
 											}
@@ -161,21 +176,20 @@
 										}
 									});
 								}
-								
-								
+
 							}
 						})
-					break;
+						break;
 					case 'email':
 						e.detail.gesture.preventDefault();
 						var btnArray = ['取消', '确定'];
 						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
 							if(e.index == 1) {
 								if(e.value == "") {
-									mui.alert("修改信息不能为空",function(){
-										
-									},"提示","确定")
-								}else {
+									mui.alert("修改信息不能为空", function() {
+
+									}, "提示", "确定")
+								} else {
 									document.getElementById("email").value = e.value;
 									mui.ajax(req_url + '/api/v1/org/contact?access_token=' + access_token + '&openid=' + openid, {
 										dataType: 'json',
@@ -183,7 +197,7 @@
 										timeout: 10000,
 										data: {
 											'id': orgId,
-											'email':e.value
+											'email': e.value
 										},
 										headers: {
 											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -193,7 +207,7 @@
 											if(data.code == 20001) {
 												if(data.code == 20001) {
 													mui.alert(data.msg, function() {
-														
+
 													}, "提示", "确定")
 												}
 											}
@@ -204,10 +218,10 @@
 										}
 									});
 								}
-								
+
 							}
 						})
-					break;
+						break;
 					case 'address':
 						e.detail.gesture.preventDefault();
 						var btnArray = ['取消', '确定'];
@@ -215,7 +229,7 @@
 							if(e.index == 1) {
 								if(e.value == "") {
 									mui.alert("修改信息不能为空")
-								}else {
+								} else {
 									document.getElementById("address").value = e.value;
 									mui.ajax(req_url + '/api/v1/org/contact?access_token=' + access_token + '&openid=' + openid, {
 										dataType: 'json',
@@ -223,7 +237,7 @@
 										timeout: 10000,
 										data: {
 											'id': orgId,
-											'address':e.value
+											'address': e.value
 										},
 										headers: {
 											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -233,7 +247,7 @@
 											if(data.code == 20001) {
 												if(data.code == 20001) {
 													mui.alert(data.msg, function() {
-														
+
 													}, "提示", "确定")
 												}
 											}
@@ -244,13 +258,12 @@
 										}
 									});
 								}
-								
-								
+
 							}
 						})
-					break;
+						break;
 				}
-			
+
 			})
 		</script>
 	</body>

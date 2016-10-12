@@ -85,7 +85,7 @@
 				var corg_name = document.getElementById("corg_name");
 				var unitName = document.getElementById("unitName");
 				var loginName = document.getElementById("loginName");
-				var uniteData =JSON.parse(localStorage.getItem("uniteData"));
+				 
 				var orgId = localStorage.getItem("orgId");
 				//获取到登录名
 				mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
@@ -100,7 +100,9 @@
 					},
 					success: function(data) {
 						if(data.code == 20001) {
-							loginName.value = data.data.account.loginname
+							console.log(data);
+							loginName.value = data.data.account.loginname;
+							unitName.value=data.data.corg_name;
 						}
 					},
 					error: function(xhr, type, errorThrown) {
@@ -108,12 +110,7 @@
 						console.log(type);
 					}
 				});
-				console.log(uniteData)
-				for(var i = 0;i<uniteData.data.length;i++) {
-					if(uniteData.data[i].id == orgId) {
-						unitName.value = uniteData.data[i].corg_name;
-					}
-				}
+			
 				document.querySelector(".pui-icon-edit").addEventListener("tap",function(e){
 					var id = this.getAttribute("data-id")
 					var openid = localStorage.getItem("ptt_openid");
