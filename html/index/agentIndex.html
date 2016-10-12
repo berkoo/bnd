@@ -97,6 +97,7 @@
 							if(data.code == 20001) {
 								dataCount();
 								console.log("data:"+JSON.stringify(data));
+								localStorage.setItem("loginGrabbedStatus", data.data.agentinfo.allow_grabbed);
 								localStorage.setItem("agentInfo",JSON.stringify(data));
 								doc.getElementById("agentInfo").innerHTML = data.data.agentinfo.contact + "<p class='mui-ellipsis'>" + data.data.agentinfo.name + "</p>";
 							} else {

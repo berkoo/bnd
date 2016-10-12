@@ -174,8 +174,7 @@
 								nickName.innerHTML = localStorage.getItem("agentInfoContact")
 								corg_name.innerHTML = data.data.agentinfo.name;
 								balance.innerHTML = data.data.agentinfo.blance;
-
-								localStorage.setItem("loginGrabbedStatus", data.data.agentinfo.allow_grabbed);
+ 
 								var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
 								console.log(loginGrabbedStatus);
 								if(data.data.agentinfo.allow_grabbed == true) {
