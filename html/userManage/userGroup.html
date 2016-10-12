@@ -107,7 +107,7 @@
 									if(data.code == 20001) {
 										var html = "";
 										for(var i = 0;i<data.data.length;i++) {
-											html ='<li data-id ='+data.data[i].id+' class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-green">默认</a><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-red">移除</a></div><div class="mui-slider-handle"><div class="mui-table-cell">'+data.data[i].name+'</div></div></li>';
+											html +='<li data-id ='+data.data[i].id+' class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-green">默认</a><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-red">移除</a></div><div class="mui-slider-handle"><div class="mui-table-cell">'+data.data[i].name+'</div></div></li>';
 										}
 										document.getElementById("lis").innerHTML = html;
 									}
