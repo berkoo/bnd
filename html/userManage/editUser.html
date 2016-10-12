@@ -98,12 +98,13 @@
 									},"提示","确定")
 								}else {
 									document.getElementById("username").value = e.value;
-									mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+									mui.ajax(req_url + '/api/v1/terminal/nickname?access_token=' + access_token + '&openid=' + openid, {
 										dataType: 'json',
 										type: 'post',
 										timeout: 10000,
 										data: {
-											'contact': e.value
+											'id':localStorage.getItem("userId"),
+											'nickname': e.value
 										},
 										headers: {
 											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
@@ -141,11 +142,12 @@
 										},"提示","确定")
 									}else {
 										document.getElementById("phoneNumber").value = e.value;
-										mui.ajax(req_url + '/api/v1/profile/mobile?access_token=' + access_token + '&openid=' + openid, {
+										mui.ajax(req_url + '/api/v1/terminal/mobile?access_token=' + access_token + '&openid=' + openid, {
 											dataType: 'json',
 											type: 'post',
 											timeout: 10000,
 											data: {
+												'id':localStorage.getItem("userId"),
 												'mobile': e.value
 											},
 											headers: {
