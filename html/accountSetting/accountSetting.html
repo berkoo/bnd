@@ -127,6 +127,8 @@
 							if(data.code == 20001) {
 								console.log(data)
 								localStorage.setItem("logonRecordedStatus", data.data.orginfo.allow_recorded);
+								//存储位置上报状态
+								localStorage.setItem("logonGpsStatus",data.data.orginfo.allow_located);
 								nickName.innerHTML = data.data.orginfo.contact;
 								corg_name.innerHTML = data.data.orginfo.corg_name;
 								if(data.data.orginfo.allow_located == false) {
