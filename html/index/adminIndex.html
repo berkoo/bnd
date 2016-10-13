@@ -52,7 +52,7 @@
 				</li>
 			</ul>
 			<div class="pui-btn">
-				<button class="mui-btn icon icon-broad pui-icon" data-href="../groupManage/vedio.html">&#xe603;</button><button data-href="../userManage/userManage.html">用户列表</button><button data-href="../groupManage/groupManage.html">群组列表</button>
+				<button class="mui-btn icon icon-broad pui-icon pui-boardcast">&#xe603;</button><button data-href="../userManage/userManage.html">用户列表</button><button data-href="../groupManage/groupManage.html">群组列表</button>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
@@ -92,6 +92,11 @@
 							localStorage.setItem("uniteCorgName",data.data.orginfo.corg_name);
 							nickName.innerHTML = data.data.orginfo.contact;
 							corg_name.innerHTML = data.data.orginfo.corg_name;
+							if(data.data.orginfo.allow_broadcasted == true) {
+								document.querySelector(".pui-boardcast").addEventListener("tap",function(){
+									mui.openWindow('../groupManage/vedio.html');
+								})
+							}
 						}
 					},
 					error: function(xhr, type, errorThrown) {
