@@ -36,10 +36,10 @@
 				</li>
 			</ul>
 			<ul class="mui-table-view mt10"> 
-				<li class="mui-table-view-cell pui-list" data-href = "../accountSetting/changePwd.html">
+				<li class="mui-table-view-cell pui-list" data-href = "unitResetPwd.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe601;</i>
-						<span class="fz14">修改密码</span>
+						<span class="fz14">重置密码</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell pui-list" data-href = "contactInfo.html">
@@ -117,6 +117,7 @@
 							console.log(data);
 							loginName.value = data.data.account.loginname;
 							unitName.value=data.data.corg_name;
+							localStorage.setItem("unitId",data.data.id);
 						}
 					},
 					error: function(xhr, type, errorThrown) {
