@@ -106,15 +106,16 @@
 												},"提示","确定")
 											}else {
 												document.getElementById("username").value = e.value;
-												mui.ajax(req_url + '/api/v1/profile/contact?access_token=' + access_token + '&openid=' + openid, {
+												mui.ajax(req_url + '/api/v1/group/name?access_token=' + access_token + '&openid=' + openid, {
 													dataType: 'json',
 													type: 'post',
 													timeout: 10000,
 													data: {
-														'contact': e.value
+														'id':localStorage.getItem("groupId"),
+														'name': e.value
 													},
 													headers: {
-														'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+														'Content-Type': 'application/json'
 													},
 													success: function(data) {
 														if(data.code == 20001) {
