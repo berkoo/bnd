@@ -60,6 +60,11 @@
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
 			var userList =localStorage.getItem("userListData");
+			//判读是否开始位置上报按钮
+			var logonGpsStatus = localStorage.getItem("logonGpsStatus");
+			if(logonGpsStatus == 'false') {
+				document.getElementById("gpsStatus").className += " mui-disabled";
+			}
 			if(userList!=null){
 				userList = JSON.parse(userList).data;
 				for (var i=0;i<userList.length;i++) {
@@ -82,15 +87,9 @@
 									if(data.data.allow_gps == true) {
 										document.getElementById("gpsStatus").className += " mui-active";
 									}
-//									if(data.data.allow_audio == true) {
-//										document.getElementById("voiceStatus").className += " mui-active";
-//									}
 									if(data.data.enable == true) {
 										document.getElementById("enableStatus").className += " mui-active";
 									}
-//									if(data.data.allow_autochange == true) {
-//										document.getElementById("gpsStatus").className += " mui-active";
-//									}
 								}else {
 									mui.alert(data.msg,function(){
 										
