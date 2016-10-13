@@ -74,12 +74,27 @@
 				console.log(userList);
 				for (var i=0;i<userList.length;i++) {
 					if(userList[i].id==localStorage.getItem("userId")){
-						document.getElementById("username").value = userList[i].nickname;
-						document.getElementById("phoneNumber").value = userList[i].user_mobile;
-						document.getElementById('iccid').value = userList[i].user_account;
-						document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName")
-				}
-									
+						if(userList[i].nickname == "" || userList[i].nickname == undefined || userList[i].nickname == null) {
+							document.getElementById("username").value = "无";
+						}else {
+							document.getElementById("username").value = userList[i].nickname;
+						}
+						if(userList[i].user_mobile == "" || userList[i].user_mobile == undefined || userList[i].user_mobile == null) {
+							document.getElementById("phoneNumber").value = "无"
+						}else {
+							document.getElementById("phoneNumber").value = userList[i].user_mobile;
+						}
+						if(userList[i].user_account == "" || userList[i].user_account == undefined || userList[i].user_account == "") {
+							userList[i].user_account = "无"
+						}else {
+							document.getElementById('iccid').value = userList[i].user_account;
+						}
+						if(localStorage.getItem("uniteCorgName") == "" || localStorage.getItem("uniteCorgName") == null || localStorage.getItem("uniteCorgName") == undefined) {
+							document.getElementById("corg_name").innerHTML = "无"
+						}else {
+							document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName");
+						}
+					}		
 				}
 			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
 				var id = this.getAttribute("data-id")
