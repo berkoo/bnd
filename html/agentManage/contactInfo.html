@@ -140,7 +140,8 @@
 								type: 'POST',
 								timeout: 10000,
 								data: {
-//									'countryid': 86,
+									'id':agentId,
+									'countryid': 86,
 									'provinceid':(items[0] || {}).value,
 									'cityid':(items[1] || {}).value,
 									'districtid':(items[2] || {}).value,

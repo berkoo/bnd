@@ -63,6 +63,7 @@
 			var sendMsgUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
 			var groupList = new Array();
 			var userList = new Array();
+			var orgId;
 			ids = [];
 			//获取企业编号
 			var getOrgId = function() {
@@ -76,9 +77,10 @@
 					success: function(data) {
 						if(data.code == 20001) {
 							if(data.data.orginfo != null) {
-								var orgId = data.data.orginfo.id;
+								orgId = data.data.orginfo.id;
+								 
 								console.log("orgId:" + orgId);
-								getGroupList(orgId)
+								
 							}
 						}
 					},
@@ -107,7 +109,7 @@
 									if(data.code == 20001) {
 										var html = "";
 										for(var i = 0;i<data.data.length;i++) {
-											html ='<li data-id ='+data.data[i].id+' class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-green">默认</a><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-red">移除</a></div><div class="mui-slider-handle"><div class="mui-table-cell">'+data.data[i].name+'</div></div></li>';
+											html +='<li data-id ='+data.data[i].id+' class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-green">默认</a><a data-id = '+data.data[i].id+' class="mui-btn mui-btn-red">移除</a></div><div class="mui-slider-handle"><div class="mui-table-cell">'+data.data[i].name+'</div></div></li>';
 										}
 										document.getElementById("lis").innerHTML = html;
 									}
@@ -146,7 +148,14 @@
 					error: function() {}
 				});
 			};
-			getOrgId();
+			 
+			//点击添加
+			document.getElementById("add").addEventListener('tap', function() {
+				getGroupList(orgId);
+
+ 			}, false);
+ 			
+ 			
 			//点击保存
 			document.getElementById("listSave").addEventListener('tap', function() {
 				var tags = document.getElementsByTagName("input");

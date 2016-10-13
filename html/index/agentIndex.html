@@ -22,7 +22,7 @@
 			<ul class="mui-table-view mui-table-view-chevron">
 				<li class="mui-table-view-cell mui-media" data-href="../accountSetting/accountSetting.html">
 					<a class="mui-navigate-right" href="#account">
-						<img width="50px" class="mui-media-object mui-pull-left head-img" id="head-img" src="../../imgs/icon_index.png">
+						<img width="50px" class="mui-media-object mui-pull-left head-img" id="head-img" src="../../imgs/icon_photo.png">
 						<div class="mui-media-body" id="agentInfo">
 							联系人姓名
 							<p class='mui-ellipsis'>代理商名称</p>
@@ -35,11 +35,11 @@
 					<a class="mui-navigate-right" href="#">
 						<span class="pui-span-left fz14">数据统计</span>
 						<span class="icon icon-broad mui-icon icon-one">&#xe610;</span>
-						<span class="fz14" id="agent_count">16家</span>
+						<span class="fz14" id="agent_count">家</span>
 						<span class="icon icon-broad mui-icon icon-two">&#xe620;</span>
-						<span class="fz14" id="org_count">11家</span>
+						<span class="fz14" id="org_count">家</span>
 						<span class="icon icon-broad mui-icon icon-three">&#xe601;</span>
-						<span class="fz14" id="user_count">11家</span>
+						<span class="fz14" id="user_count">个</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell pui-list" data-href="../userManage/createAgentUser.html">
@@ -59,7 +59,7 @@
 				</li>
 			</ul>
 			<div class="pui-btn">
-				<button class="mui-btn icon icon-broad pui-icon">&#xe616;</button><button data-href="../renew/renew.html">续费</button><button data-href="../changeCard/changeCard.html">换卡</button>
+				<button class="mui-btn icon icon-broad pui-icon ">&#xe616;</button><button data-href="../renew/renew.html">续费</button><button data-href="../changeCard/changeCard.html">换卡</button>
 			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
@@ -97,6 +97,7 @@
 							if(data.code == 20001) {
 								dataCount();
 								console.log("data:"+JSON.stringify(data));
+								localStorage.setItem("loginGrabbedStatus", data.data.agentinfo.allow_grabbed);
 								localStorage.setItem("agentInfo",JSON.stringify(data));
 								doc.getElementById("agentInfo").innerHTML = data.data.agentinfo.contact + "<p class='mui-ellipsis'>" + data.data.agentinfo.name + "</p>";
 							} else {

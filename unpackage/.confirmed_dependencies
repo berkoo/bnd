@@ -19,7 +19,7 @@
 	"html/index/adminIndex.html": {
 		"resources": [
 			"html/index/index.css",
-			"imgs/icon_index.png"
+			"imgs/icon_photo.png"
 		],
 		"refer": [
 			"html/userManage/userManage.html"

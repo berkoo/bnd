@@ -129,6 +129,8 @@
 				document.getElementById("org").innerHTML = document.querySelector("#modalList input:checked").value;
 				document.getElementById("org").setAttribute("data-orgId", document.querySelector("#modalList input:checked").getAttribute("data-account"))
 				loadGroupList(document.getElementById("org").getAttribute("data-orgId"));
+				//清空上个单位的选择的群组
+				listdata.items = [];
 			});
 			var groupdata = {
 				datas: []
