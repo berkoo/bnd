@@ -74,11 +74,12 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
-			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
-				var href = this.getAttribute("data-href");
-				mui.openWindow(href);
-			})
+			
 			(function($, doc, win, undefined) {
+				mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+					var href = this.getAttribute("data-href");
+					mui.openWindow(href);
+				})
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				var agentData =JSON.parse(localStorage.getItem("agentData"));
@@ -141,6 +142,7 @@
 					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
 					var elem = this;
 					var li = elem.parentNode.parentNode;
+					var btnArray = ['取消', '确定'];
 					mui.confirm("确认删除该条记录？","",btnArray,function(e){
 						if(e.index == 0) {
 							$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
@@ -171,6 +173,7 @@
 							}, 0);
 						}
 					})
+					
 				},false)
 				
 				mui(".mui-table-view").on("tap",".pui-icon-edit",function(e){
