@@ -54,7 +54,7 @@
 				<li class="mui-table-view-cell pui-list" data-href="resetPwd.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-one">&#xe601;</i>
-						<span class="fz14">修改密码</span>
+						<span class="fz14">重置密码</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell pui-list" data-href="agentFunctionSetting.html">
@@ -74,7 +74,10 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
-			
+			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				var href = this.getAttribute("data-href");
+				mui.openWindow(href);
+			})
 			(function($, doc, win, undefined) {
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
@@ -110,29 +113,65 @@
 					error: function() {}
 				});
 				//删除代理商
-				document.getElementById("deleteAgent").addEventListener('tap', function() {
+//				document.getElementById("deleteAgent").addEventListener('tap', function() {
+//					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
+//					$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
+//						dataType: 'json', //服务器返回json格式数据
+//						type: 'POST', //HTTP请求类型
+//						timeout: 10000, //超时时间设置为10秒；
+//						data: {
+//							"id": agentId
+//						},
+//						headers: {
+//							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+//						},
+//						success: function(data) {
+//							if(data.code == 20001) {
+//								$.alert("删除成功", function() {
+//									$.back();
+//								}, "提示", "确定");
+//							} else {
+//								$.alert(data.msg, function() {}, "提示", "确定");
+//							}
+//						}
+//					});
+//				}, false);
+				
+				document.getElementById("deleteAgent").addEventListener("tap",function(){
 					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
-					$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'POST', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						data: {
-							"id": agentId
-						},
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								$.alert("删除成功", function() {
-									$.back();
-								}, "提示", "确定");
-							} else {
-								$.alert(data.msg, function() {}, "提示", "确定");
-							}
+					var elem = this;
+					var li = elem.parentNode.parentNode;
+					mui.confirm("确认删除该条记录？","",btnArray,function(e){
+						if(e.index == 0) {
+							$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
+								dataType: 'json', //服务器返回json格式数据
+								type: 'POST', //HTTP请求类型
+								timeout: 10000, //超时时间设置为10秒；
+								data: {
+									"id": agentId
+								},
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+								},
+								success: function(data) {
+									if(data.code == 20001) {
+										$.alert("删除成功", function() {
+											li.parentNode.removeChild(li);
+											$.back();
+										}, "提示", "确定");
+									} else {
+										$.alert(data.msg, function() {}, "提示", "确定");
+									}
+								}
+							});
+							
+						}else {
+							setTimeout(function() {
+								$.swipeoutClose(li);
+							}, 0);
 						}
-					});
-				}, false);
+					})
+				},false)
 				
 				mui(".mui-table-view").on("tap",".pui-icon-edit",function(e){
 						var id = this.getAttribute("data-id");
@@ -180,11 +219,7 @@
 						}
 			
 					})
-				
-				mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
-					var href = this.getAttribute("data-href");
-					mui.openWindow(href);
-				})
+
 			})(mui, document, window)
 		</script>
 	</body>
