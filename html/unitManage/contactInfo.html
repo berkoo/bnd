@@ -69,10 +69,26 @@
 			for(var i= 0;i<uniteData.data.length;i++) {
 				if(uniteData.data[i].id == orgId) {
 					console.log(uniteData.data[i])
-					username.value = uniteData.data[i].contact;
-					phoneNum.value = uniteData.data[i].mobile;
-					address.value = uniteData.data[i].address;
-					email.value = uniteData.data[i].email;
+					if(uniteData.data[i].contact == null || uniteData.data[i].contact == null || uniteData.data[i].contact == undefined) {
+						username.value ="无"
+					}else {
+						username.value = uniteData.data[i].contact;
+					}
+					if(uniteData.data[i].mobile == null || uniteData.data[i].mobile == "" || uniteData.data[i].mobile == undefined) {
+						phoneNum.value = "无"
+					}else {
+						phoneNum.value = uniteData.data[i].mobile;
+					}
+					if(uniteData.data[i].address == null || uniteData.data[i].address == "" || uniteData.data[i].address == undefined) {
+						address.value = "无"
+					}else {
+						address.value = uniteData.data[i].address;
+					}
+					if(uniteData.data[i].email == null || uniteData.data[i].email == "" || uniteData.data[i].email == undefined) {
+						email.value = "无";
+					}else {
+						email.value = uniteData.data[i].email;
+					}
 				}
 			}
 			
