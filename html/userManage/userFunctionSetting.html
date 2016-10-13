@@ -8,6 +8,13 @@
 		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
 		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
 		<title>功能设置</title>
+		<style type="text/css">
+			.pui-network-status {
+				margin-left: 15px;
+				font-size: 14px !important;
+				color: #CCCCCC !important;
+			}
+		</style>
 	</head>
 	<body>
 		<header class="mui-bar">
@@ -24,24 +31,18 @@
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
-				<!--<li class="mui-table-view-cell">
-					<label for="">语音状态</label>
-					<span></span>
-					<div id="voiceStatus" class="mui-switch">
-						<div class="mui-switch-handle"></div>
-					</div>
-				</li>-->
 				<li class="mui-table-view-cell">
-					<label for="">是否启用</label>
+					<label for="">网络切换</label>
+					<span class="pui-network-status">当前2G状态</span>
 					<span></span>
-					<div id="enableStatus" class="mui-switch">
+					<div id="cutStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
 				<li class="mui-table-view-cell">
-					<label for="">2G/3G切换</label>
+					<label for="">返厂换卡</label>
 					<span></span>
-					<div id="cutStatus" class="mui-switch">
+					<div id="returnStatus" class="mui-switch">
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
@@ -87,8 +88,14 @@
 									if(data.data.allow_gps == true) {
 										document.getElementById("gpsStatus").className += " mui-active";
 									}
-									if(data.data.enable == true) {
-										document.getElementById("enableStatus").className += " mui-active";
+									if(data.data.network_type == 2) {
+										document.querySelector(".pui-network-status").innerHTML = "当前为2G状态";
+									}else if(data.data.network_type == 3) {
+										document.querySelector(".pui-network-status").innerHTML = "当前为3G状态";
+										document.getElementById("cutStatus").className += " mui-active";
+									}
+									if(data.data.allow_unbinded == true) {
+										document.getElementById("returnStatus").className += " mui-active";
 									}
 								}else {
 									mui.alert(data.msg,function(){
@@ -104,19 +111,24 @@
 						//保存功能设置
 						document.getElementById("save").addEventListener("tap",function(){
 							var gpsStatus = document.getElementById("gpsStatus").classList.contains("mui-active");
-							var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
-//							var autochangeStatus = document.getElementById("autochangeStatus").classList.contains("mui-active");
-//							var voiceStatus = document.getElementById("voiceStatus").classList.contains("mui-active");					//用户功能设置
+							var cutStatus = document.getElementById("cutStatus").classList.contains("mui-active");
+							var returnStatus = document.getElementById("returnStatus").classList.contains("mui-active");
+							var network = 2;
+							if(cutStatus == true) {
+								network = 3
+							}else if(cutStatus == false) {
+								network = 2
+							}
+							//用户功能设置
 							mui.ajax(req_url + '/api/v1/terminal/setting?access_token=' + access_token + '&openid=' + openid, {
 								dataType: 'json', //服务器返回json格式数据
 								type: 'POST', //HTTP请求类型
 								timeout: 10000, //超时时间设置为10秒；
 								data:{
 									'id':localStorage.getItem("userId"),
-									'enable':enableStatus,
-//									'allow_audio':voiceStatus,
-									'allow_gps':gpsStatus
-//									'allow_autochange':autochangeStatus
+									'allow_gps':gpsStatus,
+									'allow_unbinded':returnStatus,
+									'network_type':network
 								},
 								headers: {
 									'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' 
