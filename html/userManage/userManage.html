@@ -117,6 +117,29 @@
 				var normal = document.getElementById("normal");
 				var pasteDue = document.getElementById("pasteDue");
 				var due = document.getElementById("due");
+				var loginStatus = localStorage.getItem("loginStatus");
+				//当时单位管理员登录 则orgId 通过接口获取
+				if(loginStatus == 'admin') {
+					var getOrgId = function(){
+					mui.ajax(orgIdUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							console.log(data);
+							var orgId = data.data.orginfo.id;
+							getUserList(orgId,iccid,status);
+						},
+						error: function() {}
+					});
+					}
+					getOrgId();
+				}else if(loginStatus == "agent") {
+					var orgId = localStorage.getItem("unitId");
+				}
 				if(normal.checked) {
 					status = normal.getAttribute("data-status");
 				}
@@ -129,7 +152,8 @@
 				window.frames[0].window.iccid = iccid;
 				window.frames[0].window.status = status;
 				document.querySelector(".mui-modal").setAttribute("class","mui-modal");
-				window.frames[0].window.getUserList(iccid,status);
+				
+				window.frames[0].window.getUserList(orgId,iccid,status);
 			})
 			//点击重置
 			document.getElementById("reset").addEventListener("tap",function(){
@@ -162,7 +186,14 @@
 			var href = this.getAttribute("data-href");
 			mui.openWindow(href);
 		})
-		
+		document.querySelector(".pui-a-left").addEventListener("tap",function(){
+			var loginStatus = localStorage.getItem("loginStatus");
+			if(loginStatus == "admin") {
+				mui.openWindow("../index/adminIndex.html");
+			}else if(loginStatus == 'agent') {
+				mui.openWindow("../unitManage/editUnit.html");
+			}
+		})
 		</script>
 	</body>
 </html>
