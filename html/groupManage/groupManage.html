@@ -106,8 +106,13 @@
 					url:href
 				});
 			})
+			var loginStatus = localStorage.getItem("loginStatus")
 			document.querySelector(".pui-a-left").addEventListener("tap",function(){
-				mui.openWindow('../index/adminIndex.html');
+				if(loginStatus == 'admin') {
+					mui.openWindow('../index/adminIndex.html');
+				}else if(loginStatus == "agent") {
+					mui.openWindow("../unitManage/editUnit.html");
+				}
 			})
 		</script>
 	</body>

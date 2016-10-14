@@ -26,6 +26,7 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js"></script>
 		<script>
+			var orgId = null;
 			mui.init({
 				pullRefresh: {
 					container: '#pullrefresh',
@@ -43,7 +44,7 @@
 			 */
 			function pulldownRefresh() {
 				setTimeout(function() {
-					refresh('/api/v1/group/list','group');
+					getGroupList(orgId)
 					mui('#pullrefresh').pullRefresh().endPulldownToRefresh(); //refresh completed
 				}, 1500);
 			}
@@ -54,7 +55,7 @@
 			function pullupRefresh() {
 				setTimeout(function() {
 					mui('#pullrefresh').pullRefresh().endPullupToRefresh((++count > 0)); //参数为true代表没有更多数据了。
-					refresh('/api/v1/group/list','group');
+					getGroupList(orgId)
 				}, 1500);
 			}
 			if (mui.os.plus) {
@@ -78,34 +79,63 @@
 			})
 
 			var openid = localStorage.getItem("ptt_openid");
-			var access_token = localStorage.getItem("access_token");
-			//删除群组
-//			mui(".mui-table-view").on('tap', 'a.mui-btn', function() {
-//				var groupId = this.parentNode.parentNode.getAttribute("data-id");
-//				this.parentNode.parentNode.remove(this.parentNode);
-//				mui.ajax(req_url + '/api/v1/group/delete?access_token=' + access_token + '&openid=' + openid, {
-//					dataType: 'json', //服务器返回json格式数据
-//					type: 'POST', //HTTP请求类型
-//					timeout: 10000, //超时时间设置为10秒；
-//					data:{
-//						'id':groupId,
-//					},
-//					headers: {
-//						'Content-Type': 'application/json' 
-//					},
-//					success: function(data) {
-//						if(data.code == 20001) {
-//							mui.alert("删除成功",function(){
-//								
-//							},"提示","确定");
-//						}
-//					},
-//					error: function(xhr, type, errorThrown) {
-//						console.log(type);
-//					}
-//				});
-//			});
+			var access_token = localStorage.getItem("access_token");			
+			var groupListUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
+			var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
+			var fromAgentId = localStorage.getItem("unitId");
+			var loginStatus = localStorage.getItem("loginStatus");
+			if(loginStatus == 'admin') {
+				//获取到企业列表
+				var getOrgId = function(){
+					mui.ajax(orgIdUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							console.log(data);
+							orgId = data.data.orginfo.id;
+							getGroupList(orgId)
+						},
+						error: function() {}
+					});
+				}
+				getOrgId();
+			}else if(loginStatus == 'agent') {
+				orgId = fromAgentId;
+			}
+			var getGroupList = function(orgId) {
+				mui.ajax(groupListUrl, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'GET', //HTTP请求类型
+					timeout: 10000, //超时时间设置为10秒；
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					data: {
+						"org_id": orgId
+					},
+					success: function(data) {
+						document.querySelector(".mui-table-view").innerHTML = "";
+						for(var n = 0; n < data.data.length; n++) {
+							var li = document.createElement("li");
+							li.className = "mui-table-view-cell";
+							console.log(data)
+							li.setAttribute("data-href", "editGroup.html");
+							li.setAttribute('data-id',data.data[n].id);
+							li.innerHTML = '<div class="mui-slider-right mui-disabled"><a class="mui-btn mui-btn-red">删除</a></div>';
+							li.innerHTML += '<div class="mui-slider-handle mui-table"><div class="mui-table-cell"><p><span>' + data.data[n].name + '</span></p><p class="pui-p-down"><i class="icon icon-broad">&#xe605;</i><span>'+data.data[n].members_count+'</span></p><span class="mui-pull-right pui-slider-right">'+format(data.data[n].cg_createtime*1000)+'</span></div></div>';
+							document.body.querySelector('.mui-table-view').appendChild(li);
+						}
+					},
+					error: function() {}
+				});
+			};
 			
+			
+			//删除群组
 			mui(".mui-table-view").on('tap', 'a.mui-btn', function() {
 				var groupId = this.parentNode.parentNode.getAttribute("data-id");
 				var elem = this;
