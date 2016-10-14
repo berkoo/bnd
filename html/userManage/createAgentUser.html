@@ -55,10 +55,10 @@
 					<span>加入群组</span>
 					<a id="add" href="#modal" class="mui-pull-right" style="display:inline-block;" href=""><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a>
 				</li>
-				<li class="mui-table-view-cell data" v-for="item in items" data-groupId="{{item.id}}">
+				<li class="mui-table-view-cell data" v-for="item in items" data-groupId="{{item.id}}" >
 					<div class="mui-slider-right mui-disabled">
 						<a class="mui-btn mui-btn-green" data-opera="default">默认</a>
-						<a class="mui-btn mui-btn-red" data-opera="del" data-groupId="{{item.id}}">移除</a>
+						<a class="mui-btn mui-btn-red" data-opera="del" data-groupId="{{item.id}}" @click="del(item)">移除</a>
 					</div>
 					<div class="mui-slider-handle">
 						{{item.name}}
@@ -144,7 +144,21 @@
 			};
 			var listVue = new Vue({
 				el: "#OA_task_2",
-				data: listdata
+				data: listdata,
+				methods:{
+					del:function(item){
+						var btnArray = ['确认', '取消'];
+						mui.confirm('确认删除该条记录？', '', btnArray, function(e) {
+							if (e.index == 0) {
+								listdata.items.$remove(item);
+							} else {
+								setTimeout(function() {
+									$.swipeoutClose(li);
+								}, 0);
+							}
+						});
+					}
+				}
 			});
 			var loadGroupList = function(orgId) {
 				var groupLIstUrl = req_url + "/api/v1/group/list?access_token=" + access_token + "&openid=" + openid;
@@ -172,9 +186,11 @@
 				for(var i = 0; i < list.length; i++) {
 					items.push({
 						id: list[i].getAttribute("data-account"),
-						name: list[i].value
+						name: list[i].value,
+						checked:true
 					})
 				}
+				listdata.items=[];
 				listdata.items = items;
 			});
 			document.getElementById('save').addEventListener('tap', function() {
@@ -227,10 +243,27 @@
 					}
 				});
 			});
-			mui("#OA_task_2").on("tap","li.data a",function(){
-				var opera = this.getAttribute("data-opera");
-				document.getElementById("OA_task_2").removeChild(this.parentNode.parentNode);
-			});
+//			mui("#OA_task_2").on("tap","li.data a",function(){
+//				var opera = this.getAttribute("data-opera");
+//				
+//				document.getElementById("OA_task_2").removeChild(this.parentNode.parentNode);
+//			});
+//			mui('#OA_task_2').on('tap', '.mui-btn-red', function(event) {
+//					var opera = this.getAttribute("data-opera");
+//					var elem = this;
+//					var li = elem.parentNode.parentNode;
+//					mui.confirm('确认删除该条记录？', '', btnArray, function(e) {
+//						if (e.index == 0) {
+//							listdata.items.remove()
+//							li.parentNode.removeChild(li);
+//						} else {
+//							setTimeout(function() {
+//								$.swipeoutClose(li);
+//							}, 0);
+//						}
+//					});
+//				});
+//			var btnArray = ['确认', '取消'];
 		</script>
 	</body>
 
