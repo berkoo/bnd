@@ -39,7 +39,7 @@
 					}
 				}
 			});
-			
+			var orgId=null;
 			var iccid = '';
 			var status = '';
 			if(iccid == undefined || iccid == null) {
@@ -101,15 +101,18 @@
 					},
 					success: function(data) {
 						console.log(data);
-						var orgId = data.data.orginfo.id;
+						orgId = data.data.orginfo.id;
 						getUserList(orgId,iccid,status);
+//						localStorage.setItem("fromAdminId",data.data.orginfo.id);
+//						var orgId = localStorage.getItem("fromAdminId");
+//						console.log(orgId)
 					},
 					error: function() {}
 				});
 				}
 				getOrgId();
 			}else if(loginStatus == "agent") {
-				var orgId = localStorage.getItem("unitId");
+				orgId = localStorage.getItem("unitId");
 			}
 			var getUserList = function(orgId,iccid,status){
 				mui.ajax(userListUrl, {
