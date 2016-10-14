@@ -114,10 +114,13 @@
 			document.getElementById("search").addEventListener("tap",function(){
 				var iccid = document.getElementById("iccid").value;
 				var status = 0
+				var openid = localStorage.getItem("ptt_openid");
+				var access_token = localStorage.getItem("access_token");
 				var normal = document.getElementById("normal");
 				var pasteDue = document.getElementById("pasteDue");
 				var due = document.getElementById("due");
 				var loginStatus = localStorage.getItem("loginStatus");
+				var orgIdUrl = req_url + "/api/v1/profile/org?access_token=" + access_token + "&openid=" + openid;
 				//当时单位管理员登录 则orgId 通过接口获取
 				if(loginStatus == 'admin') {
 					var getOrgId = function(){
@@ -131,7 +134,7 @@
 						success: function(data) {
 							console.log(data);
 							var orgId = data.data.orginfo.id;
-							getUserList(orgId,iccid,status);
+							window.frames[0].window.getUserList(orgId,iccid,status);
 						},
 						error: function() {}
 					});
