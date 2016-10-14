@@ -39,7 +39,7 @@
 						<div class="mui-switch-handle"></div>
 					</div>
 				</li>
-				<li class="mui-table-view-cell">
+				<li class="mui-table-view-cell pui-li-return">
 					<label for="">返厂换卡</label>
 					<span></span>
 					<div id="returnStatus" class="mui-switch">
@@ -65,6 +65,9 @@
 			console.log(loginStatus)
 			if(loginStatus == "admin") {
 				document.querySelector(".pui-li-network").style.display = "none"
+			}
+			if(loginStatus == 'admin') {
+				document.querySelector(".pui-li-return").style.display = "none";
 			}
 			//判读是否开始位置上报按钮
 			var logonGpsStatus = localStorage.getItem("logonGpsStatus");
