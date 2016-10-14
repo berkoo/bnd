@@ -217,8 +217,12 @@
 								})
 							}
 							console.log(groups)
-						if(groupName == "") {
+						if(groupName == ""||groupName == null || groupName == undefined) {
 							mui.alert("请输入群组名称",function(){
+								
+							},"提示","确定")
+						}else if((/^[ ]+$/.test(groupName))){
+							mui.alert("请输入群组名称不能为空格",function(){
 								
 							},"提示","确定")
 						}else {
