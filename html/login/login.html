@@ -93,6 +93,7 @@
 				});
 			 	
 			 	var userType = 1;
+			 	localStorage.setItem("loginStatus","admin");
 				mui('body').on('tap', '.mui-popover-action li>a', function() {
 					var a = this,
 						parent;
@@ -111,10 +112,12 @@
 					 if(status == "admin") {
 							document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
 							userType = 1;
+							localStorage.setItem("loginStatus",status);
 						}
 						if(status == "agent") {
 							document.querySelector(".pui-account").placeholder = "请输入代理商管理员账户";
 							userType = 0;
+							localStorage.setItem("loginStatus",status);
 						}
 					}
 				})
