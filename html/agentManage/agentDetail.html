@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
-		
+
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache">
@@ -25,7 +26,7 @@
 			<ul class="mui-table-view">
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i data-id = "agentName" class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id="agentName" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">代理商名称</label>
 						<input type="text" value="张三丰" id="agentName" readonly="readonly" />
 					</a>
@@ -35,7 +36,7 @@
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<label for="">登录账户</label>
-						<input id="agentLoginName" style="padding-right: 15px;" type="text" readonly="readonly"  value="dfsdf" />
+						<input id="agentLoginName" style="padding-right: 15px;" type="text" readonly="readonly" value="dfsdf" />
 					</a>
 				</li>
 			</ul>
@@ -43,7 +44,7 @@
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<label for="">账户余额</label>
-						<input id="balance" style="padding-right: 15px;" type="text" readonly="readonly"  value="" />
+						<input id="balance" style="padding-right: 15px;" type="text" readonly="readonly" value="" />
 					</a>
 				</li>
 			</ul>
@@ -77,77 +78,53 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
-			
 			(function($, doc, win, undefined) {
-				mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+				mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 					var href = this.getAttribute("data-href");
 					mui.openWindow(href);
 				})
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
-				var agentData =JSON.parse(localStorage.getItem("agentData"));
+				var agentData = JSON.parse(localStorage.getItem("agentData"));
 				var agentName = document.getElementById("agentName");
 				var agentLoginName = document.getElementById("agentLoginName");
 				var agentId = localStorage.getItem("agentId");
 				var balance = document.getElementById("balance");
 				//获取到代理商
-				for(var i = 0;i<agentData.data.length;i++) {
-					if(agentData.data[i].id == agentId) {
+				for (var i = 0; i < agentData.data.length; i++) {
+					if (agentData.data[i].id == agentId) {
 						agentName.value = agentData.data[i].name;
-						
 					}
 				}
-				$.ajax(req_url + "/api/v1/agent/detail?access_token=" + access_token + "&openid=" + openid, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'GET', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					data: {
-						"id": agentId
-					},
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					success: function(data) {
-						if(data.code == 20001) {
-							console.log(data.data)
-							agentLoginName.value = data.data.account.loginname;
-							balance.value = data.data.blance;
-						}
-					},
-					error: function() {}
-				});
-				//删除代理商
-//				document.getElementById("deleteAgent").addEventListener('tap', function() {
-//					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
-//					$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
-//						dataType: 'json', //服务器返回json格式数据
-//						type: 'POST', //HTTP请求类型
-//						timeout: 10000, //超时时间设置为10秒；
-//						data: {
-//							"id": agentId
-//						},
-//						headers: {
-//							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-//						},
-//						success: function(data) {
-//							if(data.code == 20001) {
-//								$.alert("删除成功", function() {
-//									$.back();
-//								}, "提示", "确定");
-//							} else {
-//								$.alert(data.msg, function() {}, "提示", "确定");
-//							}
-//						}
-//					});
-//				}, false);
-				
-				document.getElementById("deleteAgent").addEventListener("tap",function(){
+				var money = function() {
+					$.ajax(req_url + "/api/v1/agent/detail?access_token=" + access_token + "&openid=" + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						data: {
+							"id": agentId
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if (data.code == 20001) {
+								console.log(data.data)
+								agentLoginName.value = data.data.account.loginname;
+								balance.value = data.data.blance;
+							}
+						},
+						error: function() {}
+					});
+				}
+				setTimeout(money,100);
+				document.getElementById("deleteAgent").addEventListener("tap", function() {
 					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
 					var elem = this;
 					var li = elem.parentNode.parentNode;
 					var btnArray = ['确认', '取消'];
-					mui.confirm("确认删除该条记录？","",btnArray,function(e){
-						if(e.index == 0) {
+					mui.confirm("确认删除该条记录？", "", btnArray, function(e) {
+						if (e.index == 0) {
 							$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
 								dataType: 'json', //服务器返回json格式数据
 								type: 'POST', //HTTP请求类型
@@ -159,7 +136,7 @@
 									'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 								},
 								success: function(data) {
-									if(data.code == 20001) {
+									if (data.code == 20001) {
 										$.alert("删除成功", function() {
 											li.parentNode.removeChild(li);
 											$.back();
@@ -169,63 +146,55 @@
 									}
 								}
 							});
-							
-						}else {
+						} else {
 							setTimeout(function() {
 								$.swipeoutClose(li);
 							}, 0);
 						}
 					})
-					
-				},false)
-				
-				mui(".mui-table-view").on("tap",".pui-icon-edit",function(e){
-						var id = this.getAttribute("data-id");
-						switch(id) {
-							//联系人姓名
-							case 'agentName':
-								e.detail.gesture.preventDefault();
-								var btnArray = ['取消', '确定'];
-								mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
-									if(e.index == 1) {
-										if(e.value == "") {
-											mui.alert("修改内容不能为空",function(){
-												
-											},"提示","确定")
-										}else {
-											document.getElementById("agentName").value = e.value;
-										}
-										mui.ajax(req_url + '/api/v1/agent/name?access_token=' + access_token + '&openid=' + openid, {
-											dataType: 'json',
-											type: 'post',
-											timeout: 10000,
-											data: {
-												'id':agentId,
-												'name': e.value
-											},
-											headers: {
-												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-											},
-											success: function(data) {
-												if(data.code == 20001) {
-													mui.alert(data.msg, function() {
-														
-													}, "提示", "确定")
-												}
-											},
-											error: function(xhr, type, errorThrown) {
-												//异常处理；
-												console.log(type);
-											}
-										});
+				}, false)
+				mui(".mui-table-view").on("tap", ".pui-icon-edit", function(e) {
+					var id = this.getAttribute("data-id");
+					switch (id) {
+						//联系人姓名
+						case 'agentName':
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+								if (e.index == 1) {
+									if (e.value == "") {
+										mui.alert("修改内容不能为空", function() {
+										}, "提示", "确定")
+									} else {
+										document.getElementById("agentName").value = e.value;
 									}
-								})
+									mui.ajax(req_url + '/api/v1/agent/name?access_token=' + access_token + '&openid=' + openid, {
+										dataType: 'json',
+										type: 'post',
+										timeout: 10000,
+										data: {
+											'id': agentId,
+											'name': e.value
+										},
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+										},
+										success: function(data) {
+											if (data.code == 20001) {
+												mui.alert(data.msg, function() {
+												}, "提示", "确定")
+											}
+										},
+										error: function(xhr, type, errorThrown) {
+											//异常处理；
+											console.log(type);
+										}
+									});
+								}
+							})
 							break;
-
-						}
-			
-					})
-
+					}
+				})
 			})(mui, document, window)
 		</script>
 	</body>

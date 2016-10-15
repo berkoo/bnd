@@ -39,6 +39,14 @@
 			var access_token = localStorage.getItem("access_token");
 			var changeCardUrl = req_url + "/api/v1/terminal/changecard?access_token=" + access_token + "&openid=" + openid;
 			document.getElementById('change').addEventListener('tap', function() {
+				if(document.getElementById("oldiccid").value==""){
+					mui.alert("请输入旧ICCID", "提示", "确定", function() {});
+					return;
+				}
+				if(document.getElementById("newiccid").value==""){
+					mui.alert("请输入新ICCID", "提示", "确定", function() {});
+					return;
+				}
 				mui.ajax(changeCardUrl, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'post', //HTTP请求类型

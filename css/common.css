@@ -301,3 +301,6 @@ header .pui-a-right {
 	font-size: 16px;
 	color: #333;
 }
+input[readonly],input[disabled]{
+	color: rgba(0,0,0,.6) !important;
+}

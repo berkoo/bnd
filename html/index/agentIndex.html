@@ -73,22 +73,39 @@
 				$.init();
 				$(".mui-bar").on("tap", ".mui-icon", function() {
 					var href = this.getAttribute("data-href");
-					$.openWindow({
-						url:href,
-						id:href
-					});
+					if(href!=null){
+						mui.openWindow({
+							url:href,
+							id:href
+						});
+					}
 				});
 				$(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 					var href = this.getAttribute("data-href");
-					$.openWindow(href);
+					if(href!=null){
+						mui.openWindow({
+							url:href,
+							id:href
+						});
+					}
 				});
 				$(".pui-cell-btn").on("tap", "button", function() {
 					var href = this.getAttribute("data-href");
-					mui.openWindow(href);
+					if(href!=null){
+						mui.openWindow({
+							url:href,
+							id:href
+						});
+					}
 				});
 				$(".pui-btn").on("tap", "button", function() {
 					var href = this.getAttribute("data-href");
-					mui.openWindow(href);
+					if(href!=null){
+						mui.openWindow({
+							url:href,
+							id:href
+						});
+					}
 				});
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");

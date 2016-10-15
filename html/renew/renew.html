@@ -115,6 +115,10 @@
 			var access_token = localStorage.getItem("access_token");
 			var paymentUrl = req_url + "/api/v1/payment/iccids?access_token=" + access_token + "&openid=" + openid;
 			document.getElementById('save').addEventListener('tap', function() {
+				if(document.getElementById("iccid").value==""){
+					mui.alert("请输入ICCID", "提示", "确定", function() {});
+					return;
+				}
 				mui.ajax(paymentUrl, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'post', //HTTP请求类型
