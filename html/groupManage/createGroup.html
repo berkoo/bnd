@@ -99,28 +99,34 @@
 				var userList = new Array();
 				var userIds = new Array();
 				var priority = 1;
-				var getOrgId = function() {
-					$.ajax(orgIdUrl, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'GET', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								if(data.data.orginfo != null) {
-									var orgId = data.data.orginfo.id;
-									console.log("orgId:" + orgId);
-									getUserList(orgId);
-									send(orgId);
+				var orgId;
+				var loginStatus = localStorage.getItem("loginStatus");
+				if(loginStatus == "admin") {
+					var getOrgId = function() {
+						$.ajax(orgIdUrl, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'GET', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded'
+							},
+							success: function(data) {
+								if(data.code == 20001) {
+									if(data.data.orginfo != null) {
+										orgId = data.data.orginfo.id;
+										getUserList(orgId);
+//										send(orgId);
+									}
 								}
-							}
-						},
-						error: function() {}
-					});
-				};
-				getOrgId();
+							},
+							error: function() {}
+						});
+					};
+					getOrgId();
+				}else if(loginStatus == 'agent') {
+					orgId = localStorage.getItem("unitId");
+				}
+				
 				var getUserList = function(orgId) {
 					$.ajax(userListUrl, {
 						dataType: 'json', //服务器返回json格式数据
@@ -134,7 +140,7 @@
 						},
 						success: function(data) {
 							console.log("data:" + JSON.stringify(data));
-							localdata.setItem("userListData1",JSON.stringify(data));
+							localStorage.setItem("userListData1",JSON.stringify(data));
 //								var html = "";
 //								for(var i = 0; i < data.data.length; i++) {
 //									html += '<div class="mui-input-row mui-checkbox mui-left">';
@@ -147,7 +153,7 @@
 					});
 				};
 				//将获取到的群组成员
-				doc.getElementById("listSave").addEventListener('tap', function() {
+				document.getElementById("listSave").addEventListener('tap', function() {
 //					var tags = doc.getElementsByTagName("input");
 					var tags = doc.querySelectorAll("#modal input")
 					document.getElementById("groupSend").innerHTML = '<li class="mui-table-view-cell"><span>选择群组成员</span><a class="mui-pull-right pui-add" href="#modal"><i class=" mui-icon mui-icon-plusempty pui-icon-add"></i></a></li>';
@@ -167,7 +173,7 @@
 				}, false);
 				
 				//设置优先级
-				doc.getElementById("listSave1").addEventListener("tap",function(){
+				document.getElementById("listSave1").addEventListener("tap",function(){
 					var chec = doc.querySelectorAll("#modal1 input");
 					for(var k = 0;k<chec.length;k++) {
 						if(chec[k].checked) {
@@ -176,12 +182,7 @@
 					}
 				});
 				
-				//移除
-//				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
-//					var id = this.getAttribute("data-id");
-//					this.parentNode.parentNode.remove(this.parentNode);
-//				});
-				
+				//移除				
 				$(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
 					var id = this.getAttribute("data-id");
 					var elem = this;
@@ -203,10 +204,10 @@
 				});
 				var btnArray = ['确认', '取消'];
 				
-				
+
 				//点击发送
 				var send = function(orgId){
-					doc.getElementById("btnSend").addEventListener("tap",function(){
+//					document.getElementById("btnSend").addEventListener("tap",function(){
 						var groupName = document.getElementById("groupName").value;
 //						var enableStatus = document.getElementById("enableStatus").classList.contains("mui-active");
 						var groups = new Array();
@@ -247,9 +248,11 @@
 								error: function() {}
 							});
 						}
-					})
+//					})
 				}
-				
+				document.getElementById("btnSend").addEventListener("tap",function(){
+					send(orgId);
+				})
 				Array.prototype.remove=function(dx) 
 					{ 
 					  if(isNaN(dx)||dx>this.length){return false;} 
