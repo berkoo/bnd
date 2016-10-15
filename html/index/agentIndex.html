@@ -7,7 +7,7 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache">
-		<meta http-equiv="Expires" content="0"> 
+		<meta http-equiv="Expires" content="0">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
@@ -36,7 +36,7 @@
 			</ul>
 			<ul class="mui-table-view pui-statistics pui-initial">
 				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right" href="#">
+					<a href="#">
 						<span class="pui-span-left fz14">数据统计</span>
 						<span class="icon icon-broad mui-icon icon-one">&#xe610;</span>
 						<span class="fz14" id="agent_count">家</span>
@@ -67,9 +67,8 @@
 			</div>
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="../../js/common.js" ></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
-			
 			(function($, win, doc) {
 				$.init();
 				$(".mui-bar").on("tap", ".mui-icon", function() {
@@ -101,15 +100,14 @@
 						},
 						success: function(data) {
 							//alert(JSON.stringify(data));
-							if(data.code == 20001) {
+							if (data.code == 20001) {
 								dataCount();
-								console.log("data:"+JSON.stringify(data));
+								console.log("data:" + JSON.stringify(data));
 								localStorage.setItem("loginGrabbedStatus", data.data.agentinfo.allow_grabbed);
-								localStorage.setItem("agentInfo",JSON.stringify(data));
+								localStorage.setItem("agentInfo", JSON.stringify(data));
 								doc.getElementById("agentInfo").innerHTML = data.data.agentinfo.contact + "<p class='mui-ellipsis'>" + data.data.agentinfo.name + "</p>";
 							} else {
-								$.alert(data.msg, function(){
-									
+								$.alert(data.msg, function() {
 								}, "提示", "确定");
 							}
 						},
@@ -129,14 +127,13 @@
 							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 						},
 						success: function(data) {
-							if(data.code == 20001) {
-								doc.getElementById("agent_count").innerHTML = data.data.agent_count+"家";
-								doc.getElementById("org_count").innerHTML = data.data.org_count+"个";
-								doc.getElementById("user_count").innerHTML = data.data.user_count+"个";
-							}else{
-								$.alert(data.msg,function(){
-									
-								},"提示","取消");
+							if (data.code == 20001) {
+								doc.getElementById("agent_count").innerHTML = data.data.agent_count + "家";
+								doc.getElementById("org_count").innerHTML = data.data.org_count + "个";
+								doc.getElementById("user_count").innerHTML = data.data.user_count + "个";
+							} else {
+								$.alert(data.msg, function() {
+								}, "提示", "取消");
 							}
 						},
 						error: function(xhr, type, errorThrown) {
@@ -144,33 +141,35 @@
 						}
 					});
 				};
-				
-				setTimeout(function(){
+				setTimeout(function() {
 					getAgentInfo();
-				},100);
-				
+				}, 100);
 				//获取是否有新消息
-				mui.ajax(req_url + '/api/v1/profile/notices?access_token='+access_token+'&openid='+openid, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'GET', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-					},
-					success: function(data) {
-						if(data.code == 20001) {
-							if(data.data.count>=1) {
-								document.querySelector(".pui-dot").style.display = "block"
-							}else {
-								document.querySelector(".pui-dot").style.display = "none"
+				var msg = function() {
+					mui.ajax(req_url + '/api/v1/profile/notices?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+						},
+						success: function(data) {
+							console.log("data:" + JSON.stringify(data));
+							if (data.code == 20001) {
+								if (data.data.count >= 1) {
+									document.querySelector(".pui-dot").style.display = "block"
+								} else {
+									document.querySelector(".pui-dot").style.display = "none"
+								}
 							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(type);
 						}
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						console.log(type);
-					}
-				});
+					});
+				}
+				setTimeout(msg, 100);
 			})(mui, window, document);
 		</script>
 	</body>

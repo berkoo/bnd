@@ -3,6 +3,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
 		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
@@ -22,7 +25,7 @@
 					<a href="#">
 						<i data-id = "uniteName" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">单位名称</label>
-						<input style="padding-right: 35px;" id="unitName" type="text" value="" disabled="disabled" />
+						<input style="padding-right: 35px;" id="unitName" type="text" value="" readonly="readonly" />
 					</a>
 				</li>
 			</ul>
@@ -102,32 +105,37 @@
 				var corg_name = document.getElementById("corg_name");
 				var unitName = document.getElementById("unitName");
 				var loginName = document.getElementById("loginName");
-				 
 				var orgId = localStorage.getItem("orgId");
-				//获取到登录名
-				mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
-					dataType: 'json',
-					type: 'GET',
-					timeout: 10000,
-					data: {
-						'id':orgId
-					},
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					success: function(data) {
-						if(data.code == 20001) {
-							console.log(data);
-							loginName.value = data.data.account.loginname;
-							unitName.value=data.data.corg_name;
-							localStorage.setItem("unitId",data.data.id);
+				var getLoginName = function(){
+					//获取到登录名
+					mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
+						dataType: 'json',
+						type: 'GET',
+						timeout: 10000,
+						data: {
+							'id':orgId
+						},
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								console.log(data);
+								loginName.value = data.data.account.loginname;
+								unitName.value=data.data.corg_name;
+								localStorage.setItem("unitId",data.data.id);
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							console.log(xhr)
 						}
-					},
-					error: function(xhr, type, errorThrown) {
-						//异常处理；
-						console.log(type);
-					}
-				});
+					});
+				}
+				
+				setTimeout(function(){
+					getLoginName();
+				},100)
 			
 				document.querySelector(".pui-icon-edit").addEventListener("tap",function(e){
 					var id = this.getAttribute("data-id")
@@ -221,7 +229,6 @@
 						}
 					});
 				})
-				
 			}(mui, document));
 		</script>
 	</body>

@@ -14,7 +14,7 @@
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
 			<h1 class="mui-title">群组成员</h1>
-			<a id="add" class="mui-icon mui-pull-right mui-icon-plusempty pui-add" href="#modal"></a>
+			<a id="add" class="mui-icon mui-pull-right mui-icon-plusempty pui-add modalUp" href="#modal"></a>
 		</header>
 		<div class="mui-content">
 			<ul id="lis" class="mui-table-view">
@@ -41,12 +41,12 @@
 					</div>
 				</li>-->
 			</ul>
-			<div id="modal" class="mui-modal">
+			<div class="pui-modal pui-list-input">
 				<header class="mui-bar mui-bar-nav">
-					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal">保存</a>
+					<a id="listSave" class="mui-pull-right pui-a-right pui-close" href="#">保存</a>
 					<h1 class="mui-title">选择加入的成员</h1>
 				</header>
-				<div class="mui-content" style="height: 100%;">
+				<div class="pui-modal-content" style="height: 100%;">
 					<form class="mui-input-group" id="modalList">
 					</form>
 				</div>
@@ -190,7 +190,7 @@
 			//点击保存
 			document.getElementById("listSave").addEventListener('tap', function() {
 //				var tags = document.getElementsByTagName("input");
-				var tags = document.querySelectorAll("#modal input")
+				var tags = document.querySelectorAll("#modalList input");
 				var html = "";
 				for(var i = 0; i < tags.length; i++) {
 					if(tags[i].checked) {
@@ -198,7 +198,7 @@
 						html += '<li class="mui-table-view-cell"><div class="mui-slider-right mui-disabled"><a href="#modal1" class="mui-btn mui-btn-green" data-id="' + tags[i].getAttribute("data-account") + '">优先级</a><a class="mui-btn mui-btn-red" data-id="' + tags[i].getAttribute("data-account") + '">移除</a>';
 						html += '</div><div class="mui-slider-handle"><div class="mui-table-cell">' + tags[i].value + '</div></div></li>';
 						var userId = tags[i].getAttribute("data-account");
-						groupMemberListId.push(userId)
+						console.log("ids:"+JSON.stringify(ids));
 						ids.push(userId);
 						console.log(groupMemberListId)
 						localStorage.setItem("groupMemberListId",groupMemberListId);
@@ -207,12 +207,13 @@
 				
 				console.log(localStorage.getItem('groupMemberListId'))
 				var groups = new Array();
-				for(var idd in ids) {
+				for(var i=0;i<ids.length;i++) {
 					groups.push({
-						'id':ids[idd],
+						'id':ids[i],
 						'priorities':1
 					})
 				}
+				console.log("groups:"+JSON.stringify(groups));
 				document.getElementById("lis").innerHTML += html;
 				mui.ajax(req_url + '/api/v1/group/members/add?access_token=' + access_token + '&openid=' +openid, {
 				 	dataType: 'json',
@@ -239,35 +240,7 @@
 				 	}
 				});
  			}, false);
-   			//删除用户
-//			mui(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
-//				var userId = this.getAttribute("data-id");
-//				this.parentNode.parentNode.remove(this.parentNode);
-//				var userIds = [{'id':userId}];
-//				mui.ajax(req_url + '/api/v1/group/members/remove?access_token=' + access_token + '&openid=' + openid, {
-//					dataType: 'json', //服务器返回json格式数据
-//					type: 'POST', //HTTP请求类型
-//					timeout: 10000, //超时时间设置为10秒；
-//					data:{
-//						'id':localStorage.getItem("groupId"),
-//						'members':userIds
-//					},
-//					headers: {
-//						'Content-Type': 'application/json' 
-//					},
-//					success: function(data) {
-//						if(data.code == 20001) {
-//							mui.alert("删除成功",function(){
-//											
-//						},"提示","确定");
-//						}
-//					},
-//					error: function(xhr, type, errorThrown) {
-//						console.log(type);
-//					}
-//				});
-//			});
-//			
+   			//删除用户			
 			mui(".mui-table-view").on('tap', 'a.mui-btn-red', function() {
 				var userId = this.getAttribute("data-id");
 				var userIds = [{'id':userId}];

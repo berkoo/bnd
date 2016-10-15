@@ -45,7 +45,7 @@
 					<a id="listSave" class="mui-pull-right pui-a-right" href="#modal">保存</a>
 					<h1 class="mui-title">选择加入的群组</h1>
 				</header>
-				<div class="mui-content" style="height: 100%;">
+				<div style="overflow: scroll;" class="mui-content" style="height: 100%;">
 					<form class="mui-input-group" id="modalList">
 					</form>
 				</div>
@@ -242,23 +242,7 @@
 					  } 
 					  this.length-=1 
 					} 
-//			
-//				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
-//					var id = this.getAttribute("data-id");
-//					this.parentNode.parentNode.remove(this.parentNode);
-//					for(var i = 0; i < groupIds.length; i++) {
-//						if(groupIds[i]==id){
-//							groupIds.remove(i);
-//						}
-//					}
-//					for(var i = 0; i < userIds.length; i++) {
-//						if(userIds[i]==id){
-//							userIds.remove(i);
-//						}
-//					}
-//					
-//				});
-				
+
 				$(".mui-table-view").on('tap', 'a.mui-btn', function() {
 					var id = this.getAttribute("data-id");
 					var elem = this;

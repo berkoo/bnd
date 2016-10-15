@@ -137,3 +137,24 @@ function getUser(url, type) {
 		}
 	});
 }
+
+
+function modalFun(){
+	var el =document.querySelector(".pui-modal header");
+	if(el==null){
+		return;
+	}
+	el.style.display = "none";
+	document.querySelector(".modalUp").addEventListener("tap",function(){
+		document.querySelector(".pui-modal").setAttribute("class","pui-modal sliderUp");
+		document.querySelector(".pui-modal header").style.display = "block";
+		document.querySelector("html,body").style.overflow = "scroll";
+	})
+	document.querySelector(".pui-close").addEventListener("tap",function(){
+		document.querySelector(".pui-modal").setAttribute("class","pui-modal sliderDown");
+		document.querySelector(".pui-modal header").style.display = "none";
+		document.querySelector("html,body").style.overflow = "hidden";
+	})
+}
+
+modalFun();

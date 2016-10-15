@@ -29,21 +29,21 @@
 					<a href="#">
 						<!--<i class="icon icon-broad pui-icon-edit">&#xe607;</i>-->
 						<label for="">ICCID</label>
-						<input style="padding-right: 15px;" id="iccid" type="text" value="1111111111111111" disabled="disabled"/>
+						<input style="padding-right: 15px;" id="iccid" type="text" value="1111111111111111" readonly="readonly"/>
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<i data-id = "username" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">姓名</label>
-						<input id="username" type="text" value="刘德华" disabled="disabled" />
+						<input id="username" type="text" value="刘德华" readonly="readonly" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<i class="icon icon-broad pui-icon-edit" data-id="phoneNumber" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
 						<label for="">联系电话</label>
-						<input id="phoneNumber" type="text" name="" id="" value="100000000" disabled="disabled" />
+						<input id="phoneNumber" type="text" name="" id="" value="100000000" readonly="readonly" />
 					</a>
 				</li>
 			</ul>
@@ -70,32 +70,38 @@
 //			//TODO  获取列表数据，和上一个页面存储的用户id进行比较，取出正确的数据进行显示
 			var userList =localStorage.getItem("userListData");
 			userList = JSON.parse(userList).data;
+			
 			if(userList!=null){
 				console.log(userList);
-				for (var i=0;i<userList.length;i++) {
-					if(userList[i].id==localStorage.getItem("userId")){
-						if(userList[i].nickname == "" || userList[i].nickname == undefined || userList[i].nickname == null) {
-							document.getElementById("username").value = "无";
-						}else {
-							document.getElementById("username").value = userList[i].nickname;
-						}
-						if(userList[i].user_mobile == "" || userList[i].user_mobile == undefined || userList[i].user_mobile == null) {
-							document.getElementById("phoneNumber").value = "无"
-						}else {
-							document.getElementById("phoneNumber").value = userList[i].user_mobile;
-						}
-						if(userList[i].user_account == "" || userList[i].user_account == undefined || userList[i].user_account == "") {
-							userList[i].user_account = "无"
-						}else {
-							document.getElementById('iccid').value = userList[i].user_account;
-						}
-						if(localStorage.getItem("uniteCorgName") == "" || localStorage.getItem("uniteCorgName") == null || localStorage.getItem("uniteCorgName") == undefined) {
-							document.getElementById("corg_name").innerHTML = "无"
-						}else {
-							document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName");
-						}
-					}		
+				var getInfo = function(){
+					for (var i=0;i<userList.length;i++) {
+						if(userList[i].id==localStorage.getItem("userId")){
+							if(userList[i].nickname == "" || userList[i].nickname == undefined || userList[i].nickname == null) {
+								document.getElementById("username").value = "无";
+							}else {
+								document.getElementById("username").value = userList[i].nickname;
+							}
+							if(userList[i].user_mobile == "" || userList[i].user_mobile == undefined || userList[i].user_mobile == null) {
+								document.getElementById("phoneNumber").value = "无"
+							}else {
+								document.getElementById("phoneNumber").value = userList[i].user_mobile;
+							}
+							if(userList[i].user_account == "" || userList[i].user_account == undefined || userList[i].user_account == "") {
+								userList[i].user_account = "无"
+							}else {
+								document.getElementById('iccid').value = userList[i].user_account;
+							}
+							if(localStorage.getItem("uniteCorgName") == "" || localStorage.getItem("uniteCorgName") == null || localStorage.getItem("uniteCorgName") == undefined) {
+								document.getElementById("corg_name").innerHTML = "无"
+							}else {
+								document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName");
+							}
+						}		
+					}
 				}
+				setTimeout(function(){
+					getInfo();
+				},100)
 			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
 				var id = this.getAttribute("data-id")
 				var openid = localStorage.getItem("ptt_openid");

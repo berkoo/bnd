@@ -253,42 +253,47 @@
 				var nickName = document.getElementById("nickname");
 				var corg_name = document.getElementById("corg_name");
 				var userType = localStorage.getItem("userType");
-				if(userType == 1) {
-					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'get', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒;
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								console.log(data)
-								document.getElementById("username").value = data.data.orginfo.contact;
-								document.getElementById("loginName").value = data.data.loginname;
-								document.getElementById("corg_name").value = data.data.orginfo.corg_name;
-								document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
-								document.getElementById("email").value = data.data.orginfo.email;
-								document.getElementById("address").value = data.data.orginfo.address;
+				var wayFun = function(){
+					if(userType == 1) {
+						mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒;
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded'
+							},
+							success: function(data) {
+								if(data.code == 20001) {
+									console.log(data)
+									document.getElementById("username").value = data.data.orginfo.contact;
+									document.getElementById("loginName").value = data.data.loginname;
+									document.getElementById("corg_name").value = data.data.orginfo.corg_name;
+									document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
+									document.getElementById("email").value = data.data.orginfo.email;
+									document.getElementById("address").value = data.data.orginfo.address;
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
 							}
-						},
-						error: function(xhr, type, errorThrown) {
-							//异常处理；
-							console.log(type);
+						});
+					} else {
+						var data = localStorage.getItem("agentInfo");
+						if(data != null) {
+							data = JSON.parse(data);
 						}
-					});
-				} else {
-					var data = localStorage.getItem("agentInfo");
-					if(data != null) {
-						data = JSON.parse(data);
+						document.getElementById("username").value = ddata.data.orginfo.contact;
+						document.getElementById("loginName").value = data.data.loginname;
+						document.getElementById("corg_name").value = data.data.orginfo.corg_name;
+						document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
+						document.getElementById("email").value = data.data.orginfo.email;
+						document.getElementById("address").value = data.data.orginfo.address;
 					}
-					document.getElementById("username").value = ddata.data.orginfo.contact;
-					document.getElementById("loginName").value = data.data.loginname;
-					document.getElementById("corg_name").value = data.data.orginfo.corg_name;
-					document.getElementById("phoneNumber").value = data.data.orginfo.mobile;
-					document.getElementById("email").value = data.data.orginfo.email;
-					document.getElementById("address").value = data.data.orginfo.address;
 				}
+				setTimeout(function(){
+					wayFun();
+				},100)
 			}(mui, document));
 		</script>
 	</body>

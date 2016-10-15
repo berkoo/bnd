@@ -4,6 +4,9 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
@@ -23,7 +26,7 @@
 					<a href="#">
 						<i id="promptBtn" class="icon icon-broad pui-icon-edit" data-id="username" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
 						<label for="">姓名</label>
-						<input id="username" type="text" value="张三丰" disabled="disabled" />
+						<input id="username" type="text" value="张三丰" readonly="readonly" />
 					</a>
 				</li>
 			</ul>
@@ -32,21 +35,21 @@
 					<a href="#">
 						<i class="icon icon-broad pui-icon-edit" data-id="phoneNumber" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
 						<label for="">手机号</label>
-						<input id="phoneNumber" type="text" name="" id="" value="100000000" disabled="disabled" />
+						<input id="phoneNumber" type="text" name="" id="" value="100000000" readonly="readonly" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<i class="icon icon-broad pui-icon-edit" data-id="email" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
 						<label for="">邮箱地址</label>
-						<input id="email" type="text" name="" id="" value="188888888@163.com" disabled="disabled" />
+						<input id="email" type="text" name="" id="" value="188888888@163.com" readonly="readonly" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
 						<i class="icon icon-broad pui-icon-edit" data-id="address" data-href="../accountSetting/changeInfo.html">&#xe607;</i>
 						<label for="">通讯地址</label>
-						<input id="address" type="text" name="" id="" value="深圳宝安区西乡" disabled="disabled" />
+						<input id="address" type="text" name="" id="" value="深圳宝安区西乡" readonly="readonly"/>
 					</a>
 				</li>
 			</ul>
@@ -64,8 +67,8 @@
 			var phoneNum = document.getElementById(("phoneNumber"));
 			var address = document.getElementById("address");
 			var email = document.getElementById("email")
-
-			mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
+			var getInfo = function(){
+				mui.ajax(req_url + '/api/v1/org/info?access_token=' + access_token + '&openid=' + openid, {
 				data: {
 					'id': orgId
 				},
@@ -110,6 +113,12 @@
 					console.log(type);
 				}
 			});
+			}
+			
+			setTimeout(function(){
+				getInfo()
+			},100)
+			
 
 			//修改信息
 			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
