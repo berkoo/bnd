@@ -79,6 +79,15 @@
 					provinceid = document.getElementById("province").getAttribute("data-provinceId");
 					cityid = document.getElementById("city").getAttribute("data-cityId");
 					districtid = document.getElementById("district").getAttribute("data-districtId");
+					if(provinceid == null || provinceid == undefined) {
+						provinceid = "";
+					}
+					if(cityid == null || cityid == undefined) {
+						cityid = "";
+					}
+					if(districtid == null || districtid == undefined) {
+						districtid = "";
+					}
 					if(name == "") {
 						$.alert("请输入代理商名称",function(){
 							
