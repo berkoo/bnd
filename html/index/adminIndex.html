@@ -79,7 +79,8 @@
 				var access_token = localStorage.getItem("access_token");
 				var nickName = document.getElementById("nickname");
 				var corg_name = document.getElementById("corg_name");
-				mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
+				var getAdminInfo = function(){
+					mui.ajax(req_url + '/api/v1/profile/org?access_token='+access_token+'&openid='+openid, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'get', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒;
@@ -89,6 +90,7 @@
 					success: function(data) {
 						console.log(data)
 						if(data.code == 20001) {
+							dataCount();
 							localStorage.setItem("uniteCorgName",data.data.orginfo.corg_name);
 							nickName.innerHTML = data.data.orginfo.contact;
 							corg_name.innerHTML = data.data.orginfo.corg_name;
@@ -104,9 +106,11 @@
 						console.log(type);
 					}
 				});
+				}
 				
 				
-				mui.ajax(req_url + '/api/v1/profile/faststats?access_token='+access_token+'&openid='+openid, {
+				var dataCount = function(){
+					mui.ajax(req_url + '/api/v1/profile/faststats?access_token='+access_token+'&openid='+openid, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'get', //HTTP请求类型
 					timeout: 10000, //超时时间设置为10秒；
@@ -121,8 +125,12 @@
 						//异常处理；
 						console.log(type);
 					}
-				});
+					});
+				}
 				
+				setTimeout(function(){
+					getAdminInfo();
+				},100);
 				//获取是否有新消息
 				mui.ajax(req_url + '/api/v1/profile/notices?access_token='+access_token+'&openid='+openid, {
 					dataType: 'json', //服务器返回json格式数据

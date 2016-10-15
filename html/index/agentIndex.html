@@ -3,7 +3,11 @@
 
 	<head>
 		<meta charset="UTF-8">
+		<!--<meta http-equiv="refresh" content="10">-->
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Expires" content="0"> 
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
 		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
 		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
@@ -65,6 +69,7 @@
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../js/common.js" ></script>
 		<script type="text/javascript">
+			
 			(function($, win, doc) {
 				$.init();
 				$(".mui-bar").on("tap", ".mui-icon", function() {
@@ -86,14 +91,16 @@
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				var getAgentInfo = function() {
+					//alert(req_url + '/api/v1/profile/agent?access_token=' + access_token + '&openid=' + openid);
 					$.ajax(req_url + '/api/v1/profile/agent?access_token=' + access_token + '&openid=' + openid, {
-						dataType: 'json', //服务器返回json格式数据
+						dataType: 'json', //服务器返回json格式数据 
 						type: 'GET', //HTTP请求类型
 						timeout: 10000, //超时时间设置为10秒;
 						headers: {
 							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 						},
 						success: function(data) {
+							//alert(JSON.stringify(data));
 							if(data.code == 20001) {
 								dataCount();
 								console.log("data:"+JSON.stringify(data));
@@ -107,6 +114,8 @@
 							}
 						},
 						error: function(xhr, type, errorThrown) {
+							//alert("xhr:"+xhr+"/r"+"type:"+type+"/r"+"errorThrown:"+errorThrown+"/r");
+							//alert(JSON.stringify(errorThrown));
 							console.log(type);
 						}
 					});
@@ -135,7 +144,11 @@
 						}
 					});
 				};
-				getAgentInfo();
+				
+				setTimeout(function(){
+					getAgentInfo();
+				},100);
+				
 				//获取是否有新消息
 				mui.ajax(req_url + '/api/v1/profile/notices?access_token='+access_token+'&openid='+openid, {
 					dataType: 'json', //服务器返回json格式数据
