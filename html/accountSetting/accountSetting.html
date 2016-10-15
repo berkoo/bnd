@@ -94,115 +94,116 @@
 			})
 			mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 				var href = this.getAttribute("data-href");
-				mui.openWindow(href);
+				if (href != null) {
+					mui.openWindow({
+						url: href,
+						id: href
+					});
+				}
 			})
 		</script>
 
 		<script>
 			(function($, doc) {
 				$.init();
-				
-				function wayFun(){
-				var openid = localStorage.getItem("ptt_openid");
-				var access_token = localStorage.getItem("access_token");
-				var user_type = localStorage.getItem("userType");
-				var nickName = document.getElementById("nickname");
-				var corg_name = document.getElementById("corg_name");
-				var grabbed = document.getElementById("grabbed");
-				var balance = document.getElementById("balance");
-				var gpsStatus = document.getElementById("gpsStatus");
-				var recordStatus = document.getElementById("recordStatus");
-				var broadcastStatus = document.getElementById("broadcastStatus");
-				console.log("userType:" + user_type);
-				if(user_type == 1) {
-					//删除用户余额和防串货UI样式
-					var puiagent = document.querySelectorAll(".pui-agent");
-					for(var k = 0; k < puiagent.length; k++) {
-						puiagent[k].style.display = "none";
-					}
-					mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'get', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								console.log(data)
-								localStorage.setItem("logonRecordedStatus", data.data.orginfo.allow_recorded);
-								//存储位置上报状态
-								localStorage.setItem("logonGpsStatus",data.data.orginfo.allow_located);
-								nickName.innerHTML = data.data.orginfo.contact;
-								corg_name.innerHTML = data.data.orginfo.corg_name;
-								if(data.data.orginfo.allow_located == false) {
-									gpsStatus.innerHTML = "未开启";
-								} else if(data.data.orginfo.allow_located == true) {
-									gpsStatus.innerHTML = "开启";
-								}
-								if(data.data.orginfo.allow_recorded == false) {
-									recordStatus.innerHTML = "未开启";
-								} else if(data.data.orginfo.allow_recorded == true) {
-									recordStatus.innerHTML = "开启";
-								}
-								if(data.data.orginfo.allow_broadcasted == false) {
-									broadcastStatus.innerHTML = "未开启";
-								} else if(data.data.orginfo.allow_broadcasted == true) {
-									broadcastStatus.innerHTML = "开启";
-								}
-							}
-							document.querySelector(".mui-media").addEventListener("tap", function() {
-								mui.openWindow("../unitManage/unitContactInfo.html");
-							})
 
-						},
-						error: function(xhr, type, errorThrown) {
-							//异常处理；
-							console.log(type);
+				function wayFun() {
+					var openid = localStorage.getItem("ptt_openid");
+					var access_token = localStorage.getItem("access_token");
+					var user_type = localStorage.getItem("userType");
+					var nickName = document.getElementById("nickname");
+					var corg_name = document.getElementById("corg_name");
+					var grabbed = document.getElementById("grabbed");
+					var balance = document.getElementById("balance");
+					var gpsStatus = document.getElementById("gpsStatus");
+					var recordStatus = document.getElementById("recordStatus");
+					var broadcastStatus = document.getElementById("broadcastStatus");
+					console.log("userType:" + user_type);
+					if (user_type == 1) {
+						//删除用户余额和防串货UI样式
+						var puiagent = document.querySelectorAll(".pui-agent");
+						for (var k = 0; k < puiagent.length; k++) {
+							puiagent[k].style.display = "none";
 						}
-					});
-				} else {
-					//删除平台管理员中的GPS 群组录音和文字广播
-					document.querySelector(".pui-platform").style.display = "none"
-					mui.ajax(req_url + '/api/v1/profile/agent?access_token=' + access_token + '&openid=' + openid, {
-						dataType: 'json', //服务器返回json格式数据
-						type: 'get', //HTTP请求类型
-						timeout: 10000, //超时时间设置为10秒；
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-						},
-						success: function(data) {
-							if(data.code == 20001) {
-								console.log(data)
-								localStorage.setItem("agentInfoContact", data.data.agentinfo.contact);
-								nickName.innerHTML = localStorage.getItem("agentInfoContact")
-								corg_name.innerHTML = data.data.agentinfo.name;
-								balance.innerHTML = data.data.agentinfo.blance;
- 
-								var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
-								console.log(loginGrabbedStatus);
-								if(data.data.agentinfo.allow_grabbed == true) {
-									grabbed.innerHTML = "开启"
-								} else if(data.data.agentinfo.allow_grabbed == false) {
-									grabbed.innerHTML = "未开启"
+						mui.ajax(req_url + '/api/v1/profile/org?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+							},
+							success: function(data) {
+								if (data.code == 20001) {
+									console.log(data)
+									localStorage.setItem("logonRecordedStatus", data.data.orginfo.allow_recorded);
+									//存储位置上报状态
+									localStorage.setItem("logonGpsStatus", data.data.orginfo.allow_located);
+									nickName.innerHTML = data.data.orginfo.contact;
+									corg_name.innerHTML = data.data.orginfo.corg_name;
+									if (data.data.orginfo.allow_located == false) {
+										gpsStatus.innerHTML = "未开启";
+									} else if (data.data.orginfo.allow_located == true) {
+										gpsStatus.innerHTML = "开启";
+									}
+									if (data.data.orginfo.allow_recorded == false) {
+										recordStatus.innerHTML = "未开启";
+									} else if (data.data.orginfo.allow_recorded == true) {
+										recordStatus.innerHTML = "开启";
+									}
+									if (data.data.orginfo.allow_broadcasted == false) {
+										broadcastStatus.innerHTML = "未开启";
+									} else if (data.data.orginfo.allow_broadcasted == true) {
+										broadcastStatus.innerHTML = "开启";
+									}
 								}
 								document.querySelector(".mui-media").addEventListener("tap", function() {
-									mui.openWindow("accountEdit.html");
+									mui.openWindow("../unitManage/unitContactInfo.html");
 								})
-
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
 							}
-
-						},
-						error: function(xhr, type, errorThrown) {
-							//异常处理；
-							console.log(type);
-						}
-					});
+						});
+					} else {
+						//删除平台管理员中的GPS 群组录音和文字广播
+						document.querySelector(".pui-platform").style.display = "none"
+						mui.ajax(req_url + '/api/v1/profile/agent?access_token=' + access_token + '&openid=' + openid, {
+							dataType: 'json', //服务器返回json格式数据
+							type: 'get', //HTTP请求类型
+							timeout: 10000, //超时时间设置为10秒；
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+							},
+							success: function(data) {
+								if (data.code == 20001) {
+									console.log(data)
+									localStorage.setItem("agentInfoContact", data.data.agentinfo.contact);
+									nickName.innerHTML = localStorage.getItem("agentInfoContact")
+									corg_name.innerHTML = data.data.agentinfo.name;
+									balance.innerHTML = data.data.agentinfo.blance;
+									var loginGrabbedStatus = localStorage.getItem("loginGrabbedStatus");
+									console.log(loginGrabbedStatus);
+									if (data.data.agentinfo.allow_grabbed == true) {
+										grabbed.innerHTML = "开启"
+									} else if (data.data.agentinfo.allow_grabbed == false) {
+										grabbed.innerHTML = "未开启"
+									}
+									document.querySelector(".mui-media").addEventListener("tap", function() {
+										mui.openWindow("accountEdit.html");
+									})
+								}
+							},
+							error: function(xhr, type, errorThrown) {
+								//异常处理；
+								console.log(type);
+							}
+						});
+					}
 				}
-				}
-				setTimeout(function(){
+				setTimeout(function() {
 					wayFun();
-				},100);
+				}, 100);
 			}(mui, document));
 		</script>
 	</body>
