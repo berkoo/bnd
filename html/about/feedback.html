@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="feedback.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="feedback.css" />
 		<title>问题反馈</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -17,7 +19,7 @@
 			<a id="send" class="mui-pull-right pui-a-right">发送</a>
 		</header>
 		<div class="mui-content">
-			<p  class="pui-problem-title">
+			<p class="pui-problem-title">
 				<span class="pui-span-left">问题和意见</span>
 				<!--<span class="pui-span-right mui-pull-right">快捷输入</span>
 				<i class="icon icon-broad mui-pull-right">&#xe618;</i>-->
@@ -36,26 +38,24 @@
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 			(function($, doc) {
-				$.init({});			 
+				$.init({});
 				var openid = localStorage.getItem("ptt_openid");
 				var access_token = localStorage.getItem("access_token");
 				document.getElementById("send").addEventListener('tap', function(event) {
 					var description = document.getElementById("textarea").value;
 					var contact = document.getElementById("contact").value;
-					if(description == "") {
-						$.alert("请输入问题描述",function(){
-							
-						},"提示","确定")
-					}else if (contact == "") {
-						$.alert("请输入联系人方式",function(){
-							
-						},"提示","确定")
-					}else {
+					if (description == "") {
+						$.alert("请输入问题描述", function() {
+						}, "提示", "确定")
+					} else if (contact == "") {
+						$.alert("请输入联系人方式", function() {
+						}, "提示", "确定")
+					} else {
 						mui.ajax('http://139.198.3.39/api/v1/feedback/send', {
 							data: {
-								   	'description' : description,
-								   	'contact' : contact,
-								   	'other':'123123123'
+								'description': description,
+								'contact': contact,
+								'other': '123123123'
 							},
 							dataType: 'json', //服务器返回json格式数据
 							type: 'POST', //HTTP请求类型
@@ -64,11 +64,10 @@
 								'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
 							},
 							success: function(data) {
-								if(data.code == 20001) {
-									$.alert("发送成功",function(){
+								if (data.code == 20001) {
+									$.alert("发送成功", function() {
 										$.back();
-									},"提示",'确定')
-										
+									}, "提示", '确定')
 								}
 							},
 							error: function(xhr, type, errorThrown) {
@@ -76,9 +75,9 @@
 							}
 						});
 					}
-					
 				});
 			}(mui, document));
 		</script>
 	</body>
+
 </html>

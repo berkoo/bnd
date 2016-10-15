@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="about.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="about.css" />
 		<title>关于</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -17,7 +19,7 @@
 		</header>
 		<div class="mui-content">
 			<div class="pui-logo">
-				<img src="../../imgs/icon_index.png"/>
+				<img src="../../imgs/icon_index.png" />
 			</div>
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell">
@@ -26,7 +28,7 @@
 						<span class="pui-span-right mui-pull-right">(+86)400 140 15412</span>
 					</a>
 				</li>
-				<li class="mui-table-view-cell" data-href = "feedback.html">
+				<li class="mui-table-view-cell" data-href="feedback.html">
 					<a class="mui-navigate-right" href="#">
 						<span class="pui-span-left">问题反馈</span>
 					</a>
@@ -35,10 +37,16 @@
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+			mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 				var href = this.getAttribute("data-href");
-				mui.openWindow(href);
+				if (href != null) {
+					mui.openWindow({
+						url: href,
+						id: href
+					});
+				}
 			})
 		</script>
 	</body>
+
 </html>

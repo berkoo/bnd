@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
-		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
-		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/common.css"/>
-		<link rel="stylesheet" type="text/css" href="editUser.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="../../ux_1473630887_6370625/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="editUser.css" />
 		<title>编辑用户信息</title>
 	</head>
+
 	<body>
 		<header class="mui-bar">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left pui-a-left"></a>
@@ -29,12 +31,12 @@
 					<a href="#">
 						<!--<i class="icon icon-broad pui-icon-edit">&#xe607;</i>-->
 						<label for="">ICCID</label>
-						<input style="padding-right: 15px;" id="iccid" type="text" value="1111111111111111" readonly="readonly"/>
+						<input style="padding-right: 15px;" id="iccid" type="text" value="1111111111111111" readonly="readonly" />
 					</a>
 				</li>
 				<li class="mui-table-view-input mui-input-row">
 					<a href="#">
-						<i data-id = "username" class="icon icon-broad pui-icon-edit">&#xe607;</i>
+						<i data-id="username" class="icon icon-broad pui-icon-edit">&#xe607;</i>
 						<label for="">姓名</label>
 						<input id="username" type="text" value="刘德华" readonly="readonly" />
 					</a>
@@ -47,14 +49,14 @@
 					</a>
 				</li>
 			</ul>
-			<ul class="mui-table-view mt10"> 
-				<li class="mui-table-view-cell pui-list" data-href = "userFunctionSetting.html">
+			<ul class="mui-table-view mt10">
+				<li class="mui-table-view-cell pui-list" data-href="userFunctionSetting.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe61e;</i>
 						<span class="fz14">功能设置</span>
 					</a>
 				</li>
-				<li class="mui-table-view-cell pui-list" data-href= "userGroup.html">
+				<li class="mui-table-view-cell pui-list" data-href="userGroup.html">
 					<a class="mui-navigate-right" href="#">
 						<i class="icon icon-broad mui-icon pui-list-icon pui-list-icon-two">&#xe612;</i>
 						<span class="fz14">用户群组</span>
@@ -67,108 +69,100 @@
 		<script type="text/javascript">
 			var openid = localStorage.getItem("ptt_openid");
 			var access_token = localStorage.getItem("access_token");
-//			//TODO  获取列表数据，和上一个页面存储的用户id进行比较，取出正确的数据进行显示
-			var userList =localStorage.getItem("userListData");
+			//			//TODO  获取列表数据，和上一个页面存储的用户id进行比较，取出正确的数据进行显示
+			var userList = localStorage.getItem("userListData");
 			userList = JSON.parse(userList).data;
-			
-			if(userList!=null){
+			if (userList != null) {
 				console.log(userList);
-				var getInfo = function(){
-					for (var i=0;i<userList.length;i++) {
-						if(userList[i].id==localStorage.getItem("userId")){
-							if(userList[i].nickname == "" || userList[i].nickname == undefined || userList[i].nickname == null) {
+				var getInfo = function() {
+					for (var i = 0; i < userList.length; i++) {
+						if (userList[i].id == localStorage.getItem("userId")) {
+							if (userList[i].nickname == "" || userList[i].nickname == undefined || userList[i].nickname == null) {
 								document.getElementById("username").value = "无";
-							}else {
+							} else {
 								document.getElementById("username").value = userList[i].nickname;
 							}
-							if(userList[i].user_mobile == "" || userList[i].user_mobile == undefined || userList[i].user_mobile == null) {
+							if (userList[i].user_mobile == "" || userList[i].user_mobile == undefined || userList[i].user_mobile == null) {
 								document.getElementById("phoneNumber").value = "无"
-							}else {
+							} else {
 								document.getElementById("phoneNumber").value = userList[i].user_mobile;
 							}
-							if(userList[i].user_account == "" || userList[i].user_account == undefined || userList[i].user_account == "") {
+							if (userList[i].user_account == "" || userList[i].user_account == undefined || userList[i].user_account == "") {
 								userList[i].user_account = "无"
-							}else {
+							} else {
 								document.getElementById('iccid').value = userList[i].user_account;
 							}
-							if(localStorage.getItem("uniteCorgName") == "" || localStorage.getItem("uniteCorgName") == null || localStorage.getItem("uniteCorgName") == undefined) {
+							if (localStorage.getItem("uniteCorgName") == "" || localStorage.getItem("uniteCorgName") == null || localStorage.getItem("uniteCorgName") == undefined) {
 								document.getElementById("corg_name").innerHTML = "无"
-							}else {
+							} else {
 								document.getElementById("corg_name").innerHTML = localStorage.getItem("uniteCorgName");
 							}
-						}		
+						}
 					}
 				}
-				setTimeout(function(){
+				setTimeout(function() {
 					getInfo();
-				},100)
-			mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
-				var id = this.getAttribute("data-id")
-				var openid = localStorage.getItem("ptt_openid");
-				var access_token = localStorage.getItem("access_token");
-				switch(id) {
-					case 'username':
-						e.detail.gesture.preventDefault();
-						var btnArray = ['取消', '确定'];
-						mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
-							if(e.index == 1) {
-								
-								if(e.value == null||e.value == "") {
-									mui.alert("输入内容不能为空",function(){
-										
-									},"提示","确定")
-								}else {
-									document.getElementById("username").value = e.value;
-									mui.ajax(req_url + '/api/v1/terminal/nickname?access_token=' + access_token + '&openid=' + openid, {
-										dataType: 'json',
-										type: 'post',
-										timeout: 10000,
-										data: {
-											'id':localStorage.getItem("userId"),
-											'nickname': e.value
-										},
-										headers: {
-											'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-										},
-										success: function(data) {
-											if(data.code == 20001) {
-												mui.alert(data.msg, function() {
-													
-												}, "提示", "确定")
+				}, 100)
+				mui(".mui-content").on("tap", ".pui-icon-edit", function(e) {
+					var id = this.getAttribute("data-id")
+					var openid = localStorage.getItem("ptt_openid");
+					var access_token = localStorage.getItem("access_token");
+					switch (id) {
+						case 'username':
+							e.detail.gesture.preventDefault();
+							var btnArray = ['取消', '确定'];
+							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
+								if (e.index == 1) {
+									if (e.value == null || e.value == "") {
+										mui.alert("输入内容不能为空", function() {
+										}, "提示", "确定")
+									} else {
+										document.getElementById("username").value = e.value;
+										mui.ajax(req_url + '/api/v1/terminal/nickname?access_token=' + access_token + '&openid=' + openid, {
+											dataType: 'json',
+											type: 'post',
+											timeout: 10000,
+											data: {
+												'id': localStorage.getItem("userId"),
+												'nickname': e.value
+											},
+											headers: {
+												'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+											},
+											success: function(data) {
+												if (data.code == 20001) {
+													mui.alert(data.msg, function() {
+													}, "提示", "确定")
+												}
+											},
+											error: function(xhr, type, errorThrown) {
+												//异常处理；
+												console.log(type);
 											}
-										},
-										error: function(xhr, type, errorThrown) {
-											//异常处理；
-											console.log(type);
-										}
-									});
+										});
+									}
 								}
-								
-							}
-						})
-					break;
+							})
+							break;
 						case 'phoneNumber':
 							e.detail.gesture.preventDefault();
 							var btnArray = ['取消', '确定'];
 							mui.prompt('请输入修改内容', '请输入修改内容', '博纳德对讲系统', btnArray, function(e) {
-								if(e.index == 1) {
-									
-									if(e.value == null||e.value == "") {
-										mui.alert("输入内容不能为空",function(){
-											
-										},"提示","确定")
-									}else if(!(/^1[34578]\d{9}$/.test(e.value))) {
-										mui.alert("请重新输入手机号",function(){
-											
-										},"提示","确定")
-									}else {
+								if (e.index == 1) {
+									if (e.value == null || e.value == "") {
+										mui.alert("输入内容不能为空", function() {
+										}, "提示", "确定")
+									} else if (!(/^1[34578]\d{9}$/.test(e.value))) {
+										mui.alert("请重新输入手机号", function() {
+										}, "提示", "确定")
+									} else {
 										document.getElementById("phoneNumber").value = e.value;
 										mui.ajax(req_url + '/api/v1/terminal/mobile?access_token=' + access_token + '&openid=' + openid, {
 											dataType: 'json',
 											type: 'post',
 											timeout: 10000,
 											data: {
-												'id':localStorage.getItem("userId"),
+												'id': localStorage.getItem("userId"),
 												'mobile': e.value
 											},
 											headers: {
@@ -176,10 +170,9 @@
 											},
 											success: function(data) {
 												console.log(data)
-												if(data.code == 20001) {
-													if(data.code == 20001) {
+												if (data.code == 20001) {
+													if (data.code == 20001) {
 														mui.alert(data.msg, function() {
-															
 														}, "提示", "确定")
 													}
 												}
@@ -190,20 +183,17 @@
 											}
 										});
 									}
-									
 								}
 							})
 							break;
-						}
-					})
-
+					}
+				})
 			}
-			
-			mui(".mui-table-view").on("tap",".mui-table-view-cell",function(){
+			mui(".mui-table-view").on("tap", ".mui-table-view-cell", function() {
 				var href = this.getAttribute("data-href");
 				mui.openWindow(href);
 			})
-			
 		</script>
 	</body>
+
 </html>

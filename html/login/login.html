@@ -31,37 +31,15 @@
 					<label>密码</label>
 					<input oninput="myInputFun()" type="password" class="mui-input-clear pui-pwd" id="textPassword" placeholder="请输入密码">
 				</li>
-				<!--<li class="mui-table-view-cell">
-					<label for="">自动登录</label>
-					<span></span>
-					<div class="mui-switch mui-switch-blue mui-switch-mini" id="switchAutoLogin">
-						<div class="mui-switch-handle"></div>
-					</div>
-				</li>-->
 			</ul>
-
 			<div class="pui-btn">
 				<button disabled="disabled" class="mui-btn mui-btn-primary mui-block" id="btnLogin" data-href="../index/index.html">登录</button>
 			</div>
 			<a style="margin-bottom: 15px; margin-right: 15px;" class="mui-pull-right mt15" href="#roles">切换用户类型</a>
-<!--
-			<div id="modal" class="mui-modal">
-				<header class="mui-bar mui-bar-nav">
-					<a class="mui-icon mui-icon-close mui-pull-right" href="#modal"></a>
-					<h1 class="mui-title">切换管理员</h1>
-				</header>
-				<div class="mui-content" style="height: 100%;">
-					<p class="mui-content-padded">
-						<button data-status="admin" class="mui-btn mui-btn-block">平台管理员</button>
-						<button data-status="agent" class="mui-btn mui-btn-block">代理商管理员</button>
-					</p>
-				</div>
-			</div>-->
-
 			<div id="roles" class="mui-popover mui-popover-action mui-popover-bottom">
 				<ul class="mui-table-view">
 					<li class="mui-table-view-cell" style="padding: 11px 15px;">
-						<a href="#" data-status="admin" >单位管理员</a>
+						<a href="#" data-status="admin">单位管理员</a>
 					</li>
 					<li class="mui-table-view-cell" style="padding: 11px 15px;">
 						<a href="#" data-status="agent">代理商管理员</a>
@@ -73,7 +51,6 @@
 					</li>
 				</ul>
 			</div>
-
 		</div>
 		<script src="../../js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="../../js/jquery-1.11.3.min.js"></script>
@@ -85,40 +62,37 @@
 			var APP_SECRET = "f3b2fff94f75498e";
 			(function($, doc) {
 				$.init({});
-				
 				mui('body').on('shown', '.mui-popover', function(e) {
 					//console.log('shown', e.detail.id);//detail为当前popover元素
 				});
 				mui('body').on('hidden', '.mui-popover', function(e) {
 					//console.log('hidden', e.detail.id);//detail为当前popover元素
 				});
-			 	
-			 	var userType = 1;
-			 	localStorage.setItem("loginStatus","admin");
+				var userType = 1;
+				localStorage.setItem("loginStatus", "admin");
 				mui('body').on('tap', '.mui-popover-action li>a', function() {
 					var a = this,
 						parent;
 					//根据点击按钮，反推当前是哪个actionsheet
-					for(parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
-						if(parent.classList.contains('mui-popover-action')) {
+					for (parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+						if (parent.classList.contains('mui-popover-action')) {
 							break;
 						}
 					}
 					//关闭actionsheet
 					mui('#' + parent.id).popover('toggle');
-				 	var status = this.getAttribute("data-status");
-					if(status!="cancel"){
-					 document.querySelector(".pui-sf").innerHTML = this.innerHTML
-					
-					 if(status == "admin") {
+					var status = this.getAttribute("data-status");
+					if (status != "cancel") {
+						document.querySelector(".pui-sf").innerHTML = this.innerHTML
+						if (status == "admin") {
 							document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
 							userType = 1;
-							localStorage.setItem("loginStatus",status);
+							localStorage.setItem("loginStatus", status);
 						}
-						if(status == "agent") {
+						if (status == "agent") {
 							document.querySelector(".pui-account").placeholder = "请输入代理商管理员账户";
 							userType = 0;
-							localStorage.setItem("loginStatus",status);
+							localStorage.setItem("loginStatus", status);
 						}
 					}
 				})
@@ -144,12 +118,12 @@
 						},
 						success: function(data) {
 							console.log(data)
-							if(data.code == 20001) {
+							if (data.code == 20001) {
 								localStorage.setItem("access_token", data.data.access_token);
 								localStorage.setItem("refresh_token", data.data.refresh_token);
 								localStorage.setItem("ptt_openid", data.data.openid);
 								localStorage.setItem("user_type", userType);
-								if(userType == 1) {
+								if (userType == 1) {
 									mui.openWindow("../index/adminIndex.html");
 								} else {
 									mui.openWindow("../index/agentIndex.html");
