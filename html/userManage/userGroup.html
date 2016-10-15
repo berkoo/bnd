@@ -65,29 +65,35 @@
 			var userList = new Array();
 			var orgId;
 			ids = [];
-			//获取企业编号
-			var getOrgId = function() {
-				mui.ajax(orgIdUrl, {
-					dataType: 'json', //服务器返回json格式数据
-					type: 'GET', //HTTP请求类型
-					timeout: 10000, //超时时间设置为10秒；
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
-					},
-					success: function(data) {
-						if(data.code == 20001) {
-							if(data.data.orginfo != null) {
-								orgId = data.data.orginfo.id;
-								 
-								console.log("orgId:" + orgId);
-								
+			var loginStatus = localStorage.getItem("loginStatus");
+			if(loginStatus == 'admin') {
+				//获取企业编号
+				var getOrgId = function() {
+					mui.ajax(orgIdUrl, {
+						dataType: 'json', //服务器返回json格式数据
+						type: 'GET', //HTTP请求类型
+						timeout: 10000, //超时时间设置为10秒；
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+						success: function(data) {
+							if(data.code == 20001) {
+								if(data.data.orginfo != null) {
+									orgId = data.data.orginfo.id;
+									 
+									console.log("orgId:" + orgId);
+									
+								}
 							}
-						}
-					},
-					error: function() {}
-				});
-			};
-			getOrgId();
+						},
+						error: function() {}
+					});
+				};
+				getOrgId();
+			}else if(loginStatus == 'agent') {
+				orgId = localStorage.getItem("unitId");
+			}
+			
 			var userList =localStorage.getItem("userListData");
 			//获取用户群组
 			var menberList = function(){
@@ -123,6 +129,7 @@
 			menberList();
 			//获取群组列表
 			var getGroupList = function(orgId) {
+				console.log(orgId)
 				mui.ajax(req_url + "/api/v1/terminal/ungroups?access_token=" + access_token + "&openid=" + openid, {
 					dataType: 'json', //服务器返回json格式数据
 					type: 'GET', //HTTP请求类型
