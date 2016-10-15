@@ -142,7 +142,7 @@
 					var deteleUrl = req_url + "/api/v1/agent/delete?access_token=" + access_token + "&openid=" + openid;
 					var elem = this;
 					var li = elem.parentNode.parentNode;
-					var btnArray = ['取消', '确定'];
+					var btnArray = ['确认', '取消'];
 					mui.confirm("确认删除该条记录？","",btnArray,function(e){
 						if(e.index == 0) {
 							$.ajax(req_url + '/api/v1/agent/delete?access_token=' + access_token + '&openid=' + openid, {
