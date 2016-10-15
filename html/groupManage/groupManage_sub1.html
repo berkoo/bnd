@@ -118,6 +118,7 @@
 						"org_id": orgId
 					},
 					success: function(data) {
+						localStorage.setItem("groupListData",JSON.stringify(data));
 						document.querySelector(".mui-table-view").innerHTML = "";
 						for(var n = 0; n < data.data.length; n++) {
 							var li = document.createElement("li");
