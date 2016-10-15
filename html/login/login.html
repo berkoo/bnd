@@ -80,6 +80,7 @@
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script src="login.js" type="text/javascript" charset="utf-8"></script>
 		<script>
+			localStorage.clear();
 			var APP_ID = "3b6bd62d64";
 			var APP_SECRET = "f3b2fff94f75498e";
 			(function($, doc) {
@@ -121,60 +122,6 @@
 						}
 					}
 				})
-				
-				
-				//				var switchAutoLogin = document.getElementById("switchAutoLogin");
-				//				switchAutoLogin.addEventListener("toggle", function() {
-				//					if(event.detail.isActive) {
-				//						localStorage.setItem("autoLogin", true);
-				//						var username = document.getElementById("textAccount").value;
-				//						var pwd = document.getElementById("textPassword").value;
-				//						localStorage.setItem("userAccount", username);
-				//						localStorage.setItem("pwd", pwd);
-				//					} else {
-				//						localStorage.setItem("autoLogin", false);
-				//						localStorage.setItem("userAccount", null);
-				//						localStorage.setItem("pwd", null);
-				//					}
-				//				});
-				//				var isActive = switchAutoLogin.classList.contains("mui-active");
-				//				if(isActive) {
-				//					mui.trigger(loginButton, 'tap');
-				//				}
-
-				/*mui("#modal").on("tap", "button", function() {
-						document.querySelector(".mui-modal").setAttribute("class", "mui-modal");
-						document.querySelector(".pui-sf").innerHTML = this.innerHTML;
-						var status = this.getAttribute("data-status");
-						if(status == "admin") {
-							document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
-							userType = 1;
-						}
-						if(status == "agent") {
-							document.querySelector(".pui-account").placeholder = "请输入代理商管理员账户";
-							userType = 0;
-						}
-					})*/
-					//				mui(".mui-bar").on("tap", ".mui-icon", function() {
-					//					var status = document.querySelector(".mui-icon").getAttribute("data-status");
-					//					if(status == "admin") {
-					//						document.querySelector(".pui-account").placeholder = "请输入代理商账户";
-					//						document.querySelector(".mui-icon").setAttribute("data-status", "agent");
-					//						userType = 0;
-					//						mui.alert("切换到代理商管理员",function(){
-					//							
-					//						},"提示","确定")
-					//					}
-					//					if(status == "agent") {
-					//						document.querySelector(".pui-account").placeholder = "请输入单位管理员账户";
-					//						document.querySelector(".mui-icon").setAttribute("data-status", "admin");
-					//						userType = 1;
-					//						mui.alert("切换到平台商管理员",function(){
-					//							
-					//						},"提示","确定")
-					//					}
-					//					console.log("userType:"+userType);
-					//				});
 				var loginButton = document.getElementById('btnLogin');
 				loginButton.addEventListener('tap', function(event) {
 					var username = document.getElementById("textAccount").value;
